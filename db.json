@@ -1,0 +1,119 @@
+{
+  "airComponents": [
+    {
+      "id": 1,
+      "name": "Air Component Alpha",
+      "theater": "Op Hadin Kai",
+      "createdDate": "2026-04-01"
+    },
+    {
+      "id": 2,
+      "name": "Air Component Bravo",
+      "theater": "Op Fansan Yama Sect 1",
+      "createdDate": "2026-04-02"
+    },
+    {
+      "id": 3,
+      "name": "Air Component Charlie",
+      "theater": "Op Fansan Yama Sect 2",
+      "createdDate": "2026-04-03"
+    },
+    {
+      "id": 4,
+      "name": "Air Component Delta",
+      "theater": "Op Whirl Stroke",
+      "createdDate": "2026-04-04"
+    },
+    {
+      "id": 5,
+      "name": "Air Component Echo",
+      "theater": "Op Delta Safe",
+      "createdDate": "2026-04-05"
+    },
+    {
+      "id": 6,
+      "name": "Air Component Foxtrot",
+      "theater": "Op Savanah Shield",
+      "createdDate": "2026-04-06"
+    },
+    {
+      "id": 7,
+      "name": "Air Component Golf",
+      "theater": "Op Udoka",
+      "createdDate": "2026-04-07"
+    }
+  ],
+
+  "kpis": [
+    {
+      "id": 1,
+      "airComponentId": 1,
+      "missionSuccessRate": 82,
+      "jointOpsRate": 74,
+      "threatReduction": 61,
+      "riskLevel": 88,
+      "aircraftServiceability": 79,
+      "fuelEfficiency": 92
+    },
+    {
+      "id": 2,
+      "airComponentId": 2,
+      "missionSuccessRate": 76,
+      "jointOpsRate": 68,
+      "threatReduction": 55,
+      "riskLevel": 70,
+      "aircraftServiceability": 72,
+      "fuelEfficiency": 85
+    },
+    {
+      "id": 3,
+      "airComponentId": 3,
+      "missionSuccessRate": 88,
+      "jointOpsRate": 80,
+      "threatReduction": 67,
+      "riskLevel": 65,
+      "aircraftServiceability": 83,
+      "fuelEfficiency": 90
+    },
+    {
+      "id": 4,
+      "airComponentId": 4,
+      "missionSuccessRate": 70,
+      "jointOpsRate": 60,
+      "threatReduction": 50,
+      "riskLevel": 75,
+      "aircraftServiceability": 68,
+      "fuelEfficiency": 80
+    },
+    {
+      "id": 5,
+      "airComponentId": 5,
+      "missionSuccessRate": 90,
+      "jointOpsRate": 85,
+      "threatReduction": 72,
+      "riskLevel": 60,
+      "aircraftServiceability": 88,
+      "fuelEfficiency": 94
+    },
+    {
+      "id": 6,
+      "airComponentId": 6,
+      "missionSuccessRate": 65,
+      "jointOpsRate": 58,
+      "threatReduction": 45,
+      "riskLevel": 82,
+      "aircraftServiceability": 60,
+      "fuelEfficiency": 78
+    },
+    {
+      "id": 7,
+      "airComponentId": 7,
+      "missionSuccessRate": 84,
+      "jointOpsRate": 77,
+      "threatReduction": 69,
+      "riskLevel": 66,
+      "aircraftServiceability": 81,
+      "fuelEfficiency": 89
+    }
+  ]
+}

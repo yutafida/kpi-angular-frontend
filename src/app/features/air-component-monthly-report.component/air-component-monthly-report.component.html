@@ -1,0 +1,210 @@
+@if (report; as r) {
+<div class="space-y-8 animate-in fade-in duration-500">
+
+  <!-- 🏆 SECTION 1: COMMANDERS EXECUTIVE SUMMARY -->
+  @if (r.monthlyScoreReport; as score) {
+  <section class="bg-white rounded-sm border border-slate-200 shadow-sm overflow-hidden">
+    
+    <!-- Header -->
+    <div class="bg-[#003366] px-6 py-4 text-white flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="w-1 h-8 bg-[#D4AF37]"></div> <!-- NAF Gold Accent -->
+        <div>
+          <h2 class="text-xs font-black tracking-[0.15em] uppercase text-[#D4AF37]">Monthly Performance Score</h2>
+          <p class="text-slate-300 text-[10px] font-medium tracking-wide">Aggregated Combat Readiness & Resource Analytics</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-6">
+        <div class="text-right">
+          <span class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest">Regional Rank</span>
+          <span class="text-xl font-black text-white">#{{ score.scoreRank }}</span>
+        </div>
+        <div class="h-8 w-px bg-slate-700"></div>
+        <div class="text-right">
+          <span class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest">Rating</span>
+          <span class="text-xl font-black text-[#D4AF37]">{{ score.rating }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scorecard Body -->
+    <div class="p-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <!-- Main Aggregate Radial -->
+        <div class="lg:col-span-3 flex flex-col items-center justify-center py-6 bg-slate-50 rounded-sm border border-slate-100">
+          <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Overall KPI</span>
+          <span class="text-6xl font-black text-[#003366] leading-none tabular-nums">{{ score.overallScore | number:'1.0-0' }}</span>
+          <div class="w-32 bg-slate-200 h-1.5 mt-6 rounded-full overflow-hidden">
+            <div class="bg-[#003366] h-full" [style.width.%]="score.overallScore"></div>
+          </div>
+        </div>
+
+        <!-- Metric Breakdown Grid -->
+        <div class="lg:col-span-9 grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-4">
+          @for (metric of [
+            { label: 'Ops Effectiveness', val: score.opsEffectiveness },
+            { label: 'Joint Coordination', val: score.jointCoord },
+            { label: 'Resource Mgmt', val: score.resourceManagement },
+            { label: 'Personnel Dev', val: score.personnelDev },
+            { label: 'Strategic Impact', val: score.strategicImpact },
+            { label: 'Risk Assessment', val: score.riskAssessment }
+          ]; track metric.label) {
+            <div class="group p-3 border border-transparent hover:border-slate-200 rounded-sm transition-colors">
+              <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1 group-hover:text-[#003366] transition-colors">
+                {{ metric.label }}
+              </p>
+              <div class="flex items-baseline gap-1">
+                <p class="text-2xl font-black text-slate-800 tabular-nums">{{ metric.val / 100 | percent:'1.1-1' }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Remarks Infrastructure -->
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-slate-100 pt-6">
+        <div class="p-4 bg-slate-50 rounded-sm border-l-4 border-[#003366]">
+          <h4 class="text-[10px] font-black text-slate-900 uppercase mb-2">DOPLANS Remarks</h4>
+          <p class="text-xs text-slate-600 italic leading-relaxed">{{ score.doplansRemarks || 'No entries.' }}</p>
+        </div>
+        <div class="p-4 bg-slate-50 rounded-sm border-l-4 border-slate-300">
+          <h4 class="text-[10px] font-black text-slate-900 uppercase mb-2">COPP Remarks</h4>
+          <p class="text-xs text-slate-600 italic leading-relaxed">{{ score.coppRemarks || 'No entries.' }}</p>
+        </div>
+        <div class="p-4 bg-slate-50 rounded-sm border-l-4 border-slate-300">
+          <h4 class="text-[10px] font-black text-slate-900 uppercase mb-2">CAS Remarks</h4>
+          <p class="text-xs text-slate-600 italic leading-relaxed">{{ score.casRemarks || 'No entries.' }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  }
+
+  <!-- 📊 SECTION 2: TACTICAL REPORTS GRID -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+    <!-- Mission Report -->
+    @if(r.missionReport; as m) {
+    <div class="bg-white rounded-sm border border-slate-200 shadow-sm overflow-hidden">
+      <div class="bg-slate-50 px-5 py-3 border-b border-slate-100 flex justify-between items-center">
+        <h3 class="text-[10px] font-black text-slate-700 uppercase tracking-widest">Mission Effectiveness</h3>
+        <span class="text-[9px] font-bold text-[#008751] bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-sm">SUCCESS: {{ m.missionSuccessRate | percent }}</span>
+      </div>
+      <div class="p-5 grid grid-cols-2 gap-6">
+        <div>
+          <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Target Accuracy</p>
+          <p class="text-xl font-black text-slate-900 tabular-nums">{{ m.targetEngagementAccuracy | percent }}</p>
+        </div>
+        <div>
+          <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">ISR Effectiveness</p>
+          <!-- Assuming raw decimal, applying 2 decimal places -->
+          <p class="text-xl font-black text-slate-900 tabular-nums">{{ m.isrEffectiveness | number:'1.2-2' }}</p>
+        </div>
+        <div class="col-span-2 pt-4 border-t border-slate-50 flex justify-between">
+           <span class="text-xs text-slate-500 font-medium">Total Missions: <strong class="text-slate-800 tabular-nums">{{ m.totalMissions }}</strong></span>
+           <span class="text-xs text-slate-500 font-medium">PIR Score: <strong class="text-slate-800 tabular-nums">{{ m.pirScore | number:'1.2-2' }}</strong></span>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- Crew Readiness -->
+    @if(r.crewReport; as c) {
+    <div class="bg-white rounded-sm border border-slate-200 shadow-sm overflow-hidden">
+      <div class="bg-slate-50 px-5 py-3 border-b border-slate-100">
+        <h3 class="text-[10px] font-black text-slate-700 uppercase tracking-widest">Personnel Readiness</h3>
+      </div>
+      <div class="p-5">
+        <div class="flex items-end justify-between mb-6">
+          <div>
+            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Fully Current Crew</p>
+            <p class="text-4xl font-black text-[#003366] tabular-nums">{{ c.fullyCurrentCrew }}</p>
+          </div>
+          <div class="text-right pb-1">
+             <span class="text-[10px] font-bold text-red-600 uppercase">Non-Current: {{ c.notCurrentCrew }}</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-2 border-t border-slate-100 pt-4">
+          <div class="text-center bg-slate-50 py-2 rounded-sm"><p class="text-[9px] text-slate-400 uppercase font-bold">75% Cat</p><p class="font-bold text-slate-700 tabular-nums">{{ c.current75Crew }}</p></div>
+          <div class="text-center bg-slate-50 py-2 rounded-sm"><p class="text-[9px] text-slate-400 uppercase font-bold">50% Cat</p><p class="font-bold text-slate-700 tabular-nums">{{ c.current50Crew }}</p></div>
+          <div class="text-center bg-slate-50 py-2 rounded-sm"><p class="text-[9px] text-slate-400 uppercase font-bold">25% Cat</p><p class="font-bold text-slate-700 tabular-nums">{{ c.current25Crew }}</p></div>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- Aircraft Serviceability -->
+    @if(r.serviceabilityReport; as s) {
+    <div class="bg-white rounded-sm border border-slate-200 shadow-sm p-5 flex flex-col justify-between">
+      <div class="flex justify-between items-start mb-4">
+        <h3 class="text-[10px] font-black text-slate-700 uppercase tracking-widest">Fleet Serviceability</h3>
+        <!-- Percentage kept as is -->
+        <span class="text-lg font-black text-[#008751] tabular-nums">{{ s.serviceabilityRate | percent }}</span>
+      </div>
+      <div class="flex gap-4 items-center">
+        <div class="flex-1 bg-slate-50 p-3 rounded-sm text-center border border-slate-100">
+          <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Serviceable</p>
+          <p class="text-2xl font-black text-slate-900 tabular-nums">{{ s.totalServiceableAircraft }}</p>
+        </div>
+        <div class="flex-1 bg-slate-50 p-3 rounded-sm text-center border border-slate-100">
+          <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Total Operable</p>
+          <p class="text-2xl font-black text-slate-900 tabular-nums">{{ s.totalOperableAircraft }}</p>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- Logistics Block -->
+    <div class="grid grid-cols-2 gap-4">
+      @if(r.fuelReport; as f) {
+      <div class="bg-white rounded-sm border border-slate-200 p-4">
+        <p class="text-[9px] font-black text-slate-400 uppercase mb-2 tracking-wider">Fuel Consumption</p>
+        <p class="text-xl font-black text-[#D4AF37] tabular-nums">{{ f.expectedFuelConsumption | number:'1.2-2' }}</p>
+        <p class="text-xl font-black text-[#D4AF37] tabular-nums">{{ f.actualFuelConsumption | number:'1.2-2' }}</p>
+       
+        <p class="text-[10px] text-slate-500 font-medium mt-1">{{ f.flightHours }} Flight Hours</p>
+      </div>
+      }
+      @if(r.ordnanceReport; as o) {
+      <div class="bg-white rounded-sm border border-slate-200 p-4">
+        <p class="text-[9px] font-black text-slate-400 uppercase mb-2 tracking-wider">Ordnance Expenditure</p>
+        <p class="text-xl font-black text-slate-800 tabular-nums">{{ o.expected | number:'1.2-2' }}</p>
+        <p class="text-[10px] text-slate-500 font-medium mt-1">Act: {{ o.actual }} / Exp: {{ o.expected }}</p>
+      </div>
+      }
+    </div>
+
+    <!-- Joint Coordination (Full Width) -->
+    @if(r.jointReport; as j) {
+    <section class="bg-white rounded-sm border border-slate-200 shadow-sm p-5 lg:col-span-2">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
+        <h3 class="text-[10px] font-black text-slate-700 uppercase tracking-widest">Joint Coordination & Integration</h3>
+        <!-- Applying 2 decimal places to raw score -->
+        <div class="text-[10px] font-bold text-[#003366] uppercase bg-slate-50 px-2 py-1 rounded-sm border border-slate-200">Joint Score: {{ j.jointCoordination | number:'1.2-2' }}</div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="p-3 bg-slate-50 border border-slate-100 rounded-sm">
+           <p class="text-[9px] font-bold text-slate-400 uppercase mb-1 tracking-wider">CAS Completion</p>
+           <p class="text-xl font-black text-slate-800 tabular-nums">{{ j.casCompletionRate | percent }}</p>
+        </div>
+        <div class="p-3 bg-slate-50 border border-slate-100 rounded-sm">
+           <p class="text-[9px] font-bold text-slate-400 uppercase mb-1 tracking-wider">Inter-Service</p>
+           <!-- Applying 2 decimal places -->
+           <p class="text-xl font-black text-slate-800 tabular-nums">{{ j.interServiceIntegration | number:'1.2-2' }}</p>
+        </div>
+        <div class="p-3 bg-slate-50 border border-slate-100 rounded-sm">
+           <p class="text-[9px] font-bold text-slate-400 uppercase mb-1 tracking-wider">Joint Ops Part.</p>
+           <p class="text-xl font-black text-slate-800 tabular-nums">{{ j.jointOpsParticipated }} <span class="text-xs text-slate-400 font-normal">/ {{ j.totalJointOps }}</span></p>
+        </div>
+        <div class="p-3 bg-slate-50 border border-slate-100 rounded-sm">
+           <p class="text-[9px] font-bold text-slate-400 uppercase mb-1 tracking-wider">CAS Requests</p>
+           <p class="text-xl font-black text-slate-800 tabular-nums">{{ j.casCompleted }} <span class="text-xs text-slate-400 font-normal">/ {{ j.totalCasRequests }}</span></p>
+        </div>
+      </div>
+    </section>
+    }
+
+  </div>
+</div>
+}

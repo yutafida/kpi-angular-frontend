@@ -1,0 +1,268 @@
+<div class="min-h-screen bg-slate-100 text-slate-800 font-sans selection:bg-[#008751] selection:text-white pb-12">
+
+  <!-- 🔷 LOADING STATE -->
+  @if (loading()) {
+    <div class="flex flex-col items-center justify-center py-32 space-y-4">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#003366]"></div>
+      <p class="text-slate-400 font-black uppercase text-xs tracking-[0.2em]">
+        Synchronizing Component Data...
+      </p>
+    </div>
+  }
+
+  <!-- 🔷 DATA VIEW -->
+  @if (summary(); as s) {
+    <div class="max-w-7xl mx-auto px-6 pt-8 space-y-6 animate-[fadeIn_0.5s_ease-out]">
+
+      <!-- 🔷 HEADER (Redesigned for NAF Command Center Feel) -->
+      <header class="relative bg-gradient-to-br from-[#003366] to-[#00284d] rounded-xl shadow-xl border border-white/10 p-8 text-white overflow-hidden">
+        
+        <!-- Decorative Background Elements -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-[#D4AF37]/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 rounded-full blur-2xl -ml-20 -mb-20 pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+
+          <!-- Identity Section -->
+          <div class="flex-1">
+            <!-- Breadcrumbs -->
+            <div class="text-[10px] font-bold uppercase tracking-widest text-blue-200/70 mb-3 flex items-center gap-2">
+              <a routerLink="/" class="hover:text-white transition-colors flex items-center gap-1 group">
+                <svg class="w-3 h-3 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Command Dashboard
+              </a>
+              <span class="text-blue-400/40">/</span>
+              <span class="text-[#D4AF37]">Component Detail</span>
+            </div>
+
+            <!-- Tags -->
+            <div class="flex items-center gap-3 mb-2">
+              <span class="bg-[#D4AF37] text-[#003366] text-[10px] font-black px-2 py-0.5 rounded-sm tracking-widest uppercase shadow-sm border border-[#D4AF37]/30">
+                Unit Specification
+              </span>
+              <span class="bg-white/5 backdrop-blur-sm text-white text-[10px] font-black px-2 py-0.5 rounded-sm tracking-widest uppercase border border-white/10">
+                ID: #{{ s.id }}
+              </span>
+            </div>
+
+            <h1 class="text-3xl md:text-4xl font-black tracking-tight leading-tight mb-1">
+              {{ s.name }}
+            </h1>
+
+            <div class="flex items-center gap-2 mt-3">
+              <span class="w-1.5 h-1.5 bg-[#008751] rounded-full shadow-[0_0_8px_rgba(0,135,81,0.6)]"></span>
+              <p class="text-blue-100 text-xs font-medium uppercase tracking-wide">
+                Operational Area: <span class="text-white font-bold ml-1">{{ s.region }} Theater</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Currency Status Card (Floating) -->
+          <div class="flex flex-col items-center justify-center bg-white/5 border border-white/10 p-5 rounded-lg backdrop-blur-md min-w-[180px] shadow-inner group hover:bg-white/10 transition-colors">
+            <span class="text-[10px] font-bold text-[#D4AF37] uppercase tracking-widest mb-2">
+              Currency Status
+            </span>
+            <span class="text-4xl font-black text-white leading-none tabular-nums drop-shadow-md">
+              {{ s.currencyStatus }}
+            </span>
+            <div class="mt-3 w-full h-1 bg-slate-600/30 rounded-full overflow-hidden">
+              <div class="h-full bg-[#D4AF37] w-3/4 shadow-[0_0_10px_rgba(212,175,55,0.5)]"></div>
+            </div>
+          </div>
+
+        </div>
+      </header>
+
+
+      <!-- 🔷 FILTER BAR (Accordion) -->
+      <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden transition-all duration-300">
+        
+        <!-- Toggle Header -->
+        <div (click)="toggleFilters()" 
+             class="flex items-center justify-between p-4 cursor-pointer hover:bg-slate-50 transition-colors select-none border-b border-slate-100">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-[#003366] group-hover:text-white transition-colors">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+            </div>
+            <div>
+              <h3 class="text-xs font-bold uppercase tracking-widest text-slate-700">Reporting Parameters</h3>
+              <p class="text-[10px] text-slate-400">Adjust the data view timeline</p>
+            </div>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" 
+               [class.rotate-180]="filtersExpanded()" 
+               class="w-5 h-5 text-slate-400 transition-transform duration-300" 
+               fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+
+        <!-- Collapsible Content -->
+        @if (filtersExpanded()) {
+          <div class="p-6 bg-slate-50/50 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-6 animate-[fadeIn_0.3s_ease-out]">
+            
+            <div class="flex flex-col gap-2">
+              <label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest ml-1">Timeline Selection</label>
+              <select class="bg-white border border-slate-300 text-sm font-bold text-slate-700 rounded-lg px-4 py-3 shadow-sm focus:ring-2 focus:ring-[#003366] focus:border-[#003366] outline-none transition-all"
+                [(ngModel)]="selectedMonth">
+                @for (m of months; track m) {
+                  <option [ngValue]="m">{{ m }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest ml-1">Fiscal Year</label>
+              <select class="bg-white border border-slate-300 text-sm font-bold text-slate-700 rounded-lg px-4 py-3 shadow-sm focus:ring-2 focus:ring-[#003366] focus:border-[#003366] outline-none transition-all"
+                [(ngModel)]="selectedYear">
+                @for (y of years; track y) {
+                  <option [value]="y">{{ y }}</option>
+                }
+              </select>
+            </div>
+
+          </div>
+        }
+      </div>
+
+
+      <!-- 🔷 KPI TILES (Accordion - Default Open) -->
+      <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden transition-all duration-300">
+        
+        <!-- Toggle Header -->
+        <div (click)="toggleKpi()" 
+             class="flex items-center justify-between p-5 cursor-pointer hover:bg-slate-50 transition-colors select-none border-b border-slate-100">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-[#003366]/10 flex items-center justify-center text-[#003366]">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wide">Executive Summary</h3>
+              <p class="text-[10px] text-slate-400">High-level operational metrics at a glance</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hidden sm:block">Overview</span>
+            <svg xmlns="http://www.w3.org/2000/svg" 
+                 [class.rotate-180]="kpiExpanded()" 
+                 class="w-5 h-5 text-slate-400 transition-transform duration-300" 
+                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Collapsible Content -->
+        @if (kpiExpanded()) {
+          <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 animate-[fadeIn_0.3s_ease-out]">
+
+            <!-- Card 1: Missions -->
+            <div class="group relative bg-slate-50 border border-slate-200 rounded-xl p-6 hover:border-[#003366]/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+              <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <svg class="w-20 h-20 text-[#003366]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z"/></svg>
+              </div>
+              <div class="flex justify-between items-start mb-4">
+                <div class="w-10 h-10 rounded-full bg-[#003366] flex items-center justify-center text-white shadow-lg shadow-[#003366]/20">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <span class="text-[9px] font-bold uppercase text-[#008751] bg-[#008751]/10 px-2 py-1 rounded">Active</span>
+              </div>
+              <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-1">Mission Lifecycle</p>
+              <h4 class="text-3xl font-black text-slate-800 tabular-nums">{{ s.totalMissions }}</h4>
+            </div>
+
+            <!-- Card 2: Personnel -->
+            <div class="group relative bg-slate-50 border border-slate-200 rounded-xl p-6 hover:border-[#D4AF37]/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+              <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <svg class="w-20 h-20 text-[#D4AF37]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+              </div>
+              <div class="flex justify-between items-start mb-4">
+                <div class="w-10 h-10 rounded-full bg-[#D4AF37] flex items-center justify-center text-[#003366] shadow-lg shadow-[#D4AF37]/20">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                </div>
+                <span class="text-[9px] font-bold uppercase text-slate-400 bg-slate-200 px-2 py-1 rounded">Headcount</span>
+              </div>
+              <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-1">Personnel</p>
+              <h4 class="text-3xl font-black text-slate-800 tabular-nums">{{ s.totalPersonnel }}</h4>
+            </div>
+
+            <!-- Card 3: Platforms -->
+            <div class="group relative bg-slate-50 border border-slate-200 rounded-xl p-6 hover:border-red-500/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+              <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <svg class="w-20 h-20 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+              </div>
+              <div class="flex justify-between items-start mb-4">
+                <div class="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white shadow-lg shadow-red-500/20">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                </div>
+                <span class="text-[9px] font-bold uppercase text-slate-400 bg-slate-200 px-2 py-1 rounded">Assets</span>
+              </div>
+              <p class="text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-1">Platforms</p>
+              <h4 class="text-3xl font-black text-slate-800 tabular-nums">{{ s.totalAircraftDeployed }}</h4>
+            </div>
+
+          </div>
+        }
+      </div>
+
+
+      <!-- 🔷 MONTHLY REPORT (Accordion - Default Closed) -->
+      <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden transition-all duration-300">
+        
+        <!-- Toggle Header -->
+        <div (click)="toggleReport()" 
+             class="flex items-center justify-between p-5 cursor-pointer hover:bg-slate-50 transition-colors select-none border-b border-slate-100">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-600">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wide">Detailed Monthly Analytics</h3>
+              <p class="text-[10px] text-slate-400">Comprehensive performance breakdown and trends</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+             <!-- Context Badge -->
+            <span class="text-[10px] font-bold text-[#003366] bg-[#003366]/10 px-2 py-1 rounded border border-[#003366]/10 hidden sm:block">
+              {{ selectedMonth() }} {{ selectedYear() }}
+            </span>
+            <svg xmlns="http://www.w3.org/2000/svg" 
+                 [class.rotate-180]="reportExpanded()" 
+                 class="w-5 h-5 text-slate-400 transition-transform duration-300" 
+                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Collapsible Content -->
+        @if (reportExpanded()) {
+          <div class="p-0 border-t border-slate-100 bg-white animate-[fadeIn_0.3s_ease-out]">
+            @if (monthlyReport(); as report) {
+              <section class="p-6">
+                <app-air-component-monthly-report [report]="report"></app-air-component-monthly-report>
+              </section>
+            } @else {
+              <div class="p-12 text-center text-slate-400 text-sm">
+                <p>No detailed report data available for this period.</p>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+    </div>
+  }
+
+</div>
+
+<!-- Custom Styles for Animations -->
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .rotate-180 {
+    transform: rotate(180deg);
+  }
+</style>

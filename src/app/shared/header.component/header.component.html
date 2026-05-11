@@ -1,0 +1,81 @@
+<div class="relative overflow-hidden bg-gradient-to-br from-[#00264d] to-[#003366] rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.15)] border border-white/5 mb-8 group">
+
+  <!-- Technical Grid Overlay -->
+  <div class="absolute inset-0 opacity-[0.07] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+  
+  <!-- Inner Glow for Depth -->
+  <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#000000]/20 pointer-events-none"></div>
+
+  <!-- Gold Accent Strip (Top) -->
+  <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent shadow-[0_0_10px_rgba(212,175,55,0.4)]"></div>
+
+  <div class="relative px-6 py-6 sm:px-8 sm:py-7 flex items-start sm:items-center justify-between gap-6">
+
+    <!-- Left: Identity -->
+    <div class="flex items-start sm:items-center gap-5 z-10">
+
+      <!-- Enhanced Icon Container -->
+      <div class="relative w-14 h-14 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center flex-shrink-0 shadow-inner group-hover:border-[#D4AF37]/50 transition-colors duration-300">
+        <div class="absolute inset-0 bg-[#D4AF37]/5 rounded-lg blur-sm"></div>
+        <svg class="relative w-7 h-7 text-[#D4AF37] drop-shadow-md" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
+        </svg>
+      </div>
+
+      <!-- Text Block -->
+      <div class="flex flex-col">
+        <div class="flex items-center gap-3 mb-1">
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-none">
+            {{ title }}
+          </h1>
+          <!-- Official Badge -->
+          <span class="hidden sm:inline-flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-[#003366] bg-[#D4AF37] px-2.5 py-1 rounded-sm shadow-sm border border-white/20">
+            NAF
+          </span>
+        </div>
+
+        @if (subtitle) {
+          <p class="text-blue-200/80 font-medium tracking-wide text-[13px] flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse"></span>
+            {{ subtitle }}
+          </p>
+        }
+      </div>
+
+    </div>
+
+    <!-- Right: Status / Decoration -->
+    <div class="hidden sm:flex flex-col items-end gap-2 z-10 border-l border-white/10 pl-6">
+      <div class="flex items-center gap-3">
+        <div class="text-right">
+          <div class="text-[10px] font-bold text-[#D4AF37] uppercase tracking-[0.15em]">
+            System Status
+          </div>
+          <div class="text-[10px] font-medium text-slate-300">
+            Nigerian Air Force
+          </div>
+        </div>
+        <!-- Status Indicator -->
+        <div class="relative flex h-3 w-3">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D4AF37] opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-[#D4AF37]"></span>
+        </div>
+      </div>
+      <!-- Decorative Technical Lines -->
+      <div class="flex gap-1">
+        <div class="h-px w-12 bg-white/10"></div>
+        <div class="h-px w-4 bg-[#D4AF37]/50"></div>
+        <div class="h-px w-2 bg-white/10"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom decorative tech line -->
+  <div class="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#D4AF37]/20 to-transparent"></div>
+  
+  <!-- Corner Accents (Top Left/Right) for Tactical Feel -->
+  <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#D4AF37]/50"></div>
+  <div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-[#D4AF37]/50"></div>
+
+</div>
