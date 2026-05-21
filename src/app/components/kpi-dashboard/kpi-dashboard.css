@@ -1,0 +1,28 @@
+.sticky-note-toggle {
+  position: sticky;
+  top: 1rem;
+  z-index: 50;
+}
+
+.sticky-note-toggle:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+}
+
+.observation-float-panel {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: min(420px, calc(100vw - 2rem));
+  max-height: 68vh;
+  display: flex;
+  flex-direction: column;
+  z-index: 60;
+  overflow: hidden;
+}
+
+.observation-float-panel textarea {
+  min-height: 180px;
+  max-height: 60vh;
+  overflow-y: auto;
+}

@@ -34,4 +34,54 @@ export class KpiService {
       `${this.baseUrl}/${airComponentId}/monthly/${year}/${month}`
     );
   }
+
+  submitDashboardObservation(period: string, year: number, content: string): Observable<any> {
+    const payload = {
+      period,
+      year,
+      content,
+      timestamp: new Date().toISOString()
+    };
+
+    return this.http.post(`${this.baseUrl}/observations/dashboard`, payload);
+  }
+
+  submitComponentObservation(
+    airComponentId: number,
+    month: string,
+    year: number,
+    content: string
+  ): Observable<any> {
+    const payload = {
+      airComponentId,
+      month,
+      year,
+      content,
+      timestamp: new Date().toISOString()
+    };
+
+    return this.http.post(`${this.baseUrl}/observations/component`, payload);
+  }
+
+  getDashboardObservations(month: string, year: number): Observable<Array<{ id?: number; period: string; year: number; content: string; timestamp: string }>> {
+    const params = new HttpParams()
+      .set('month', month)
+      .set('year', year);
+
+    return this.http.get<Array<{ id?: number; period: string; year: number; content: string; timestamp: string }>>(
+      `${this.baseUrl}/observations/dashboard`,
+      { params }
+    );
+  }
+
+  submitKpiReport(period: string, year: number, content: string): Observable<any> {
+    const payload = {
+      period,
+      year,
+      content,
+      timestamp: new Date().toISOString()
+    };
+
+    return this.http.post(`${this.baseUrl}/reports/generate`, payload);
+  }
 }

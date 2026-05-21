@@ -1,16 +1,13 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 import {
   Chart,
   registerables,
-  ChartConfiguration,
   ChartData,
-  ChartDataset,
-  ChartOptions,
-  ChartType,
-  ActiveElement
+  ChartOptions
 } from 'chart.js';
 
 import annotationPlugin from 'chartjs-plugin-annotation';
@@ -24,9 +21,11 @@ import {
 import { HeaderComponent } from '../../shared/header.component/header.component';
 
 import { KpiMonthlyDashboard } from '../../models/kpi-monthly-dashboard';
-import { AirComponentMonthlyScore } from '../../models/air-component-monthly-score';
 
 import { KpiService } from '../../services/kpi-service';
+import { ReportChart } from '../../models/report-chart';
+import { ChartExportService } from '../../services/chart-export-service';
+import { ReportBuilderService } from '../../services/report-builder-service';
 
 Chart.register(...registerables, annotationPlugin);
 
@@ -36,6 +35,7 @@ Chart.register(...registerables, annotationPlugin);
   imports: [
     CommonModule,
     DecimalPipe,
+    FormsModule,
     HeaderComponent,
     BaseChartDirective,
     RouterModule
@@ -46,8 +46,11 @@ Chart.register(...registerables, annotationPlugin);
 })
 export class KpiDashboard implements OnInit {
 
-  constructor(private kpiService: KpiService) {}
-
+  constructor(
+    private kpiService: KpiService,
+    private chartExportService: ChartExportService,
+    private reportBuilderService: ReportBuilderService
+  ) {}
   // =========================================================
   // SIGNALS
   // =========================================================
@@ -55,13 +58,15 @@ export class KpiDashboard implements OnInit {
   data = signal<KpiMonthlyDashboard | null>(null);
   loading = signal(false);
 
-  selectedTheater = signal<AirComponentMonthlyScore | null>(null);
-
   showChart = signal(true);
   showDimensionTable = signal(true);
   showTheatreTable = signal(true);
   showComparisonChart = signal(true);
   showBulletChart = signal(true);
+  showObservationPane = signal<boolean>(false);
+
+  observationNotes = signal<Record<string, string>>({});
+  submittingObservation = signal<boolean>(false);
 
   filterType = signal<'MONTH' | 'QUARTER'>('MONTH');
 
@@ -70,6 +75,54 @@ export class KpiDashboard implements OnInit {
   selectedYear = signal(2026);
 
   activeChartType = signal<'bar'>('bar');
+
+  selectedObservationKey = computed(() => {
+    const period = this.filterType() === 'MONTH' ? this.selectedMonth() : this.selectedQuarter();
+    return `dashboard-${period}-${this.selectedYear()}`;
+  });
+
+  insertChartIntoReport(
+    chartId: string,
+    title: string,
+    chartType: string
+  ): void {
+
+    const image =
+      this.chartExportService.exportChart(chartId);
+
+    if (!image) {
+      return;
+    }
+
+    const reportChart: ReportChart = {
+
+      title,
+
+      chartType,
+
+      imageBase64: image,
+
+      createdAt: new Date()
+    };
+
+    this.reportBuilderService.addChart(reportChart);
+
+    alert('Chart added to report successfully.');
+  }
+
+  observationText = computed(() => {
+    return this.observationNotes()[this.selectedObservationKey()] || '';
+  });
+
+  selectedObservationLabel = computed(() => {
+    const period = this.filterType() === 'MONTH' ? this.selectedMonth() : this.selectedQuarter();
+    return `${period} ${this.selectedYear()} Dashboard`;
+  });
+
+  observationTitle = computed(() => {
+    const period = this.filterType() === 'MONTH' ? this.selectedMonth() : this.selectedQuarter();
+    return `${period} ${this.selectedYear()} Dashboard Observation`;
+  });
 
   months = [
     'JANUARY',
@@ -154,8 +207,8 @@ export class KpiDashboard implements OnInit {
 
     maintainAspectRatio: false,
 
-    onClick: (_, elements) => {
-      this.onChartClick(elements);
+    onClick: () => {
+      // Drill-down disabled: chart click no longer opens a component detail view.
     },
 
     scales: {
@@ -203,47 +256,6 @@ export class KpiDashboard implements OnInit {
       }
     }
   }));
-
-  // =========================================================
-  // DRILLDOWN RADAR CHART
-  // =========================================================
-
-  drillDownChartData = computed<ChartData<'radar'> | null>(() => {
-
-    const t = this.selectedTheater();
-
-    if (!t) {
-      return null;
-    }
-
-    return {
-      labels: [
-        'Ops Effectiveness',
-        'Joint Coord',
-        'Resource Mgmt',
-        'Personnel Dev',
-        'Strategic Impact',
-        'Risk Assessment'
-      ],
-      datasets: [
-        {
-          label: t.airComponentName,
-          data: [
-            t.opsEffectiveness,
-            t.jointCoord,
-            t.resourceManagement,
-            t.personnelDev,
-            t.strategicImpact,
-            t.riskAssessment
-          ],
-          backgroundColor: 'rgba(212,175,55,0.2)',
-          borderColor: '#D4AF37',
-          pointBackgroundColor: '#D4AF37',
-          fill: true
-        }
-      ]
-    };
-  });
 
   // =========================================================
   // BULLET CHART DATA
@@ -430,21 +442,6 @@ export class KpiDashboard implements OnInit {
   // CHART CLICK
   // =========================================================
 
-  onChartClick(elements: ActiveElement[]): void {
-
-    if (!elements.length) {
-      return;
-    }
-
-    const index = elements[0].index;
-
-    const theater = this.data()?.scores[index];
-
-    if (theater) {
-      this.selectedTheater.set(theater);
-    }
-  }
-
   // =========================================================
   // HELPERS
   // =========================================================
@@ -473,6 +470,51 @@ export class KpiDashboard implements OnInit {
   toggleComparisonChart(): void {
     this.showComparisonChart.update(v => !v);
   }
-  toggleBulletChart() {
+
+  toggleBulletChart(): void {
     this.showBulletChart.update(v => !v);
-  }}
+  }
+
+  toggleObservationPane(): void {
+    this.showObservationPane.update(v => !v);
+  }
+
+  setObservationText(value: string): void {
+    const key = this.selectedObservationKey();
+    this.observationNotes.update(notes => ({
+      ...notes,
+      [key]: value
+    }));
+  }
+
+  submitObservation(): void {
+    const content = this.observationText();
+    if (!content.trim()) {
+      console.warn('Cannot submit empty observation');
+      return;
+    }
+
+    this.submittingObservation.set(true);
+
+    const period = this.filterType() === 'MONTH' ? this.selectedMonth() : this.selectedQuarter();
+    const year = this.selectedYear();
+
+    this.kpiService.submitDashboardObservation(period, year, content)
+      .subscribe({
+        next: (response) => {
+          console.log('Observation submitted successfully:', response);
+          const key = this.selectedObservationKey();
+          this.observationNotes.update(notes => ({
+            ...notes,
+            [key]: ''
+          }));
+          this.submittingObservation.set(false);
+          this.showObservationPane.set(false);
+        },
+        error: (error) => {
+          console.error('Failed to submit observation:', error);
+          this.submittingObservation.set(false);
+        }
+      });
+  }
+}
