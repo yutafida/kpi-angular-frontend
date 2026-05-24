@@ -76,16 +76,79 @@ export class KpiDashboard implements OnInit {
 
   activeChartType = signal<'bar'>('bar');
 
+  // =========================================================
+  // KPI DIMENSION TARGETS
+  // =========================================================
+
+  dimensionTargets = signal<Record<string, number>>({
+
+    'Ops Effectiveness': 75,
+
+    'Joint Coord': 75,
+
+    'Resource Mgmt': 50,
+
+    'Personnel Dev': 75,
+
+    'Strategic Impact': 75,
+
+    'Risk Assessment': 75
+  });
+
+  
+
+  selectedTargetDimension = signal<string>('Ops Effectiveness');
+
+  selectedTargetValue = signal<number>(75);
+
   selectedObservationKey = computed(() => {
     const period = this.filterType() === 'MONTH' ? this.selectedMonth() : this.selectedQuarter();
     return `dashboard-${period}-${this.selectedYear()}`;
   });
+
+
+  // =========================================================
+  // UPDATE DIMENSION TARGET
+  // =========================================================
+
+  updateDimensionTarget(): void {
+
+    const dimension =
+      this.selectedTargetDimension();
+
+    const target =
+      this.selectedTargetValue();
+
+    this.dimensionTargets.update(current => ({
+
+      ...current,
+
+      [dimension]: target
+    }));
+  }
 
   insertChartIntoReport(
     chartId: string,
     title: string,
     chartType: string
   ): void {
+
+    // =====================================================
+    // CHECK IF ALREADY EXISTS
+    // =====================================================
+
+    const alreadyExists =
+      this.reportBuilderService
+        .getCharts()
+        .some(chart => chart.title === title);
+
+    if (alreadyExists) {
+
+      alert('This chart has already been added to the report.');
+
+      return;
+    }
+
 
     const image =
       this.chartExportService.exportChart(chartId);
@@ -140,6 +203,21 @@ export class KpiDashboard implements OnInit {
   ];
 
   quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
+
+    dimensions = [
+
+    'Ops Effectiveness',
+
+    'Joint Coord',
+
+    'Resource Mgmt',
+
+    'Personnel Dev',
+
+    'Strategic Impact',
+
+    'Risk Assessment'
+  ];
 
   // =========================================================
   // INIT
@@ -261,26 +339,50 @@ export class KpiDashboard implements OnInit {
   // BULLET CHART DATA
   // =========================================================
 
-  bulletChartData = computed<ChartData<'bar'>>(() => {
-    const reports = this.data()?.reports || [];
-    const labels = reports.map(r => r.dimension);
-    const values = reports.map(r => r.averageOverallScore);
+//   bulletChartData = computed<ChartData<'bar'>>(() => {
 
-    return {
-      labels,
-      datasets: [{
-        label: 'NAF Average',
-        data: values,
-        backgroundColor: values.map(v =>
-          v >= 75 ? 'rgba(16,185,129,0.7)' :
-          v >= 60 ? 'rgba(245,158,11,0.7)' :
-          'rgba(239,68,68,0.7)'
-        ),
-        borderRadius: 4,
-        borderSkipped: false
-      }]
-    };
-  });
+//   const reports =
+//     this.data()?.reports || [];
+
+//   const labels =
+//     reports.map(r => r.dimension);
+
+//   const values =
+//     reports.map(r => r.averageOverallScore);
+
+//   return {
+
+//     labels,
+
+//     datasets: [
+
+//       {
+
+//         label: 'Performance',
+
+//         data: values,
+
+//         backgroundColor: values.map(v =>
+
+//           v >= 75
+//             ? 'rgba(16,185,129,0.75)'
+
+//             : v >= 60
+//             ? 'rgba(245,158,11,0.75)'
+
+//             : 'rgba(239,68,68,0.75)'
+//         ),
+
+//         borderRadius: 8,
+
+//         borderSkipped: false,
+
+//         barThickness: 24
+//       }
+//     ]
+//   };
+// });
+  
 
   comparisonBarChartData = computed<ChartData<'bar' | 'line'>>(() => {
 
@@ -385,30 +487,146 @@ export class KpiDashboard implements OnInit {
     }
   };
 
+  
   // =========================================================
   // BULLET CHART OPTIONS
   // =========================================================
 
+  // =========================================================
+  // BULLET CHART CONFIGURATION
+  // =========================================================
+
+  bulletChartData = computed<ChartData<'bar'>>(() => {
+    const reports = this.data()?.reports || [];
+    const labels = reports.map(r => r.dimension);
+    const values = reports.map(r => r.averageOverallScore);
+
+    return {
+      labels,
+      datasets: [
+        {
+          label: 'Performance',
+          data: values,
+          backgroundColor: values.map(v =>
+            v >= 75
+              ? 'rgba(16,185,129,0.75)'
+              : v >= 60
+              ? 'rgba(245,158,11,0.75)'
+              : 'rgba(239,68,68,0.75)'
+          ),
+          borderRadius: 8,
+          borderSkipped: false,
+          barThickness: 24
+        }
+      ]
+    };
+  });
+
+  // Calculate annotations separately based on data and dimension targets
+  bulletAnnotations = computed(() => {
+    const reports = this.data()?.reports || [];
+    const targets = this.dimensionTargets();
+    const dynamicAnnotations: Record<string, any> = {};
+
+    const getTargetValue = (dimensionName: string): number => {
+      // Normalize common abbreviations before matching
+      let cleanName = dimensionName.trim().toLowerCase()
+        .replace('management', 'mgmt') // Normalizes full word to abbreviation
+        .replace(/[^a-z0-9]/g, '');    // Strip out spaces, dashes, etc.
+      
+      const match = Object.entries(targets).find(([key]) => {
+        let cleanKey = key.trim().toLowerCase()
+          .replace('management', 'mgmt')
+          .replace(/[^a-z0-9]/g, '');
+          
+        return cleanKey === cleanName || cleanKey.includes(cleanName) || cleanName.includes(cleanKey);
+      });
+
+      return match ? match[1] : 75; // Fallback to 75 if everything else fails
+    };
+
+    reports.forEach((report, index) => {
+      const target = getTargetValue(report.dimension);
+
+      dynamicAnnotations[`target_${index}`] = {
+        type: 'line',
+        xScaleID: 'x',
+        yScaleID: 'y',
+        xMin: target,
+        xMax: target,
+        yMin: index,
+        yMax: index,
+        borderColor: '#111827',
+        borderWidth: 4,
+        drawTime: 'afterDatasetsDraw',
+        label: {
+          display: true,
+          content: `${target}%`,
+          position: 'center',
+          backgroundColor: '#111827',
+          color: '#ffffff',
+          padding: { top: 2, bottom: 2, left: 4, right: 4 },
+          font: {
+            size: 9,
+            weight: 'bold'
+          }
+        }
+      };
+    });
+
+    return dynamicAnnotations;
+  });
+
+
+  // Keep static chart structure separate
   bulletChartOptions: ChartOptions<'bar'> = {
-    indexAxis: 'y', // Horizontal bars
+    indexAxis: 'y',
     responsive: true,
     maintainAspectRatio: false,
+    animation: {
+      duration: 500
+    },
     scales: {
       x: {
         beginAtZero: true,
         max: 100,
-        ticks: { color: '#64748b' },
-        grid: { color: 'rgba(148,163,184,0.15)' }
+        ticks: {
+          color: '#64748b',
+          callback: (value) => `${value}%`
+        },
+        grid: {
+          color: 'rgba(148,163,184,0.15)'
+        }
       },
       y: {
-        ticks: { color: '#64748b' },
-        grid: { display: false }
+        ticks: {
+          color: '#64748b'
+        },
+        grid: {
+          display: false
+        }
       }
     },
     plugins: {
-      legend: { display: false }
+      legend: {
+        display: false
+      }
     }
   };
+
+  // Combine options and dynamic annotations into a fresh object reference
+  finalBulletOptions = computed<ChartOptions<'bar'>>(() => {
+    return {
+      ...this.bulletChartOptions,
+      plugins: {
+        ...this.bulletChartOptions.plugins,
+        annotation: {
+          annotations: this.bulletAnnotations()
+        }
+      }
+    };
+  });
+
 
   // =========================================================
   // LOAD DATA
@@ -485,6 +703,13 @@ export class KpiDashboard implements OnInit {
       ...notes,
       [key]: value
     }));
+  }
+
+  isChartAlreadyAdded(title: string): boolean {
+
+    return this.reportBuilderService
+      .getCharts()
+      .some(chart => chart.title === title);
   }
 
   submitObservation(): void {

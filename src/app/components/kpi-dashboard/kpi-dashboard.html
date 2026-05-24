@@ -297,13 +297,25 @@
                 'BAR'
               )"
 
-              class="px-4 py-2 rounded-lg bg-[#003366]
-                    hover:bg-[#004080]
+              [disabled]="isChartAlreadyAdded('Theatre Readiness Matrix')"
+
+              class="px-4 py-2 rounded-lg
                     text-white text-[10px]
                     font-bold uppercase tracking-wider
-                    shadow-sm transition-all">
+                    shadow-sm transition-all"
 
-              Add To Report
+              [ngClass]="
+                isChartAlreadyAdded('Theatre Readiness Matrix')
+                  ? 'bg-slate-400 cursor-not-allowed opacity-70'
+                  : 'bg-[#003366] hover:bg-[#004080]'
+              ">
+
+              {{
+                isChartAlreadyAdded('Theatre Readiness Matrix')
+                  ? 'Already Added'
+                  : 'Add To Report'
+              }}
+
             </button>
 
             <!-- CHART TYPE -->
@@ -389,13 +401,24 @@
               'COMPARISON'
             )"
 
-            class="px-4 py-2 rounded-lg bg-[#003366]
-                  hover:bg-[#004080]
+            [disabled]="isChartAlreadyAdded('KPI Dimensions Comparison')"
+
+            class="px-4 py-2 rounded-lg
                   text-white text-[10px]
                   font-bold uppercase tracking-wider
-                  shadow-sm transition-all">
+                  shadow-sm transition-all"
 
-            Add To Report
+            [ngClass]="
+              isChartAlreadyAdded('KPI Dimensions Comparison')
+                ? 'bg-slate-400 cursor-not-allowed opacity-70'
+                : 'bg-[#003366] hover:bg-[#004080]'
+            ">
+
+            {{
+              isChartAlreadyAdded('KPI Dimensions Comparison')
+                ? 'Already Added'
+                : 'Add To Report'
+            }}
 
           </button>
 
@@ -421,6 +444,159 @@
 
 
       @if (showBulletChart()) {
+
+        <!-- ===================================================== -->
+        <!-- DIMENSION TARGET CONTROL -->
+        <!-- ===================================================== -->
+
+        <section
+          class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+
+          <div
+            class="flex flex-col lg:flex-row
+                  lg:items-end gap-6">
+
+            <!-- TITLE -->
+            <div class="flex-1">
+
+              <h3
+                class="text-sm font-bold uppercase
+                      tracking-widest text-slate-800">
+
+                KPI Dimension Targets
+              </h3>
+
+              <p class="text-xs text-slate-500 mt-1">
+
+                Configure operational targets
+                for each KPI dimension.
+              </p>
+            </div>
+
+            <!-- DIMENSION -->
+            <div class="flex flex-col">
+
+              <label
+                class="text-[10px] font-bold uppercase
+                      text-slate-500 mb-2">
+
+                Select Dimension
+              </label>
+
+              <select
+
+                [value]="selectedTargetDimension()"
+
+                (change)="
+                  selectedTargetDimension.set(
+                    $any($event.target).value
+                  )
+                "
+
+                class="px-4 py-3 rounded-xl
+                      border border-slate-300
+                      bg-slate-50 text-sm
+                      font-semibold
+                      focus:outline-none
+                      focus:ring-2
+                      focus:ring-[#003366]">
+
+                @for (d of dimensions; track d) {
+
+                  <option [value]="d">
+
+                    {{ d }}
+
+                  </option>
+                }
+
+              </select>
+            </div>
+
+            <!-- TARGET -->
+            <div class="flex flex-col">
+
+              <label
+                class="text-[10px] font-bold uppercase
+                      text-slate-500 mb-2">
+
+                Target (%)
+              </label>
+
+              <input
+                type="number"
+
+                min="0"
+
+                max="100"
+
+                [value]="selectedTargetValue()"
+
+                (input)="
+                  selectedTargetValue.set(
+                    +$any($event.target).value
+                  )
+                "
+
+                class="px-4 py-3 rounded-xl
+                      border border-slate-300
+                      bg-slate-50 text-sm
+                      font-semibold w-36
+                      focus:outline-none
+                      focus:ring-2
+                      focus:ring-[#003366]" />
+            </div>
+
+            <!-- ACTION -->
+            <button
+
+              (click)="updateDimensionTarget()"
+
+              class="px-6 py-3 rounded-xl
+                    bg-[#003366]
+                    hover:bg-[#004080]
+                    text-white text-xs
+                    font-bold uppercase
+                    tracking-wider
+                    shadow-sm transition-all">
+
+              Update Target
+            </button>
+          </div>
+
+          <!-- TARGET PREVIEW -->
+          <div
+            class="mt-6 grid grid-cols-2
+                  md:grid-cols-3 lg:grid-cols-6 gap-4">
+
+            @for (
+              d of dimensions;
+              track d
+            ) {
+
+              <div
+                class="rounded-xl border border-slate-200
+                      bg-slate-50 p-4 text-center">
+
+                <p
+                  class="text-[10px] uppercase
+                        font-bold text-slate-500">
+
+                  {{ d }}
+                </p>
+
+                <p
+                  class="mt-2 text-2xl
+                        font-black text-[#003366]">
+
+                  {{ dimensionTargets()[d] }}%
+                </p>
+              </div>
+            }
+
+          </div>
+
+        </section>
 
       <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-lg transition-shadow duration-300">
 
@@ -453,18 +629,31 @@
               'BULLET'
             )"
 
-            class="px-4 py-2 rounded-lg bg-[#003366]
-                  hover:bg-[#004080]
+            [disabled]="isChartAlreadyAdded('KPI Bullet Chart')"
+
+            class="px-4 py-2 rounded-lg
                   text-white text-[10px]
                   font-bold uppercase tracking-wider
-                  shadow-sm transition-all">
+                  shadow-sm transition-all"
 
-            Add To Report
+            [ngClass]="
+              isChartAlreadyAdded('KPI Bullet Chart')
+                ? 'bg-slate-400 cursor-not-allowed opacity-70'
+                : 'bg-[#003366] hover:bg-[#004080]'
+            ">
+
+            {{
+              isChartAlreadyAdded('KPI Bullet Chart')
+                ? 'Already Added'
+                : 'Add To Report'
+            }}
 
           </button>
 
+
         </div>
 
+        
         <!-- CHART -->
         <div class="p-6 relative h-[400px] bg-white">
 
@@ -472,9 +661,8 @@
             id="bulletChart"
             baseChart
             [data]="bulletChartData()"
-            [options]="bulletChartOptions"
+            [options]="finalBulletOptions()"
             [type]="'bar'">
-
           </canvas>
 
         </div>
