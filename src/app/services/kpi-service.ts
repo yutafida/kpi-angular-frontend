@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { KpiMonthlyDashboard } from '../models/kpi-monthly-dashboard'; 
 import { ReportMonth } from '../shared/report-month';
 import { AirComponentMonthlyReport } from '../models/air-component-monthly-report';
+import { ReportSubmissionLog } from '../models/report-submission-log';
 
 
 
@@ -15,6 +16,44 @@ export class KpiService {
   private baseUrl = 'http://localhost:4040/api/kpi';
 
   constructor(private http: HttpClient) {}
+
+  getReportSubmissionLogs(
+    airComponentId?: number,
+    status?: string,
+    date?: string
+  ): Observable<ReportSubmissionLog[]> {
+
+    let params = new HttpParams();
+
+    if (airComponentId !== undefined && airComponentId !== null) {
+
+      params = params.set(
+        'airComponentId',
+        airComponentId.toString()
+      );
+    }
+
+    if (status) {
+
+      params = params.set(
+        'status',
+        status
+      );
+    }
+
+    if (date) {
+
+      params = params.set(
+        'date',
+        date
+      );
+    }
+
+    return this.http.get<ReportSubmissionLog[]>(
+      `${this.baseUrl}/report-submission-logs`,
+      { params }
+    );
+  }
 
   getMonthlyReport(month: string, year: number): Observable<KpiMonthlyDashboard> {
     const params = new HttpParams()

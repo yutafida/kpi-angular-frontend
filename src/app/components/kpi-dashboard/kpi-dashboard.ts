@@ -18,7 +18,7 @@ import {
   withDefaultRegisterables
 } from 'ng2-charts';
 
-import { HeaderComponent } from '../../shared/header.component/header.component';
+// import { HeaderComponent } from '../../shared/header.component/header.component';
 
 import { KpiMonthlyDashboard } from '../../models/kpi-monthly-dashboard';
 
@@ -36,7 +36,7 @@ Chart.register(...registerables, annotationPlugin);
     CommonModule,
     DecimalPipe,
     FormsModule,
-    HeaderComponent,
+    // HeaderComponent,
     BaseChartDirective,
     RouterModule
   ],

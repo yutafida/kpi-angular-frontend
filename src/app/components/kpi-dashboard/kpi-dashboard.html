@@ -1,67 +1,115 @@
 <div class="min-h-screen bg-gradient-to-br from-slate-100 to-slate-200 text-slate-800 font-sans selection:bg-[#008751] selection:text-white antialiased">
 
   <!-- 🔷 HEADER -->
-  <div class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
-    <div class="max-w-7xl mx-auto px-6 py-4">
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        
-        <!-- Branding Area -->
-        <div class="flex items-center gap-4">
-          <!-- Optional: Abstract Logo Icon -->
-          <div class="hidden sm:block w-10 h-10 bg-[#003366] rounded-md flex items-center justify-center shadow-lg shadow-[#003366]/20 text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-          </div>
-          <div>
-            <app-header
-              title="NAF Performance Command"
-              subtitle="Predictive Operational Intelligence Dashboard">
-            </app-header>
-          </div>
+  
+
+<div class="sticky top-0 z-50 bg-[#00264d]/95 backdrop-blur-md border-b border-[#D4AF37]/15 shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
+    <!-- Gold top accent line -->
+    <div class="h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent opacity-60"></div>
+
+    <div class="flex items-center justify-between h-14 sm:h-16">
+
+      <!-- ── LEFT: NAF Identity ──
+           Gestalt: Proximity — logo + text grouped as one identity unit -->
+      <div class="flex items-center gap-3 min-w-0">
+
+        <!-- NAF Eagle Crest Mark -->
+        <div class="relative w-9 h-9 sm:w-10 sm:h-10 bg-[#D4AF37] rounded-[3px] flex items-center justify-center flex-shrink-0 shadow-lg shadow-[#D4AF37]/20">
+          <!-- Stylized NAF Eagle -->
+          <svg class="w-5 h-5 sm:w-6 sm:h-6 text-[#00264d]" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C12 2 8 5 8 9C8 11.5 9.5 13 10.5 13.5L9 18H11L12 15L13 18H15L13.5 13.5C14.5 13 16 11.5 16 9C16 5 12 2 12 2ZM12 4.5C12.8 5.8 14 7.5 14 9C14 10.5 13 11.5 12 12C11 11.5 10 10.5 10 9C10 7.5 11.2 5.8 12 4.5Z"/>
+            <!-- Wings -->
+            <path d="M8 9L2 7L4 9L1 11L8 10.5" opacity="0.85"/>
+            <path d="M16 9L22 7L20 9L23 11L16 10.5" opacity="0.85"/>
+            <!-- Star above eagle -->
+            <circle cx="12" cy="1.2" r="0.7"/>
+          </svg>
         </div>
 
-        <!-- Header Actions -->
-        <div class="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
-          
-          <!-- DOPLANS Button (Integrated into Header for better flow) -->
-          <a
-            href="http://localhost:4040/kpi/doplans-dashboard"
-            class="group flex items-center gap-2 px-4 py-2 rounded border border-[#D4AF37]/30 bg-[#D4AF37]/5 text-[#b89325] hover:bg-[#D4AF37] hover:text-[#003366] transition-all duration-300 shadow-sm text-xs font-bold uppercase tracking-wider">
-            
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-            
-            <span class="hidden sm:inline">DOPLANS</span>
-          </a>
-
-          <a
-            routerLink="/kpi-report"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded border border-slate-300 bg-slate-50 text-slate-700 hover:bg-slate-100 transition-all duration-300 shadow-sm text-xs font-bold uppercase tracking-wider">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            </svg>
-            <span class="hidden sm:inline">KPI Report</span>
-          </a>
-
-          <div class="h-8 w-px bg-slate-200 hidden md:block"></div>
-
-          <!-- System Status -->
-          <div class="flex items-center gap-3 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
-            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em]">System</div>
-            <div class="flex items-center justify-end gap-2 text-[#008751] font-bold text-xs">
-              <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#008751] opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-[#008751]"></span>
-              </span>
-              OPERATIONAL
-            </div>
+        <!-- Identity Text -->
+        <div class="min-w-0">
+          <div class="text-white font-bold text-sm sm:text-[15px] tracking-wide leading-tight truncate">
+            Nigerian Air Force
+          </div>
+          <div class="text-[#D4AF37]/70 font-semibold text-[10px] sm:text-[11px] uppercase tracking-[0.18em] leading-tight truncate">
+            Performance Command
           </div>
         </div>
       </div>
+
+      <!-- ── CENTER: Primary Navigation ──
+           Fitts' Law: Larger click targets, clear labels
+           Visual hierarchy: Primary action (DOPLANS) is gold, others are subtle -->
+      <nav class="hidden lg:flex items-center gap-1" role="navigation" aria-label="Main navigation">
+
+        <!-- Primary Action: DOPLANS (Gold — stands out) -->
+        <a
+          href="http://localhost:4040/kpi/doplans-dashboard"
+          class="group flex items-center gap-2 px-4 py-2 rounded-[3px] bg-[#D4AF37] text-[#00264d] font-bold text-[11px] uppercase tracking-[0.12em] hover:bg-[#e6c44a] transition-colors duration-200 shadow-sm"
+          aria-label="Open DOPLANS Dashboard">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13h2v8H3zM9 9h2v12H9zM15 5h2v16h-2zM21 1h2v20h-2z"/>
+          </svg>
+          DOPLANS
+        </a>
+
+        <!-- Secondary Actions (Ghost style — lower visual weight) -->
+        <a
+          routerLink="/kpi-report"
+          class="flex items-center gap-2 px-3.5 py-2 rounded-[3px] text-blue-200/80 font-semibold text-[11px] uppercase tracking-[0.12em] hover:text-white hover:bg-white/10 transition-colors duration-200"
+          aria-label="View KPI Report">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          KPI Report
+        </a>
+
+        <a
+          routerLink="/report-submission-compliance"
+          class="flex items-center gap-2 px-3.5 py-2 rounded-[3px] text-blue-200/80 font-semibold text-[11px] uppercase tracking-[0.12em] hover:text-white hover:bg-white/10 transition-colors duration-200"
+          aria-label="View Compliance Report">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Compliance
+        </a>
+
+      </nav>
+
+      <!-- ── RIGHT: Status + Mobile Menu ──
+           Single status indicator (not duplicated in hero)
+           Progressive disclosure: mobile menu hidden until needed -->
+      <div class="flex items-center gap-3">
+
+        <!-- System Status Pill -->
+        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#008751]/10 border border-[#008751]/25">
+          <span class="relative flex h-1.5 w-1.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#008751] opacity-60"></span>
+            <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#008751]"></span>
+          </span>
+          <span class="text-[#008751] font-bold text-[10px] uppercase tracking-[0.15em]">Operational</span>
+        </div>
+
+        <!-- Mobile Menu Button (lg:hidden) -->
+        <!-- <button
+          (click)="mobileMenuOpen = !mobileMenuOpen"
+          class="lg:hidden flex items-center justify-center w-9 h-9 rounded-[3px] text-blue-200/80 hover:text-white hover:bg-white/10 transition-colors"
+          aria-label="Toggle navigation menu"
+          aria-expanded="false">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button> -->
+      </div>
     </div>
   </div>
+
+  
+</div>
+
 
   <div class="max-w-7xl mx-auto px-6 py-8 space-y-6">
 

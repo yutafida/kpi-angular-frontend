@@ -10,3 +10,19 @@ button,
 select {
   font-family: inherit;
 }
+
+[contenteditable="true"] {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+[contenteditable="true"] p {
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+[contenteditable="true"] h1,
+[contenteditable="true"] h2,
+[contenteditable="true"] h3 {
+  text-align: left;
+}

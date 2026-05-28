@@ -25,6 +25,71 @@ export class KpiReport implements OnInit {
     public reportBuilderService: ReportBuilderService
   ) {}
 
+
+    /**
+   * Handles keyboard events inside the document canvas.
+   * Specifically intercepts the TAB key to insert 8 spaces instead of changing focus.
+   */
+  handleKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Tab') {
+      // Prevent the browser from moving focus to the next element
+      event.preventDefault();
+
+      // Insert 8 standard spaces at the cursor position
+      document.execCommand('insertText', false, '        ');
+
+      // Sync the state with the new HTML content
+      if (this.documentCanvas) {
+        this.onCanvasChange(this.documentCanvas.nativeElement.innerHTML);
+      }
+    }
+  }
+    /**
+   * Transforms the text case of the current selection.
+   * Replaces the selected text with the transformed version.
+   * 
+   * Note: This uses 'insertText', which replaces the selection with plain text.
+   * Any inline formatting (bold/italic) within the specific selection will be removed
+   * and replaced by the new text case.
+   */
+  transformText(type: string): void {
+    const selection = window.getSelection();
+    
+    // Check if there is a valid text selection
+    if (!selection || selection.rangeCount === 0 || selection.isCollapsed) return;
+
+    const range = selection.getRangeAt(0);
+    const originalText = range.toString();
+
+    if (!originalText) return;
+
+    let newText = '';
+
+    switch (type) {
+      case 'uppercase':
+        newText = originalText.toUpperCase();
+        break;
+      case 'lowercase':
+        newText = originalText.toLowerCase();
+        break;
+      case 'capitalize':
+        // Capitalize the first letter of every word
+        newText = originalText.replace(/\b\w/g, (char) => char.toUpperCase());
+        break;
+      default:
+        return;
+    }
+
+    // Use execCommand to replace the selection. 
+    // This maintains the Undo/Redo stack history better than manual DOM manipulation.
+    document.execCommand('insertText', false, newText);
+
+    // Sync the state with the new HTML
+    if (this.documentCanvas) {
+      this.onCanvasChange(this.documentCanvas.nativeElement.innerHTML);
+    }
+  }
+
   // =====================================================
   // SIGNALS
   // =====================================================
@@ -56,6 +121,9 @@ export class KpiReport implements OnInit {
   months = Object.values(ReportMonth);
 
   years = [2024, 2025, 2026, 2027];
+
+  // NEW: Signal to track Fullscreen/Focus Mode
+  isFullscreen = signal<boolean>(false);
 
   // =====================================================
   // INIT
@@ -149,6 +217,13 @@ export class KpiReport implements OnInit {
     if (this.documentCanvas) {
       this.onCanvasChange(this.documentCanvas.nativeElement.innerHTML);
     }
+  }
+
+  /**
+   * NEW: Toggles Fullscreen mode for the writing canvas
+   */
+  toggleFullscreen(): void {
+    this.isFullscreen.update(v => !v);
   }
 
   /**
