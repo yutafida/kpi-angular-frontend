@@ -1,31 +1,18 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-
-import {
-  Chart,
-  registerables,
-  ChartData,
-  ChartOptions
-} from 'chart.js';
-
+import { Chart, registerables, ChartData, ChartOptions} from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
-
-import {
-  BaseChartDirective,
-  provideCharts,
-  withDefaultRegisterables
-} from 'ng2-charts';
-
-// import { HeaderComponent } from '../../shared/header.component/header.component';
-
+import { BaseChartDirective, provideCharts,withDefaultRegisterables } from 'ng2-charts';
 import { KpiMonthlyDashboard } from '../../models/kpi-monthly-dashboard';
-
 import { KpiService } from '../../services/kpi-service';
 import { ReportChart } from '../../models/report-chart';
 import { ChartExportService } from '../../services/chart-export-service';
 import { ReportBuilderService } from '../../services/report-builder-service';
+import { ThemeToggleComponent } from '../theme-toggle.component/theme-toggle.component';
+import { ThemeService } from '../../services/theme.service';
+
 
 Chart.register(...registerables, annotationPlugin);
 
@@ -36,24 +23,29 @@ Chart.register(...registerables, annotationPlugin);
     CommonModule,
     DecimalPipe,
     FormsModule,
-    // HeaderComponent,
     BaseChartDirective,
-    RouterModule
+    RouterModule,
+    ThemeToggleComponent
   ],
   providers: [provideCharts(withDefaultRegisterables())],
   templateUrl: './kpi-dashboard.html',
   styleUrls: ['./kpi-dashboard.css']
 })
+
+
 export class KpiDashboard implements OnInit {
+
+  readonly theme = inject(ThemeService);
+
+
+  
 
   constructor(
     private kpiService: KpiService,
     private chartExportService: ChartExportService,
     private reportBuilderService: ReportBuilderService
   ) {}
-  // =========================================================
-  // SIGNALS
-  // =========================================================
+
 
   data = signal<KpiMonthlyDashboard | null>(null);
   loading = signal(false);
@@ -70,11 +62,43 @@ export class KpiDashboard implements OnInit {
 
   filterType = signal<'MONTH' | 'QUARTER'>('MONTH');
 
-  selectedMonth = signal('MAY');
+  selectedMonth = signal('JUNE');
   selectedQuarter = signal('Q2');
   selectedYear = signal(2026);
 
   activeChartType = signal<'bar'>('bar');
+
+  // =========================================================
+  // THEME-DRIVEN CHART PALETTE
+  // =========================================================
+  //
+  // Centralised colour tokens that adapt to the active theme.
+  // All Chart.js option signals below depend on these so the
+  // canvas re-renders automatically when the user toggles.
+
+  private readonly chartTickColor = computed(() =>
+    
+    this.theme.isDark() ? '#94a3b8' : '#64748b'
+  );
+
+  private readonly chartGridColor = computed(() =>
+    this.theme.isDark() ? 'rgba(148,163,184,0.10)' : 'rgba(148,163,184,0.15)'
+  );
+
+  private readonly chartTooltipBg = computed(() =>
+    this.theme.isDark() ? '#020617' : '#0f172a'
+  );
+
+  private readonly chartThresholdColor = computed(() =>
+    this.theme.isDark() ? '#D4AF37' : '#00264d'
+  );
+
+
+
+  // Semantic performance colours — same in both themes
+  private readonly perfGreen = 'rgba(16,185,129,0.78)';
+  private readonly perfAmber = 'rgba(245,158,11,0.78)';
+  private readonly perfRed = 'rgba(239,68,68,0.78)';
 
   // =========================================================
   // KPI DIMENSION TARGETS
@@ -95,7 +119,7 @@ export class KpiDashboard implements OnInit {
     'Risk Assessment': 75
   });
 
-  
+
 
   selectedTargetDimension = signal<string>('Ops Effectiveness');
 
@@ -240,7 +264,7 @@ export class KpiDashboard implements OnInit {
   });
 
   // =========================================================
-  // MAIN CHART
+  // MAIN CHART  (theme-reactive)
   // =========================================================
 
   mainChartData = computed<ChartData<'bar'> | null>(() => {
@@ -263,126 +287,92 @@ export class KpiDashboard implements OnInit {
           data: values,
           backgroundColor: values.map(v =>
             v >= 75
-              ? 'rgba(16,185,129,0.7)'
+              ? this.perfGreen
               : v >= 60
-              ? 'rgba(245,158,11,0.7)'
-              : 'rgba(239,68,68,0.7)'
+              ? this.perfAmber
+              : this.perfRed
           ),
-          borderColor: '#0B1221',
-          borderWidth: 1
+          borderColor: this.theme.isDark() ? '#0b1a2e' : '#ffffff',
+          borderWidth: 1,
+          borderRadius: 6,
+          borderSkipped: false as any
         }
       ]
     };
   });
 
   // =========================================================
-  // MAIN CHART OPTIONS
+  // MAIN CHART OPTIONS  (theme-reactive)
   // =========================================================
 
-  mainChartOptions = computed<ChartOptions<'bar'>>(() => ({
+  mainChartOptions = computed<ChartOptions<'bar'>>(() => {
 
-    responsive: true,
+    const tick = this.chartTickColor();
+    const grid = this.chartGridColor();
+    const tooltipBg = this.chartTooltipBg();
+    const threshold75 = this.chartThresholdColor();
 
-    maintainAspectRatio: false,
+    return {
 
-    onClick: () => {
-      // Drill-down disabled: chart click no longer opens a component detail view.
-    },
+      responsive: true,
 
-    scales: {
-      y: {
-        beginAtZero: true,
-        max: 100,
-        ticks: {
-          color: '#64748b'
-        }
-      },
-      x: {
-        ticks: {
-          color: '#64748b'
-        }
-      }
-    },
+      maintainAspectRatio: false,
 
-    plugins: {
-
-      legend: {
-        display: false
+      onClick: () => {
+        // Drill-down disabled: chart click no longer opens a component detail view.
       },
 
-      annotation: {
-        annotations: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 100,
+          ticks: { color: tick },
+          grid: { color: grid }
+        },
+        x: {
+          ticks: { color: tick },
+          grid: { display: false }
+        }
+      },
 
-          threshold75: {
-            type: 'line',
-            yMin: 75,
-            yMax: 75,
-            borderColor: '#2563eb',
-            borderWidth: 2,
-            borderDash: [6, 6]
-          },
+      plugins: {
 
-          threshold60: {
-            type: 'line',
-            yMin: 60,
-            yMax: 60,
-            borderColor: '#f59e0b',
-            borderWidth: 2,
-            borderDash: [6, 6]
+        legend: { display: false },
+
+        tooltip: {
+          backgroundColor: tooltipBg,
+          titleColor: '#ffffff',
+          bodyColor: '#ffffff',
+          padding: 10,
+          cornerRadius: 8
+        },
+
+        annotation: {
+          annotations: {
+
+            threshold75: {
+              type: 'line',
+              yMin: 75,
+              yMax: 75,
+              borderColor: threshold75,
+              borderWidth: 2,
+              borderDash: [6, 6]
+            },
+
+            threshold60: {
+              type: 'line',
+              yMin: 60,
+              yMax: 60,
+              borderColor: '#f59e0b',
+              borderWidth: 2,
+              borderDash: [6, 6]
+            }
           }
         }
       }
-    }
-  }));
+    };
+  });
 
-  // =========================================================
-  // BULLET CHART DATA
-  // =========================================================
-
-//   bulletChartData = computed<ChartData<'bar'>>(() => {
-
-//   const reports =
-//     this.data()?.reports || [];
-
-//   const labels =
-//     reports.map(r => r.dimension);
-
-//   const values =
-//     reports.map(r => r.averageOverallScore);
-
-//   return {
-
-//     labels,
-
-//     datasets: [
-
-//       {
-
-//         label: 'Performance',
-
-//         data: values,
-
-//         backgroundColor: values.map(v =>
-
-//           v >= 75
-//             ? 'rgba(16,185,129,0.75)'
-
-//             : v >= 60
-//             ? 'rgba(245,158,11,0.75)'
-
-//             : 'rgba(239,68,68,0.75)'
-//         ),
-
-//         borderRadius: 8,
-
-//         borderSkipped: false,
-
-//         barThickness: 24
-//       }
-//     ]
-//   };
-// });
-  
 
   comparisonBarChartData = computed<ChartData<'bar' | 'line'>>(() => {
 
@@ -441,59 +431,48 @@ export class KpiDashboard implements OnInit {
   });
 
   // =========================================================
-  // COMPARISON OPTIONS
+  // COMPARISON OPTIONS  (theme-reactive)
   // =========================================================
 
-  comparisonBarChartOptions: ChartOptions<'bar' | 'line'> = {
+  comparisonBarChartOptions = computed<ChartOptions<'bar' | 'line'>>(() => {
+    const tick = this.chartTickColor();
+    const grid = this.chartGridColor();
+    const tooltipBg = this.chartTooltipBg();
 
-    responsive: true,
-
-    maintainAspectRatio: false,
-
-    scales: {
-
-      y: {
-        beginAtZero: true,
-        max: 100,
-        ticks: {
-          color: '#64748b'
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 100,
+          ticks: { color: tick },
+          grid: { color: grid }
         },
-        grid: {
-          color: 'rgba(148,163,184,0.15)'
+        x: {
+          ticks: { color: tick },
+          grid: { display: false }
         }
       },
-
-      x: {
-        ticks: {
-          color: '#64748b'
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { color: tick }
         },
-        grid: {
-          display: false
+        tooltip: {
+          backgroundColor: tooltipBg,
+          titleColor: '#ffffff',
+          bodyColor: '#ffffff',
+          padding: 10,
+          cornerRadius: 8
         }
       }
-    },
+    };
+  });
 
-    plugins: {
-
-      legend: {
-        position: 'bottom'
-      },
-
-      tooltip: {
-        backgroundColor: '#0f172a',
-        titleColor: '#ffffff',
-        bodyColor: '#ffffff'
-      }
-    }
-  };
-
-  
-  // =========================================================
-  // BULLET CHART OPTIONS
-  // =========================================================
 
   // =========================================================
-  // BULLET CHART CONFIGURATION
+  // BULLET CHART CONFIGURATION  (theme-reactive)
   // =========================================================
 
   bulletChartData = computed<ChartData<'bar'>>(() => {
@@ -509,10 +488,10 @@ export class KpiDashboard implements OnInit {
           data: values,
           backgroundColor: values.map(v =>
             v >= 75
-              ? 'rgba(16,185,129,0.75)'
+              ? this.perfGreen
               : v >= 60
-              ? 'rgba(245,158,11,0.75)'
-              : 'rgba(239,68,68,0.75)'
+              ? this.perfAmber
+              : this.perfRed
           ),
           borderRadius: 8,
           borderSkipped: false,
@@ -533,17 +512,22 @@ export class KpiDashboard implements OnInit {
       let cleanName = dimensionName.trim().toLowerCase()
         .replace('management', 'mgmt') // Normalizes full word to abbreviation
         .replace(/[^a-z0-9]/g, '');    // Strip out spaces, dashes, etc.
-      
+
       const match = Object.entries(targets).find(([key]) => {
         let cleanKey = key.trim().toLowerCase()
           .replace('management', 'mgmt')
           .replace(/[^a-z0-9]/g, '');
-          
+
         return cleanKey === cleanName || cleanKey.includes(cleanName) || cleanName.includes(cleanKey);
       });
 
       return match ? match[1] : 75; // Fallback to 75 if everything else fails
     };
+
+    // Annotation line color adapts to theme for visibility
+    const lineColor = this.theme.isDark() ? '#D4AF37' : '#0b1a2e';
+    const labelBg = this.theme.isDark() ? '#D4AF37' : '#0b1a2e';
+    const labelColor = this.theme.isDark() ? '#0b1a2e' : '#ffffff';
 
     reports.forEach((report, index) => {
       const target = getTargetValue(report.dimension);
@@ -556,15 +540,15 @@ export class KpiDashboard implements OnInit {
         xMax: target,
         yMin: index,
         yMax: index,
-        borderColor: '#111827',
+        borderColor: lineColor,
         borderWidth: 4,
         drawTime: 'afterDatasetsDraw',
         label: {
           display: true,
           content: `${target}%`,
           position: 'center',
-          backgroundColor: '#111827',
-          color: '#ffffff',
+          backgroundColor: labelBg,
+          color: labelColor,
           padding: { top: 2, bottom: 2, left: 4, right: 4 },
           font: {
             size: 9,
@@ -578,48 +562,44 @@ export class KpiDashboard implements OnInit {
   });
 
 
-  // Keep static chart structure separate
-  bulletChartOptions: ChartOptions<'bar'> = {
-    indexAxis: 'y',
-    responsive: true,
-    maintainAspectRatio: false,
-    animation: {
-      duration: 500
-    },
-    scales: {
-      x: {
-        beginAtZero: true,
-        max: 100,
-        ticks: {
-          color: '#64748b',
-          callback: (value) => `${value}%`
+  // Static-ish chart structure, but ticks/grid react to theme
+  bulletChartOptions = computed<ChartOptions<'bar'>>(() => {
+    const tick = this.chartTickColor();
+    const grid = this.chartGridColor();
+
+    return {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 500 },
+      scales: {
+        x: {
+          beginAtZero: true,
+          max: 100,
+          ticks: {
+            color: tick,
+            callback: (value) => `${value}%`
+          },
+          grid: { color: grid }
         },
-        grid: {
-          color: 'rgba(148,163,184,0.15)'
+        y: {
+          ticks: { color: tick },
+          grid: { display: false }
         }
       },
-      y: {
-        ticks: {
-          color: '#64748b'
-        },
-        grid: {
-          display: false
-        }
+      plugins: {
+        legend: { display: false }
       }
-    },
-    plugins: {
-      legend: {
-        display: false
-      }
-    }
-  };
+    };
+  });
 
   // Combine options and dynamic annotations into a fresh object reference
   finalBulletOptions = computed<ChartOptions<'bar'>>(() => {
+    const base = this.bulletChartOptions();
     return {
-      ...this.bulletChartOptions,
+      ...base,
       plugins: {
-        ...this.bulletChartOptions.plugins,
+        ...base.plugins,
         annotation: {
           annotations: this.bulletAnnotations()
         }
@@ -655,10 +635,6 @@ export class KpiDashboard implements OnInit {
         }
       });
   }
-
-  // =========================================================
-  // CHART CLICK
-  // =========================================================
 
   // =========================================================
   // HELPERS
@@ -713,7 +689,9 @@ export class KpiDashboard implements OnInit {
   }
 
   submitObservation(): void {
+
     const content = this.observationText();
+
     if (!content.trim()) {
       console.warn('Cannot submit empty observation');
       return;
@@ -721,25 +699,35 @@ export class KpiDashboard implements OnInit {
 
     this.submittingObservation.set(true);
 
-    const period = this.filterType() === 'MONTH' ? this.selectedMonth() : this.selectedQuarter();
-    const year = this.selectedYear();
-
-    this.kpiService.submitDashboardObservation(period, year, content)
+    this.kpiService
+      .submitDashboardObservation(
+        this.selectedMonth() as any,
+        this.selectedYear(),
+        content
+      )
       .subscribe({
         next: (response) => {
+
           console.log('Observation submitted successfully:', response);
+
           const key = this.selectedObservationKey();
+
           this.observationNotes.update(notes => ({
             ...notes,
             [key]: ''
           }));
+
           this.submittingObservation.set(false);
           this.showObservationPane.set(false);
         },
+
         error: (error) => {
+
           console.error('Failed to submit observation:', error);
+
           this.submittingObservation.set(false);
         }
       });
   }
+
 }

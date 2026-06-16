@@ -5,6 +5,7 @@ import { KpiMonthlyDashboard } from '../models/kpi-monthly-dashboard';
 import { ReportMonth } from '../shared/report-month';
 import { AirComponentMonthlyReport } from '../models/air-component-monthly-report';
 import { ReportSubmissionLog } from '../models/report-submission-log';
+import { KpiReportWriteUp } from '../models/kpi-report-write-up';
 
 
 
@@ -74,15 +75,24 @@ export class KpiService {
     );
   }
 
-  submitDashboardObservation(period: string, year: number, content: string): Observable<any> {
+  
+  submitDashboardObservation(
+    reportMonth: ReportMonth,
+    reportYear: number,
+    content: string
+  ): Observable<any> {
+
     const payload = {
-      period,
-      year,
+      reportMonth,
+      reportYear,
       content,
       timestamp: new Date().toISOString()
     };
 
-    return this.http.post(`${this.baseUrl}/observations/dashboard`, payload);
+    return this.http.post(
+      `${this.baseUrl}/observations/dashboard`,
+      payload
+    );
   }
 
   submitComponentObservation(
@@ -113,14 +123,39 @@ export class KpiService {
     );
   }
 
-  submitKpiReport(period: string, year: number, content: string): Observable<any> {
+
+  submitKpiReport(
+    reportMonth: ReportMonth,
+    reportYear: number,
+    content: string
+  ): Observable<any> {
+
     const payload = {
-      period,
-      year,
+      reportMonth,
+      reportYear,
       content,
       timestamp: new Date().toISOString()
     };
 
-    return this.http.post(`${this.baseUrl}/reports/generate`, payload);
+    console.log('Sending KPI Report:', payload);
+
+    return this.http.post(
+      `${this.baseUrl}/reports/generate`,
+      payload
+    );
   }
+
+  getReport(
+    reportMonth: ReportMonth,
+    reportYear: number
+  ): Observable<KpiReportWriteUp> {
+
+    return this.http.get<KpiReportWriteUp>(
+      `${this.baseUrl}/reports/${reportMonth}/${reportYear}`
+    );
+  }
+
+
+  
+  
 }

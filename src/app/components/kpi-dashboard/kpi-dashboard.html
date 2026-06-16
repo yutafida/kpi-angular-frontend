@@ -1,785 +1,483 @@
-<div class="min-h-screen bg-gradient-to-br from-slate-100 to-slate-200 text-slate-800 font-sans selection:bg-[#008751] selection:text-white antialiased">
+<div class="min-h-screen bg-slate-100 dark:bg-naf-navy text-slate-800 dark:text-slate-200 font-sans selection:bg-naf-gold selection:text-naf-navy antialiased transition-colors duration-300">
 
-  <!-- 🔷 HEADER -->
-  
+  <!-- ============================================================
+       HEADER  (matches DOPLANS launcher)
+       ============================================================ -->
+  <header class="sticky top-0 z-50 bg-white/90 dark:bg-naf-navy/95 backdrop-blur-md border-b border-slate-200 dark:border-naf-gold/15 shadow-sm dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Gold top accent line -->
+      <div class="h-[2px] bg-gradient-to-r from-transparent via-naf-gold to-transparent opacity-60"></div>
 
-<div class="sticky top-0 z-50 bg-[#00264d]/95 backdrop-blur-md border-b border-[#D4AF37]/15 shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
+      <div class="flex items-center justify-between h-16 sm:h-20">
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6">
-
-    <!-- Gold top accent line -->
-    <div class="h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent opacity-60"></div>
-
-    <div class="flex items-center justify-between h-14 sm:h-16">
-
-      <!-- ── LEFT: NAF Identity ──
-           Gestalt: Proximity — logo + text grouped as one identity unit -->
-      <div class="flex items-center gap-3 min-w-0">
-
-        <!-- NAF Eagle Crest Mark -->
-        <div class="relative w-9 h-9 sm:w-10 sm:h-10 bg-[#D4AF37] rounded-[3px] flex items-center justify-center flex-shrink-0 shadow-lg shadow-[#D4AF37]/20">
-          <!-- Stylized NAF Eagle -->
-          <svg class="w-5 h-5 sm:w-6 sm:h-6 text-[#00264d]" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C12 2 8 5 8 9C8 11.5 9.5 13 10.5 13.5L9 18H11L12 15L13 18H15L13.5 13.5C14.5 13 16 11.5 16 9C16 5 12 2 12 2ZM12 4.5C12.8 5.8 14 7.5 14 9C14 10.5 13 11.5 12 12C11 11.5 10 10.5 10 9C10 7.5 11.2 5.8 12 4.5Z"/>
-            <!-- Wings -->
-            <path d="M8 9L2 7L4 9L1 11L8 10.5" opacity="0.85"/>
-            <path d="M16 9L22 7L20 9L23 11L16 10.5" opacity="0.85"/>
-            <!-- Star above eagle -->
-            <circle cx="12" cy="1.2" r="0.7"/>
-          </svg>
-        </div>
-
-        <!-- Identity Text -->
-        <div class="min-w-0">
-          <div class="text-white font-bold text-sm sm:text-[15px] tracking-wide leading-tight truncate">
-            Nigerian Air Force
+        <!-- ── LEFT: Branding ── -->
+        <div class="flex items-center gap-4">
+          <div class="relative group cursor-pointer">
+            <div class="absolute inset-0 bg-naf-gold/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div class="relative w-11 h-11 bg-gradient-to-br from-naf-gold to-yellow-600 rounded-xl flex items-center justify-center shadow-lg border border-white/20">
+              <svg class="w-6 h-6 text-naf-navy" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C12 2 8 5 8 9C8 11.5 9.5 13 10.5 13.5L9 18H11L12 15L13 18H15L13.5 13.5C14.5 13 16 11.5 16 9C16 5 12 2 12 2ZM12 4.5C12.8 5.8 14 7.5 14 9C14 10.5 13 11.5 12 12C11 11.5 10 10.5 10 9C10 7.5 11.2 5.8 12 4.5Z"/>
+                <path d="M8 9L2 7L4 9L1 11L8 10.5" opacity="0.85"/>
+                <path d="M16 9L22 7L20 9L23 11L16 10.5" opacity="0.85"/>
+                <circle cx="12" cy="1.2" r="0.7"/>
+              </svg>
+            </div>
           </div>
-          <div class="text-[#D4AF37]/70 font-semibold text-[10px] sm:text-[11px] uppercase tracking-[0.18em] leading-tight truncate">
-            Performance Command
+
+          <div class="hidden sm:block">
+            <h1 class="text-lg font-black tracking-tight text-naf-navy dark:text-white leading-none">DOPLANS</h1>
+            <p class="text-[10px] font-bold text-naf-gold uppercase tracking-[0.25em] mt-1">KPI Command Center</p>
           </div>
         </div>
-      </div>
 
-      <!-- ── CENTER: Primary Navigation ──
-           Fitts' Law: Larger click targets, clear labels
-           Visual hierarchy: Primary action (DOPLANS) is gold, others are subtle -->
-      <nav class="hidden lg:flex items-center gap-1" role="navigation" aria-label="Main navigation">
+        <!-- ── CENTER: Navigation (DOPLANS · KPI Report · Compliance) ── -->
+        <nav class="hidden lg:flex items-center gap-1" role="navigation" aria-label="Main navigation">
 
-        <!-- Primary Action: DOPLANS (Gold — stands out) -->
-        <a
-          href="http://localhost:4040/kpi/doplans-dashboard"
-          class="group flex items-center gap-2 px-4 py-2 rounded-[3px] bg-[#D4AF37] text-[#00264d] font-bold text-[11px] uppercase tracking-[0.12em] hover:bg-[#e6c44a] transition-colors duration-200 shadow-sm"
-          aria-label="Open DOPLANS Dashboard">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13h2v8H3zM9 9h2v12H9zM15 5h2v16h-2zM21 1h2v20h-2z"/>
-          </svg>
-          DOPLANS
-        </a>
+          <!-- Primary Action: DOPLANS (Gold) -->
+          <a routerLink="/kpi-dashboard"
+             class="flex items-center gap-2 px-4 py-2 rounded-lg bg-naf-gold text-naf-navy font-bold text-[11px] uppercase tracking-[0.12em] hover:bg-naf-goldLight transition-colors duration-200 shadow-sm"
+             aria-label="Open KPI Dashboard">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 13h2v8H3zM9 9h2v12H9zM15 5h2v16h-2zM21 1h2v20h-2z"/>
+            </svg>
+            Dashboard
+          </a>
 
-        <!-- Secondary Actions (Ghost style — lower visual weight) -->
-        <a
-          routerLink="/kpi-report"
-          class="flex items-center gap-2 px-3.5 py-2 rounded-[3px] text-blue-200/80 font-semibold text-[11px] uppercase tracking-[0.12em] hover:text-white hover:bg-white/10 transition-colors duration-200"
-          aria-label="View KPI Report">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-          </svg>
-          KPI Report
-        </a>
+          <!-- Secondary: KPI Report -->
+          <a routerLink="/kpi-report"
+             class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-500 dark:text-blue-200/80 font-semibold text-[11px] uppercase tracking-[0.12em] hover:text-naf-navy dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors duration-200"
+             aria-label="View KPI Report">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            KPI Report
+          </a>
 
-        <a
-          routerLink="/report-submission-compliance"
-          class="flex items-center gap-2 px-3.5 py-2 rounded-[3px] text-blue-200/80 font-semibold text-[11px] uppercase tracking-[0.12em] hover:text-white hover:bg-white/10 transition-colors duration-200"
-          aria-label="View Compliance Report">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          Compliance
-        </a>
+          <!-- Secondary: Compliance -->
+          <a routerLink="/report-submission-compliance"
+             class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-500 dark:text-blue-200/80 font-semibold text-[11px] uppercase tracking-[0.12em] hover:text-naf-navy dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors duration-200"
+             aria-label="View Compliance Report">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Compliance
+          </a>
+        </nav>
 
-      </nav>
+        <!-- ── RIGHT: Status + Theme + Logout ── -->
+        <div class="flex items-center gap-3 md:gap-4">
 
-      <!-- ── RIGHT: Status + Mobile Menu ──
-           Single status indicator (not duplicated in hero)
-           Progressive disclosure: mobile menu hidden until needed -->
-      <div class="flex items-center gap-3">
+          <!-- System Status Pill -->
+          <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/25">
+            <span class="relative flex h-1.5 w-1.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-60"></span>
+              <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+            </span>
+            <span class="text-emerald-700 dark:text-emerald-400 font-bold text-[10px] uppercase tracking-[0.15em]">Operational</span>
+          </div>
 
-        <!-- System Status Pill -->
-        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#008751]/10 border border-[#008751]/25">
-          <span class="relative flex h-1.5 w-1.5">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#008751] opacity-60"></span>
-            <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#008751]"></span>
-          </span>
-          <span class="text-[#008751] font-bold text-[10px] uppercase tracking-[0.15em]">Operational</span>
+          <!-- THEME TOGGLE (global component) -->
+          <app-theme-toggle />
+
+          <div class="h-6 w-px bg-slate-200 dark:bg-white/10"></div>
+
+          <!-- Logout -->
+          <a href="/logout"
+             class="flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-all duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+            </svg>
+            <span class="hidden md:inline">Exit</span>
+          </a>
         </div>
-
-        <!-- Mobile Menu Button (lg:hidden) -->
-        <!-- <button
-          (click)="mobileMenuOpen = !mobileMenuOpen"
-          class="lg:hidden flex items-center justify-center w-9 h-9 rounded-[3px] text-blue-200/80 hover:text-white hover:bg-white/10 transition-colors"
-          aria-label="Toggle navigation menu"
-          aria-expanded="false">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-          </svg>
-        </button> -->
       </div>
     </div>
-  </div>
+  </header>
 
-  
-</div>
+  <!-- ============================================================
+       MAIN CONTENT
+       ============================================================ -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12">
 
+    <!-- INTRO -->
+    <div class="mb-8">
+      <h2 class="text-2xl md:text-3xl font-black text-naf-navy dark:text-white tracking-tight">
+        Operational <span class="text-naf-gold">Overview</span>
+      </h2>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-lg">
+        Manage key performance indicators, view generated reports, and analyze live mission data.
+      </p>
+    </div>
 
-  <div class="max-w-7xl mx-auto px-6 py-8 space-y-6">
+    @if (loading()) {
+      <!-- SKELETON LOADER -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-pulse">
+        <div class="lg:col-span-2 h-32 rounded-2xl bg-slate-200 dark:bg-white/5"></div>
+        <div class="h-32 rounded-2xl bg-slate-200 dark:bg-white/5"></div>
+        <div class="h-32 rounded-2xl bg-slate-200 dark:bg-white/5"></div>
+        <div class="h-32 rounded-2xl bg-slate-200 dark:bg-white/5"></div>
+        <div class="h-32 rounded-2xl bg-slate-200 dark:bg-white/5"></div>
+        <div class="lg:col-span-2 h-32 rounded-2xl bg-slate-200 dark:bg-white/5"></div>
+      </div>
+    }
 
-    <!-- 🔷 MAIN ANALYTICS -->
     @if (data(); as dashboard) {
-      
-      <!-- 🔷 EXECUTIVE SUMMARY PANEL -->
-      <!-- Bento-style Grid Layout -->
+
+      <!-- ============================================================
+           EXECUTIVE SUMMARY PANEL  (Bento grid)
+           ============================================================ -->
       <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        
-        <!-- Main Score Card (Span 2 on desktop) -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden group hover:shadow-md transition-all lg:col-span-2">
-          <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-            <svg class="w-24 h-24 text-[#003366]" fill="currentColor" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+
+        <!-- Main Score Card (span 2) -->
+        <div class="bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 relative overflow-hidden group hover:shadow-xl hover:border-naf-gold/30 transition-all lg:col-span-2">
+          <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity text-naf-navy dark:text-naf-gold">
+            <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
           </div>
-          <h3 class="text-[10px] font-bold uppercase text-slate-400 tracking-[0.2em] mb-2">NAF Average Score</h3>
+          <h3 class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-[0.2em] mb-2">NAF Average Score</h3>
           <div class="flex items-baseline gap-3">
-            <span class="text-5xl font-black text-[#003366] tabular-nums tracking-tight">
-              {{ dashboard.nafAverageScore | number:'1.1-1' }}<span class="text-2xl text-slate-400 ml-1">%</span>
+            <span class="text-5xl font-black text-naf-navy dark:text-white tabular-nums tracking-tight">
+              {{ dashboard.nafAverageScore | number:'1.1-1' }}<span class="text-2xl text-slate-400 dark:text-slate-500 ml-1">%</span>
             </span>
-             <span
-            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ring-1 ring-inset"
-            [ngClass]="
-              dashboard.nafAverageScore >= 75 ? 'bg-emerald-50 text-emerald-700 ring-emerald-600/20' :
-              dashboard.nafAverageScore >= 60 ? 'bg-amber-50 text-amber-700 ring-amber-600/20' :
-              'bg-red-50 text-red-700 ring-red-600/20'
-            ">
-            {{ dashboard.nafRating }}
-          </span>
+            <span
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ring-1 ring-inset"
+              [ngClass]="
+                dashboard.nafAverageScore >= 75 ? 'bg-emerald-50 text-emerald-700 ring-emerald-600/20 dark:bg-emerald-500/10 dark:text-emerald-400 dark:ring-emerald-500/30' :
+                dashboard.nafAverageScore >= 60 ? 'bg-amber-50 text-amber-700 ring-amber-600/20 dark:bg-amber-500/10 dark:text-amber-400 dark:ring-amber-500/30' :
+                'bg-red-50 text-red-700 ring-red-600/20 dark:bg-red-500/10 dark:text-red-400 dark:ring-red-500/30'
+              ">
+              {{ dashboard.nafRating }}
+            </span>
           </div>
-          <div class="mt-4 w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-            <div class="bg-[#003366] h-full rounded-full transition-all duration-1000" [style.width.%]="dashboard.nafAverageScore"></div>
+          <div class="mt-4 w-full bg-slate-100 dark:bg-white/5 rounded-full h-1.5 overflow-hidden">
+            <div class="bg-gradient-to-r from-naf-navy to-naf-gold dark:from-naf-gold dark:to-naf-goldLight h-full rounded-full transition-all duration-1000" [style.width.%]="dashboard.nafAverageScore"></div>
           </div>
         </div>
 
-        <!-- Best Theatre -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden group hover:shadow-md hover:border-[#008751]/30 transition-all">
+        <!-- Top Performer -->
+        <div class="bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 relative overflow-hidden group hover:shadow-xl hover:border-emerald-500/30 transition-all">
           <div class="flex justify-between items-start mb-4">
-            <h3 class="text-[10px] font-bold uppercase text-slate-400 tracking-[0.2em]">Top Performer</h3>
-            <div class="p-1.5 bg-emerald-50 rounded text-[#008751]">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+            <h3 class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-[0.2em]">Top Performer</h3>
+            <div class="p-1.5 bg-emerald-50 dark:bg-emerald-500/10 rounded text-emerald-600 dark:text-emerald-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
             </div>
           </div>
-          <p class="text-lg font-bold text-slate-800 truncate mb-1">{{ dashboard.bestTheatre }}</p>
-          <div class="text-xs text-slate-500 font-medium">Leading Theatre Command</div>
+          <p class="text-lg font-bold text-slate-800 dark:text-white truncate mb-1">{{ dashboard.bestTheatre }}</p>
+          <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Leading Theatre Command</div>
         </div>
 
-        <!-- Attention Required -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden group hover:shadow-md hover:border-red-600/30 transition-all">
+        <!-- Critical -->
+        <div class="bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 relative overflow-hidden group hover:shadow-xl hover:border-red-500/30 transition-all">
           <div class="flex justify-between items-start mb-4">
-            <h3 class="text-[10px] font-bold uppercase text-slate-400 tracking-[0.2em]">Critical</h3>
-            <div class="p-1.5 bg-red-50 rounded text-red-600">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            <h3 class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-[0.2em]">Critical</h3>
+            <div class="p-1.5 bg-red-50 dark:bg-red-500/10 rounded text-red-600 dark:text-red-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
             </div>
           </div>
-          <p class="text-lg font-bold text-slate-800 truncate mb-1">{{ dashboard.attentionTheatre }}</p>
-          <div class="text-xs text-slate-500 font-medium">Requires Immediate Action</div>
+          <p class="text-lg font-bold text-slate-800 dark:text-white truncate mb-1">{{ dashboard.attentionTheatre }}</p>
+          <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Requires Immediate Action</div>
         </div>
 
-        <!-- Secondary Metrics Row -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-center hover:shadow-md transition-all">
-          <p class="text-[10px] font-bold uppercase text-slate-400 tracking-[0.2em] mb-2">On Target (≥75%)</p>
-          <p class="text-3xl font-black text-[#008751] tabular-nums">{{ aboveTargetCount() }}</p>
+        <!-- On Target -->
+        <div class="bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 flex flex-col justify-center hover:shadow-xl transition-all">
+          <p class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-[0.2em] mb-2">On Target (≥75%)</p>
+          <p class="text-3xl font-black text-emerald-600 dark:text-emerald-400 tabular-nums">{{ aboveTargetCount() }}</p>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-center hover:shadow-md transition-all">
-          <p class="text-[10px] font-bold uppercase text-slate-400 tracking-[0.2em] mb-2">Below Target</p>
-          <p class="text-3xl font-black text-red-700 tabular-nums">{{ belowTargetCount() }}</p>
+        <!-- Below Target -->
+        <div class="bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 flex flex-col justify-center hover:shadow-xl transition-all">
+          <p class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-[0.2em] mb-2">Below Target</p>
+          <p class="text-3xl font-black text-red-600 dark:text-red-400 tabular-nums">{{ belowTargetCount() }}</p>
         </div>
 
-        <!-- Empty Spacers for layout balance if needed, or extend others -->
-        <div class="lg:col-span-2 bg-gradient-to-r from-[#003366] to-[#004080] rounded-xl shadow-lg p-6 flex items-center justify-between text-white">
+        <!-- Operational Cycle banner -->
+        <div class="lg:col-span-2 bg-gradient-to-r from-naf-navy to-[#004080] dark:from-naf-navyLight dark:to-naf-navy rounded-2xl shadow-lg p-6 flex items-center justify-between text-white border border-naf-gold/10">
           <div>
-            <h4 class="font-bold text-sm text-[#D4AF37] uppercase tracking-wider mb-1">Operational Cycle</h4>
-            <p class="text-xs text-blue-100 opacity-80">Current data reflects active fiscal year performance metrics.</p>
+            <h4 class="font-bold text-sm text-naf-gold uppercase tracking-wider mb-1">Operational Cycle</h4>
+            <p class="text-xs text-blue-100 dark:text-slate-300 opacity-80">Current data reflects active fiscal year performance metrics.</p>
           </div>
-          <div class="h-10 w-10 rounded-full border-2 border-[#D4AF37] flex items-center justify-center">
-            <span class="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
+          <div class="h-10 w-10 rounded-full border-2 border-naf-gold flex items-center justify-center">
+            <span class="w-2 h-2 rounded-full bg-naf-gold animate-pulse"></span>
           </div>
         </div>
-
       </section>
 
 
-      <!-- 🔷 CONTROL DECK (Unified Toolbar) -->
-      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-2 flex flex-col lg:flex-row justify-between items-center gap-4">
-        
-        <!-- 🔷 FILTERS (Left) -->
+      <!-- ============================================================
+           CONTROL DECK  (toolbar)
+           ============================================================ -->
+      <div class="mt-6 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-2 flex flex-col lg:flex-row justify-between items-center gap-4">
+
+        <!-- FILTERS -->
         <div class="flex flex-wrap items-center gap-4 w-full lg:w-auto justify-center lg:justify-start px-2 py-1">
-          
-          <!-- Logic Mode Toggle -->
-          <div class="flex items-center bg-slate-100 rounded-lg p-1 border border-slate-200">
-            <button (click)="setFilterType('MONTH')" [class.bg-white]="filterType()==='MONTH'" [class.shadow-sm]="filterType()==='MONTH'" [class.text-[#003366]]="filterType()==='MONTH'" class="px-4 py-1.5 text-[10px] font-bold uppercase transition-all rounded-md hover:text-slate-600">Month</button>
-            <button (click)="setFilterType('QUARTER')" [class.bg-white]="filterType()==='QUARTER'" [class.shadow-sm]="filterType()==='QUARTER'" [class.text-[#003366]]="filterType()==='QUARTER'" class="px-4 py-1.5 text-[10px] font-bold uppercase transition-all rounded-md hover:text-slate-600">Quarter</button>
+
+          <!-- Mode toggle -->
+          <div class="flex items-center bg-slate-100 dark:bg-white/5 rounded-lg p-1 border border-slate-200 dark:border-white/10">
+            <button (click)="setFilterType('MONTH')"
+                    [class.bg-white]="filterType()==='MONTH'"
+                    [class.dark:bg-naf-navy]="filterType()==='MONTH'"
+                    [class.shadow-sm]="filterType()==='MONTH'"
+                    [class.text-naf-navy]="filterType()==='MONTH'"
+                    [class.dark:text-naf-gold]="filterType()==='MONTH'"
+                    class="px-4 py-1.5 text-[10px] font-bold uppercase transition-all rounded-md hover:text-slate-600 dark:hover:text-slate-200 text-slate-500 dark:text-slate-400">Month</button>
+            <button (click)="setFilterType('QUARTER')"
+                    [class.bg-white]="filterType()==='QUARTER'"
+                    [class.dark:bg-naf-navy]="filterType()==='QUARTER'"
+                    [class.shadow-sm]="filterType()==='QUARTER'"
+                    [class.text-naf-navy]="filterType()==='QUARTER'"
+                    [class.dark:text-naf-gold]="filterType()==='QUARTER'"
+                    class="px-4 py-1.5 text-[10px] font-bold uppercase transition-all rounded-md hover:text-slate-600 dark:hover:text-slate-200 text-slate-500 dark:text-slate-400">Quarter</button>
           </div>
 
-          <div class="w-px h-6 bg-slate-200 hidden md:block"></div>
+          <div class="w-px h-6 bg-slate-200 dark:bg-white/10 hidden md:block"></div>
 
           @if (filterType() === 'MONTH') {
             <div class="flex flex-col">
-              <label class="text-[9px] font-bold uppercase text-slate-400 tracking-wider mb-0.5 ml-1">Timeline</label>
-              <select class="bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 rounded-md px-3 py-1.5 focus:ring-2 focus:ring-[#003366] focus:border-[#003366] outline-none w-32 hover:bg-slate-100 transition-colors cursor-pointer" (change)="selectedMonth.set($any($event.target).value); loadData()">
+              <label class="text-[9px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-0.5 ml-1">Timeline</label>
+              <select class="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-700 dark:text-slate-200 rounded-md px-3 py-1.5 focus:ring-2 focus:ring-naf-gold/40 focus:border-naf-gold outline-none w-32 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
+                      (change)="selectedMonth.set($any($event.target).value); loadData()">
                 @for (m of months; track m) { <option [value]="m" [selected]="m === selectedMonth()">{{ m }}</option> }
               </select>
             </div>
           }
 
           <div class="flex flex-col">
-            <label class="text-[9px] font-bold uppercase text-slate-400 tracking-wider mb-0.5 ml-1">Fiscal Year</label>
-            <input type="number" [value]="selectedYear()" (change)="selectedYear.set(+$any($event.target).value); loadData()" class="bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 w-24 rounded-md px-3 py-1.5 focus:ring-2 focus:ring-[#003366] focus:border-[#003366] outline-none hover:bg-slate-100 transition-colors" />
+            <label class="text-[9px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-0.5 ml-1">Fiscal Year</label>
+            <input type="number" [value]="selectedYear()" (change)="selectedYear.set(+$any($event.target).value); loadData()"
+                   class="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-700 dark:text-slate-200 w-24 rounded-md px-3 py-1.5 focus:ring-2 focus:ring-naf-gold/40 focus:border-naf-gold outline-none hover:bg-slate-100 dark:hover:bg-white/10 transition-colors" />
           </div>
         </div>
 
-        <!-- 🔷 VIEW CONTROLS (Right) -->
+        <!-- VIEW CONTROLS -->
         <div class="flex items-center gap-2 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0 px-2">
-          <div class="text-[10px] font-bold uppercase text-slate-300 tracking-widest whitespace-nowrap mr-2">Views</div>
-          
-          <button (click)="toggleChart()" class="flex items-center gap-1.5 px-3 py-2 text-[10px] font-bold uppercase rounded-lg border transition-all duration-200 whitespace-nowrap"
-            [ngClass]="showChart() ? 'bg-[#003366] text-white border-[#003366] shadow-md' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50 hover:text-slate-700'">
+          <div class="text-[10px] font-bold uppercase text-slate-300 dark:text-slate-600 tracking-widest whitespace-nowrap mr-2">Views</div>
+
+          <button (click)="toggleChart()"
+                  class="flex items-center gap-1.5 px-3 py-2 text-[10px] font-bold uppercase rounded-lg border transition-all duration-200 whitespace-nowrap"
+                  [ngClass]="showChart() ? 'bg-naf-navy dark:bg-naf-gold text-white dark:text-naf-navy border-naf-navy dark:border-naf-gold shadow-md' : 'bg-white dark:bg-white/5 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/10 hover:text-slate-700 dark:hover:text-slate-200'">
             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
             Matrix
           </button>
-          
-          <button (click)="toggleDimensionTable()" class="flex items-center gap-1.5 px-3 py-2 text-[10px] font-bold uppercase rounded-lg border transition-all duration-200 whitespace-nowrap"
-            [ngClass]="showDimensionTable() ? 'bg-[#003366] text-white border-[#003366] shadow-md' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50 hover:text-slate-700'">
+
+          <button (click)="toggleDimensionTable()"
+                  class="flex items-center gap-1.5 px-3 py-2 text-[10px] font-bold uppercase rounded-lg border transition-all duration-200 whitespace-nowrap"
+                  [ngClass]="showDimensionTable() ? 'bg-naf-navy dark:bg-naf-gold text-white dark:text-naf-navy border-naf-navy dark:border-naf-gold shadow-md' : 'bg-white dark:bg-white/5 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/10 hover:text-slate-700 dark:hover:text-slate-200'">
             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
             Dim.
           </button>
-          
-          <button (click)="toggleTheatreTable()" class="flex items-center gap-1.5 px-3 py-2 text-[10px] font-bold uppercase rounded-lg border transition-all duration-200 whitespace-nowrap"
-            [ngClass]="showTheatreTable() ? 'bg-[#003366] text-white border-[#003366] shadow-md' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50 hover:text-slate-700'">
+
+          <button (click)="toggleTheatreTable()"
+                  class="flex items-center gap-1.5 px-3 py-2 text-[10px] font-bold uppercase rounded-lg border transition-all duration-200 whitespace-nowrap"
+                  [ngClass]="showTheatreTable() ? 'bg-naf-navy dark:bg-naf-gold text-white dark:text-naf-navy border-naf-navy dark:border-naf-gold shadow-md' : 'bg-white dark:bg-white/5 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/10 hover:text-slate-700 dark:hover:text-slate-200'">
             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
             Theatre
           </button>
-          
-          <button (click)="toggleComparisonChart()" class="flex items-center gap-1.5 px-3 py-2 text-[10px] font-bold uppercase rounded-lg border transition-all duration-200 whitespace-nowrap"
-            [ngClass]="showComparisonChart() ? 'bg-[#003366] text-white border-[#003366] shadow-md' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50 hover:text-slate-700'">
-             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+
+          <button (click)="toggleComparisonChart()"
+                  class="flex items-center gap-1.5 px-3 py-2 text-[10px] font-bold uppercase rounded-lg border transition-all duration-200 whitespace-nowrap"
+                  [ngClass]="showComparisonChart() ? 'bg-naf-navy dark:bg-naf-gold text-white dark:text-naf-navy border-naf-navy dark:border-naf-gold shadow-md' : 'bg-white dark:bg-white/5 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/10 hover:text-slate-700 dark:hover:text-slate-200'">
+            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
             Comp.
           </button>
-          
-          <button (click)="toggleBulletChart()" class="flex items-center gap-1.5 px-3 py-2 text-[10px] font-bold uppercase rounded-lg border transition-all duration-200 whitespace-nowrap"
-            [ngClass]="showBulletChart() ? 'bg-[#003366] text-white border-[#003366] shadow-md' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50 hover:text-slate-700'">
+
+          <button (click)="toggleBulletChart()"
+                  class="flex items-center gap-1.5 px-3 py-2 text-[10px] font-bold uppercase rounded-lg border transition-all duration-200 whitespace-nowrap"
+                  [ngClass]="showBulletChart() ? 'bg-naf-navy dark:bg-naf-gold text-white dark:text-naf-navy border-naf-navy dark:border-naf-gold shadow-md' : 'bg-white dark:bg-white/5 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/10 hover:text-slate-700 dark:hover:text-slate-200'">
             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
             Bullet
           </button>
-          <button (click)="toggleObservationPane()" class="sticky-note-toggle flex items-center gap-1.5 px-3 py-2 text-[10px] font-bold uppercase rounded-lg border transition-all duration-200 whitespace-nowrap"
-            [ngClass]="showObservationPane() ? 'bg-[#003366] text-white border-[#003366] shadow-md' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50 hover:text-slate-700'">
+
+          <button (click)="toggleObservationPane()"
+                  class="flex items-center gap-1.5 px-3 py-2 text-[10px] font-bold uppercase rounded-lg border transition-all duration-200 whitespace-nowrap"
+                  [ngClass]="showObservationPane() ? 'bg-naf-navy dark:bg-naf-gold text-white dark:text-naf-navy border-naf-navy dark:border-naf-gold shadow-md' : 'bg-white dark:bg-white/5 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/10 hover:text-slate-700 dark:hover:text-slate-200'">
             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
             Note
           </button>
         </div>
       </div>
 
-      @if (showObservationPane()) {
-        <section class="observation-float-panel bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden transition-all duration-300">
-          <div class="px-6 py-5 border-b border-slate-100 bg-slate-50/95 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+      <!-- ============================================================
+           MAIN CHART  (Theatre Readiness Matrix)
+           ============================================================ -->
+      @if (showChart()) {
+        <section class="mt-6 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 overflow-hidden hover:shadow-xl transition-shadow duration-300">
+          <div class="px-6 py-5 border-b border-slate-100 dark:border-white/5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/30 dark:bg-white/5">
             <div>
-              <h3 class="text-sm font-bold uppercase tracking-widest text-slate-800">{{ observationTitle() }}</h3>
-              <p class="text-xs text-slate-500 mt-1">Persistent note linked to the current report context.</p>
+              <h3 class="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-widest flex items-center gap-2">
+                <span class="w-2 h-2 rounded-sm bg-naf-gold"></span>
+                Theater Readiness Matrix
+              </h3>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-medium">Interact with data points to access diagnostic deep-dive</p>
             </div>
-            <div class="flex items-center gap-2">
-              <span class="text-[10px] uppercase font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-full">{{ selectedObservationLabel() }}</span>
-              <button (click)="toggleObservationPane()" class="inline-flex items-center justify-center w-8 h-8 rounded-full border border-slate-300 text-slate-600 hover:bg-slate-100 transition-all">
-                ✕
+
+            <div class="flex items-center gap-3">
+              <button (click)="insertChartIntoReport('mainReadinessChart', 'Theatre Readiness Matrix', 'BAR')"
+                      [disabled]="isChartAlreadyAdded('Theatre Readiness Matrix')"
+                      class="px-4 py-2 rounded-lg text-white dark:text-naf-navy text-[10px] font-bold uppercase tracking-wider shadow-sm transition-all"
+                      [ngClass]="isChartAlreadyAdded('Theatre Readiness Matrix') ? 'bg-slate-400 dark:bg-slate-600 cursor-not-allowed opacity-70' : 'bg-naf-navy dark:bg-naf-gold hover:bg-[#004080] dark:hover:bg-naf-goldLight'">
+                {{ isChartAlreadyAdded('Theatre Readiness Matrix') ? 'Already Added' : 'Add To Report' }}
               </button>
+
+              <div class="flex bg-slate-200/50 dark:bg-white/5 p-1 rounded-lg border border-slate-200 dark:border-white/10">
+                @for (t of ['bar']; track t) {
+                  <button (click)="setChartType($any(t))"
+                          [class.bg-white]="activeChartType()===t"
+                          [class.dark:bg-naf-navy]="activeChartType()===t"
+                          [class.shadow-sm]="activeChartType()===t"
+                          class="px-4 py-1.5 text-[10px] font-bold uppercase rounded-md transition-all text-slate-600 dark:text-slate-300">{{ t }}</button>
+                }
+              </div>
             </div>
           </div>
-          <form (ngSubmit)="submitObservation()" class="flex flex-col h-full">
-            <div class="p-6 flex-1 flex flex-col">
-              <textarea
-                class="w-full flex-1 min-h-[220px] rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003366] resize-none"
-                placeholder="Write your observation here..."
-                [value]="observationText()"
-                (input)="setObservationText($any($event.target).value)"
-                [disabled]="submittingObservation()"
-                required>
-              </textarea>
-            </div>
-            <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-100 bg-slate-50/50">
-              <button
-                type="button"
-                (click)="toggleObservationPane()"
-                class="px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                [disabled]="submittingObservation()">
-                Cancel
-              </button>
-              <button
-                type="submit"
-                class="px-6 py-2 text-sm font-bold uppercase tracking-wider rounded-lg bg-[#003366] text-white hover:bg-[#004080] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                [disabled]="submittingObservation() || !observationText().trim()">
-                @if (!submittingObservation()) {
-                  <span>Submit</span>
-                } @else {
-                  <span class="animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
-                  <span>Submitting...</span>
-                }
-              </button>
-            </div>
-          </form>
+
+          <div class="p-6 relative h-[450px] bg-white dark:bg-naf-navyLight">
+            @if (mainChartData()) {
+              <canvas id="mainReadinessChart" baseChart
+                      [data]="mainChartData()!"
+                      [options]="mainChartOptions()!"
+                      [type]="activeChartType()"></canvas>
+            }
+          </div>
         </section>
       }
 
-      <!-- INTERACTIVE CHART -->
-
-      @if (showChart()) {
-
-      <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-lg transition-shadow duration-300">
-
-        <!-- HEADER -->
-        <div class="px-6 py-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/30">
-
-          <!-- TITLE -->
-          <div>
-            <h3 class="text-sm font-bold text-slate-800 uppercase tracking-widest flex items-center gap-2">
-              <span class="w-2 h-2 rounded-sm bg-[#D4AF37]"></span>
-              Theater Readiness Matrix
+      <!-- ============================================================
+           COMPARISON CHART
+           ============================================================ -->
+      @if (showComparisonChart()) {
+        <section class="mt-6 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 overflow-hidden hover:shadow-xl transition-shadow duration-300">
+          <div class="px-6 py-5 border-b border-slate-100 dark:border-white/5 bg-slate-50/30 dark:bg-white/5 flex justify-between items-center">
+            <h3 class="text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-white flex items-center gap-2">
+              <svg class="w-4 h-4 text-naf-navy dark:text-naf-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+              </svg>
+              KPI Dimensions Comparison
             </h3>
 
-            <p class="text-[11px] text-slate-500 mt-1 font-medium">
-              Interact with data points to access diagnostic deep-dive
-            </p>
-          </div>
-
-          <!-- ACTIONS -->
-          <div class="flex items-center gap-3">
-
-            <!-- ADD TO REPORT -->
-            <button
-              (click)="insertChartIntoReport(
-                'mainReadinessChart',
-                'Theatre Readiness Matrix',
-                'BAR'
-              )"
-
-              [disabled]="isChartAlreadyAdded('Theatre Readiness Matrix')"
-
-              class="px-4 py-2 rounded-lg
-                    text-white text-[10px]
-                    font-bold uppercase tracking-wider
-                    shadow-sm transition-all"
-
-              [ngClass]="
-                isChartAlreadyAdded('Theatre Readiness Matrix')
-                  ? 'bg-slate-400 cursor-not-allowed opacity-70'
-                  : 'bg-[#003366] hover:bg-[#004080]'
-              ">
-
-              {{
-                isChartAlreadyAdded('Theatre Readiness Matrix')
-                  ? 'Already Added'
-                  : 'Add To Report'
-              }}
-
+            <button (click)="insertChartIntoReport('comparisonChart', 'KPI Dimensions Comparison', 'COMPARISON')"
+                    [disabled]="isChartAlreadyAdded('KPI Dimensions Comparison')"
+                    class="px-4 py-2 rounded-lg text-white dark:text-naf-navy text-[10px] font-bold uppercase tracking-wider shadow-sm transition-all"
+                    [ngClass]="isChartAlreadyAdded('KPI Dimensions Comparison') ? 'bg-slate-400 dark:bg-slate-600 cursor-not-allowed opacity-70' : 'bg-naf-navy dark:bg-naf-gold hover:bg-[#004080] dark:hover:bg-naf-goldLight'">
+              {{ isChartAlreadyAdded('KPI Dimensions Comparison') ? 'Already Added' : 'Add To Report' }}
             </button>
-
-            <!-- CHART TYPE -->
-            <div class="flex bg-slate-200/50 p-1 rounded-lg border border-slate-200">
-
-              @for (t of ['bar']; track t) {
-
-                <button
-                  (click)="setChartType($any(t))"
-                  [class.bg-white]="activeChartType()===t"
-                  [class.shadow-sm]="activeChartType()===t"
-
-                  class="px-4 py-1.5 text-[10px]
-                        font-bold uppercase
-                        rounded-md transition-all
-                        text-slate-600">
-
-                  {{ t }}
-
-                </button>
-              }
-
-            </div>
-
           </div>
 
-        </div>
-
-        <!-- CHART -->
-        <div class="p-6 relative h-[450px] bg-white">
-
-          @if (mainChartData()) {
-
-            <canvas
-              id="mainReadinessChart"
-              baseChart
-              [data]="mainChartData()!"
-              [options]="mainChartOptions()!"
-              [type]="activeChartType()">
-
-            </canvas>
-
-          }
-
-        </div>
-
-      </section>
-
-      }
-       
-
-      <!-- 🔷 COMPARISON BAR CHART -->
-      @if (showComparisonChart()) {
-
-      <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-lg transition-shadow duration-300">
-
-        <!-- HEADER -->
-        <div class="px-6 py-5 border-b border-slate-100 bg-slate-50/30 flex justify-between items-center">
-
-          <h3 class="text-sm font-bold uppercase tracking-widest text-slate-800 flex items-center gap-2">
-
-            <svg class="w-4 h-4 text-[#003366]"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24">
-
-              <path stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
-
-            </svg>
-
-            KPI Dimensions Comparison
-
-          </h3>
-
-          <!-- ADD TO REPORT -->
-          <button
-            (click)="insertChartIntoReport(
-              'comparisonChart',
-              'KPI Dimensions Comparison',
-              'COMPARISON'
-            )"
-
-            [disabled]="isChartAlreadyAdded('KPI Dimensions Comparison')"
-
-            class="px-4 py-2 rounded-lg
-                  text-white text-[10px]
-                  font-bold uppercase tracking-wider
-                  shadow-sm transition-all"
-
-            [ngClass]="
-              isChartAlreadyAdded('KPI Dimensions Comparison')
-                ? 'bg-slate-400 cursor-not-allowed opacity-70'
-                : 'bg-[#003366] hover:bg-[#004080]'
-            ">
-
-            {{
-              isChartAlreadyAdded('KPI Dimensions Comparison')
-                ? 'Already Added'
-                : 'Add To Report'
-            }}
-
-          </button>
-
-        </div>
-
-        <!-- CHART -->
-        <div class="p-6 relative h-[400px] bg-white">
-
-          <canvas
-            id="comparisonChart"
-            baseChart
-            [data]="comparisonBarChartData()"
-            [options]="comparisonBarChartOptions"
-            [type]="'bar'">
-
-          </canvas>
-
-        </div>
-
-      </section>
-
+          <div class="p-6 relative h-[400px] bg-white dark:bg-naf-navyLight">
+            <canvas id="comparisonChart" baseChart
+                    [data]="comparisonBarChartData()"
+                    [options]="comparisonBarChartOptions()"
+                    [type]="'bar'"></canvas>
+          </div>
+        </section>
       }
 
-
+      <!-- ============================================================
+           BULLET CHART + DIMENSION TARGET CONTROL
+           ============================================================ -->
       @if (showBulletChart()) {
 
-        <!-- ===================================================== -->
-        <!-- DIMENSION TARGET CONTROL -->
-        <!-- ===================================================== -->
-
-        <section
-          class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-
-          <div
-            class="flex flex-col lg:flex-row
-                  lg:items-end gap-6">
-
-            <!-- TITLE -->
+        <!-- Dimension target control panel -->
+        <section class="mt-6 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6">
+          <div class="flex flex-col lg:flex-row lg:items-end gap-6">
             <div class="flex-1">
-
-              <h3
-                class="text-sm font-bold uppercase
-                      tracking-widest text-slate-800">
-
-                KPI Dimension Targets
-              </h3>
-
-              <p class="text-xs text-slate-500 mt-1">
-
-                Configure operational targets
-                for each KPI dimension.
-              </p>
+              <h3 class="text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-white">KPI Dimension Targets</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Configure operational targets for each KPI dimension.</p>
             </div>
 
-            <!-- DIMENSION -->
             <div class="flex flex-col">
-
-              <label
-                class="text-[10px] font-bold uppercase
-                      text-slate-500 mb-2">
-
-                Select Dimension
-              </label>
-
-              <select
-
-                [value]="selectedTargetDimension()"
-
-                (change)="
-                  selectedTargetDimension.set(
-                    $any($event.target).value
-                  )
-                "
-
-                class="px-4 py-3 rounded-xl
-                      border border-slate-300
-                      bg-slate-50 text-sm
-                      font-semibold
-                      focus:outline-none
-                      focus:ring-2
-                      focus:ring-[#003366]">
-
-                @for (d of dimensions; track d) {
-
-                  <option [value]="d">
-
-                    {{ d }}
-
-                  </option>
-                }
-
+              <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Select Dimension</label>
+              <select [value]="selectedTargetDimension()"
+                      (change)="selectedTargetDimension.set($any($event.target).value)"
+                      class="px-4 py-3 rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-naf-gold/40">
+                @for (d of dimensions; track d) { <option [value]="d">{{ d }}</option> }
               </select>
             </div>
 
-            <!-- TARGET -->
             <div class="flex flex-col">
-
-              <label
-                class="text-[10px] font-bold uppercase
-                      text-slate-500 mb-2">
-
-                Target (%)
-              </label>
-
-              <input
-                type="number"
-
-                min="0"
-
-                max="100"
-
-                [value]="selectedTargetValue()"
-
-                (input)="
-                  selectedTargetValue.set(
-                    +$any($event.target).value
-                  )
-                "
-
-                class="px-4 py-3 rounded-xl
-                      border border-slate-300
-                      bg-slate-50 text-sm
-                      font-semibold w-36
-                      focus:outline-none
-                      focus:ring-2
-                      focus:ring-[#003366]" />
+              <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Target (%)</label>
+              <input type="number" min="0" max="100" [value]="selectedTargetValue()"
+                     (input)="selectedTargetValue.set(+$any($event.target).value)"
+                     class="px-4 py-3 rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-sm font-semibold text-slate-800 dark:text-slate-100 w-36 focus:outline-none focus:ring-2 focus:ring-naf-gold/40" />
             </div>
 
-            <!-- ACTION -->
-            <button
-
-              (click)="updateDimensionTarget()"
-
-              class="px-6 py-3 rounded-xl
-                    bg-[#003366]
-                    hover:bg-[#004080]
-                    text-white text-xs
-                    font-bold uppercase
-                    tracking-wider
-                    shadow-sm transition-all">
-
+            <button (click)="updateDimensionTarget()"
+                    class="px-6 py-3 rounded-xl bg-naf-navy dark:bg-naf-gold hover:bg-[#004080] dark:hover:bg-naf-goldLight text-white dark:text-naf-navy text-xs font-bold uppercase tracking-wider shadow-md transition-all">
               Update Target
             </button>
           </div>
 
-          <!-- TARGET PREVIEW -->
-          <div
-            class="mt-6 grid grid-cols-2
-                  md:grid-cols-3 lg:grid-cols-6 gap-4">
-
-            @for (
-              d of dimensions;
-              track d
-            ) {
-
-              <div
-                class="rounded-xl border border-slate-200
-                      bg-slate-50 p-4 text-center">
-
-                <p
-                  class="text-[10px] uppercase
-                        font-bold text-slate-500">
-
-                  {{ d }}
-                </p>
-
-                <p
-                  class="mt-2 text-2xl
-                        font-black text-[#003366]">
-
-                  {{ dimensionTargets()[d] }}%
-                </p>
+          <!-- Target preview grid -->
+          <div class="mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            @for (d of dimensions; track d) {
+              <div class="rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 p-4 text-center">
+                <p class="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">{{ d }}</p>
+                <p class="mt-2 text-2xl font-black text-naf-navy dark:text-naf-gold">{{ dimensionTargets()[d] }}%</p>
               </div>
             }
-
           </div>
-
         </section>
 
-      <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-lg transition-shadow duration-300">
+        <section class="mt-6 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 overflow-hidden hover:shadow-xl transition-shadow duration-300">
+          <div class="px-6 py-5 border-b border-slate-100 dark:border-white/5 bg-slate-50/30 dark:bg-white/5 flex justify-between items-center">
+            <h3 class="text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-white flex items-center gap-2">
+              <svg class="w-4 h-4 text-naf-navy dark:text-naf-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+              KPI Dimensions Bullet Chart
+            </h3>
 
-        <!-- HEADER -->
-        <div class="px-6 py-5 border-b border-slate-100 bg-slate-50/30 flex justify-between items-center">
+            <button (click)="insertChartIntoReport('bulletChart', 'KPI Bullet Chart', 'BULLET')"
+                    [disabled]="isChartAlreadyAdded('KPI Bullet Chart')"
+                    class="px-4 py-2 rounded-lg text-white dark:text-naf-navy text-[10px] font-bold uppercase tracking-wider shadow-sm transition-all"
+                    [ngClass]="isChartAlreadyAdded('KPI Bullet Chart') ? 'bg-slate-400 dark:bg-slate-600 cursor-not-allowed opacity-70' : 'bg-naf-navy dark:bg-naf-gold hover:bg-[#004080] dark:hover:bg-naf-goldLight'">
+              {{ isChartAlreadyAdded('KPI Bullet Chart') ? 'Already Added' : 'Add To Report' }}
+            </button>
+          </div>
 
-          <h3 class="text-sm font-bold uppercase tracking-widest text-slate-800 flex items-center gap-2">
-
-            <svg class="w-4 h-4 text-[#003366]"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24">
-
-              <path stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-
-            </svg>
-
-            KPI Dimensions Bullet Chart
-
-          </h3>
-
-          <!-- ADD TO REPORT -->
-          <button
-            (click)="insertChartIntoReport(
-              'bulletChart',
-              'KPI Bullet Chart',
-              'BULLET'
-            )"
-
-            [disabled]="isChartAlreadyAdded('KPI Bullet Chart')"
-
-            class="px-4 py-2 rounded-lg
-                  text-white text-[10px]
-                  font-bold uppercase tracking-wider
-                  shadow-sm transition-all"
-
-            [ngClass]="
-              isChartAlreadyAdded('KPI Bullet Chart')
-                ? 'bg-slate-400 cursor-not-allowed opacity-70'
-                : 'bg-[#003366] hover:bg-[#004080]'
-            ">
-
-            {{
-              isChartAlreadyAdded('KPI Bullet Chart')
-                ? 'Already Added'
-                : 'Add To Report'
-            }}
-
-          </button>
-
-
-        </div>
-
-        
-        <!-- CHART -->
-        <div class="p-6 relative h-[400px] bg-white">
-
-          <canvas
-            id="bulletChart"
-            baseChart
-            [data]="bulletChartData()"
-            [options]="finalBulletOptions()"
-            [type]="'bar'">
-          </canvas>
-
-        </div>
-
-      </section>
-
+          <div class="p-6 relative h-[400px] bg-white dark:bg-naf-navyLight">
+            <canvas id="bulletChart" baseChart
+                    [data]="bulletChartData()"
+                    [options]="finalBulletOptions()"
+                    [type]="'bar'"></canvas>
+          </div>
+        </section>
       }
 
-      <!-- 🔷 DIMENSION PERFORMANCE TABLE -->
+      <!-- ============================================================
+           DIMENSION PERFORMANCE TABLE
+           ============================================================ -->
       @if (showDimensionTable()) {
-        <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-lg transition-shadow duration-300">
-          <div class="px-6 py-5 border-b border-slate-200 bg-slate-50/50 flex justify-between items-center">
-            <h3 class="text-sm font-bold uppercase tracking-widest text-slate-800">
-              Dimension Performance Analysis
-            </h3>
-            <span class="text-[10px] font-bold bg-slate-200 text-slate-600 px-2 py-1 rounded">Avg. Variance Report</span>
+        <section class="mt-6 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 overflow-hidden hover:shadow-xl transition-shadow duration-300">
+          <div class="px-6 py-5 border-b border-slate-200 dark:border-white/5 bg-slate-50/50 dark:bg-white/5 flex justify-between items-center">
+            <h3 class="text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-white">Dimension Performance Analysis</h3>
+            <span class="text-[10px] font-bold bg-slate-200 dark:bg-white/10 text-slate-600 dark:text-slate-300 px-2 py-1 rounded">Avg. Variance Report</span>
           </div>
 
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
-              <thead class="bg-[#003366] text-white text-[10px] uppercase font-black tracking-wider">
+              <thead class="bg-naf-navy dark:bg-white/5 text-white dark:text-naf-gold text-[10px] uppercase font-black tracking-wider">
                 <tr>
-                  <th class="px-6 py-4 font-semibold border-b border-slate-700/50">Metric Dimension</th>
-                  <th class="px-6 py-4 text-right font-semibold border-b border-slate-700/50">NAF Avg</th>
-                  <th class="px-6 py-4 text-right font-semibold border-b border-slate-700/50">Best Perf.</th>
-                  <th class="px-6 py-4 font-semibold border-b border-slate-700/50">Top Theatre</th>
-                  <th class="px-6 py-4 text-right font-semibold border-b border-slate-700/50">Lowest</th>
-                  <th class="px-6 py-4 font-semibold border-b border-slate-700/50">Lowest Theatre</th>
-                  <th class="px-6 py-4 text-right font-semibold border-b border-slate-700/50 text-slate-300">Std Dev</th>
-                  <th class="px-6 py-4 text-center font-semibold border-b border-slate-700/50">Status</th>
+                  <th class="px-6 py-4 font-semibold border-b border-slate-700/50 dark:border-white/10">Metric Dimension</th>
+                  <th class="px-6 py-4 text-right font-semibold border-b border-slate-700/50 dark:border-white/10">NAF Avg</th>
+                  <th class="px-6 py-4 text-right font-semibold border-b border-slate-700/50 dark:border-white/10">Best Perf.</th>
+                  <th class="px-6 py-4 font-semibold border-b border-slate-700/50 dark:border-white/10">Top Theatre</th>
+                  <th class="px-6 py-4 text-right font-semibold border-b border-slate-700/50 dark:border-white/10">Lowest</th>
+                  <th class="px-6 py-4 font-semibold border-b border-slate-700/50 dark:border-white/10">Lowest Theatre</th>
+                  <th class="px-6 py-4 text-right font-semibold border-b border-slate-700/50 dark:border-white/10 text-slate-300 dark:text-slate-400">Std Dev</th>
+                  <th class="px-6 py-4 text-center font-semibold border-b border-slate-700/50 dark:border-white/10">Status</th>
                 </tr>
               </thead>
 
-              <tbody class="divide-y divide-slate-100 text-sm">
+              <tbody class="divide-y divide-slate-100 dark:divide-white/5 text-sm">
                 @for (r of dashboard.reports; track r.id) {
-                  <tr class="hover:bg-blue-50/50 transition-colors group group/border border-l-4 border-transparent hover:border-[#003366]">
-
-                    <td class="px-6 py-4 font-bold text-slate-700 text-xs uppercase tracking-wide group-hover:text-[#003366] transition-colors">
-                      {{ r.dimension }}
-                    </td>
-
-                    <td class="px-6 py-4 text-right font-mono text-sm font-bold text-slate-600">
-                      {{ r.averageOverallScore | number:'1.1-1' }}%
-                    </td>
-
-                    <td class="px-6 py-4 text-right font-mono text-sm font-black text-[#008751] bg-emerald-50/50 group-hover:bg-emerald-50">
-                      {{ r.bestScore }}%
-                    </td>
-
-                    <td class="px-6 py-4 text-xs text-slate-500 font-medium">
-                      {{ r.bestPerformingTheater }}
-                    </td>
-
-                    <td class="px-6 py-4 text-right font-mono text-sm font-bold text-red-600 bg-red-50/50 group-hover:bg-red-50">
-                      {{ r.lowestScore }}%
-                    </td>
-
-                    <td class="px-6 py-4 text-xs text-slate-500 font-medium">
-                      {{ r.lowestPerformingTheater }}
-                    </td>
-
-                    <td class="px-6 py-4 text-right font-mono text-xs text-slate-400">
-                      <!-- {{ r.standardDeviation | number:'1.1-1' }}% -->
-                    </td>
-
-                    <td class="px-6 py-4 text-center">
-                      <!-- <span class="px-2 py-1 text-[9px] font-black uppercase rounded-sm bg-slate-100 text-slate-500">--</span> -->
-                    </td>
-
+                  <tr class="hover:bg-blue-50/50 dark:hover:bg-white/5 transition-colors group">
+                    <td class="px-6 py-4 font-bold text-slate-700 dark:text-slate-200 text-xs uppercase tracking-wide group-hover:text-naf-navy dark:group-hover:text-naf-gold transition-colors">{{ r.dimension }}</td>
+                    <td class="px-6 py-4 text-right font-mono text-sm font-bold text-slate-600 dark:text-slate-300">{{ r.averageOverallScore | number:'1.1-1' }}%</td>
+                    <td class="px-6 py-4 text-right font-mono text-sm font-black text-emerald-600 dark:text-emerald-400 bg-emerald-50/50 dark:bg-emerald-500/5 group-hover:bg-emerald-50 dark:group-hover:bg-emerald-500/10">{{ r.bestScore }}%</td>
+                    <td class="px-6 py-4 text-xs text-slate-500 dark:text-slate-400 font-medium">{{ r.bestPerformingTheater }}</td>
+                    <td class="px-6 py-4 text-right font-mono text-sm font-bold text-red-600 dark:text-red-400 bg-red-50/50 dark:bg-red-500/5 group-hover:bg-red-50 dark:group-hover:bg-red-500/10">{{ r.lowestScore }}%</td>
+                    <td class="px-6 py-4 text-xs text-slate-500 dark:text-slate-400 font-medium">{{ r.lowestPerformingTheater }}</td>
+                    <td class="px-6 py-4 text-right font-mono text-xs text-slate-400 dark:text-slate-500"></td>
+                    <td class="px-6 py-4 text-center"></td>
                   </tr>
                 }
               </tbody>
@@ -788,114 +486,167 @@
         </section>
       }
 
-      <!-- 🔷 THEATRE SUMMARY TABLE -->
-@if (showTheatreTable()) {
-  <section class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-lg transition-shadow duration-300">
-    <div class="px-6 py-5 border-b border-slate-200 bg-slate-50/50">
-      <h3 class="text-sm font-bold uppercase tracking-widest text-slate-800">
-        Theatre Command Summary
-      </h3>
-    </div>
+      <!-- ============================================================
+           THEATRE SUMMARY TABLE
+           ============================================================ -->
+      @if (showTheatreTable()) {
+        <section class="mt-6 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 overflow-hidden hover:shadow-xl transition-shadow duration-300">
+          <div class="px-6 py-5 border-b border-slate-200 dark:border-white/5 bg-slate-50/50 dark:bg-white/5">
+            <h3 class="text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-white">Theatre Command Summary</h3>
+          </div>
 
-    <div class="overflow-x-auto">
-      <table class="w-full text-left border-collapse table-auto">
-        <!-- HEADER -->
-        <thead class="bg-slate-800 text-white text-[10px] uppercase font-black tracking-wider">
-          <tr>
-            <th class="px-6 py-4 border-b border-slate-700/50">Command Unit</th>
-            <th class="px-6 py-4 border-b border-slate-700/50">Region</th>
-            <th class="px-6 py-4 text-right border-b border-slate-700/50">Readiness</th>
-            <th class="px-6 py-4 text-center border-b border-slate-700/50">Rating</th>
-            <th class="px-6 py-4 text-center border-b border-slate-700/50">Rank</th>
-            <th class="px-6 py-4 text-center border-b border-slate-700/50">Action</th>
-          </tr>
-        </thead>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse table-auto">
+              <thead class="bg-slate-800 dark:bg-white/5 text-white dark:text-naf-gold text-[10px] uppercase font-black tracking-wider">
+                <tr>
+                  <th class="px-6 py-4 border-b border-slate-700/50 dark:border-white/10">Command Unit</th>
+                  <th class="px-6 py-4 border-b border-slate-700/50 dark:border-white/10">Region</th>
+                  <th class="px-6 py-4 text-right border-b border-slate-700/50 dark:border-white/10">Readiness</th>
+                  <th class="px-6 py-4 text-center border-b border-slate-700/50 dark:border-white/10">Rating</th>
+                  <th class="px-6 py-4 text-center border-b border-slate-700/50 dark:border-white/10">Rank</th>
+                  <th class="px-6 py-4 text-center border-b border-slate-700/50 dark:border-white/10">Action</th>
+                </tr>
+              </thead>
 
-        <!-- BODY -->
-        <tbody class="divide-y divide-slate-100 text-sm bg-white">
-          @for (t of dashboard.scores; track t.airComponentName) {
-            <tr class="group hover:bg-slate-50/80 transition-colors">
-              
-              <!-- UNIT (With integrated hover indicator) -->
-              <td class="relative px-6 py-4 font-bold text-slate-700 text-xs uppercase group-hover:text-[#003366] transition-colors">
-                <!-- Visual highlight bar -->
-                <div class="absolute left-0 top-0 bottom-0 w-1 bg-[#003366] scale-y-0 group-hover:scale-y-100 transition-transform origin-center"></div>
-                {{ t.airComponentName }}
-              </td>
+              <tbody class="divide-y divide-slate-100 dark:divide-white/5 text-sm bg-white dark:bg-transparent">
+                @for (t of dashboard.scores; track t.airComponentName) {
+                  <tr class="group hover:bg-slate-50/80 dark:hover:bg-white/5 transition-colors">
 
-              <!-- REGION -->
-              <td class="px-6 py-4 text-xs text-slate-500 uppercase tracking-wide font-medium whitespace-nowrap">
-                {{ t.region }}
-              </td>
+                    <td class="relative px-6 py-4 font-bold text-slate-700 dark:text-slate-200 text-xs uppercase group-hover:text-naf-navy dark:group-hover:text-naf-gold transition-colors">
+                      <div class="absolute left-0 top-0 bottom-0 w-1 bg-naf-navy dark:bg-naf-gold scale-y-0 group-hover:scale-y-100 transition-transform origin-center"></div>
+                      {{ t.airComponentName }}
+                    </td>
 
-              <!-- READINESS -->
-              <td class="px-6 py-4 text-right font-mono text-sm font-bold text-slate-800 tabular-nums">
-                {{ t.overallScore | number:'1.1-1' }}%
-              </td>
+                    <td class="px-6 py-4 text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide font-medium whitespace-nowrap">{{ t.region }}</td>
 
-              <!-- RATING -->
-              <td class="px-6 py-4 text-center">
-                <span
-                  class="inline-flex items-center justify-center px-3 py-1 text-[10px] font-bold uppercase rounded-full border whitespace-nowrap min-w-[80px]"
-                  [ngClass]="
-                    t.overallScore >= 75 ? 'bg-emerald-100 text-emerald-700 border-emerald-200' :
-                    t.overallScore >= 60 ? 'bg-amber-100 text-amber-700 border-amber-200' :
-                    'bg-red-100 text-red-700 border-red-200'
-                  ">
-                  {{ t.rating }}
-                </span>
-              </td>
+                    <td class="px-6 py-4 text-right font-mono text-sm font-bold text-slate-800 dark:text-white tabular-nums">{{ t.overallScore | number:'1.1-1' }}%</td>
 
-              <!-- RANK -->
-              <td class="px-6 py-4">
-                <div class="flex justify-center">
-                  <span class="inline-flex items-center justify-center w-8 h-8 text-xs font-bold text-slate-500 bg-slate-100 rounded-full border border-slate-200">
-                    #{{ t.scoreRank }}
-                  </span>
-                </div>
-              </td>
+                    <td class="px-6 py-4 text-center">
+                      <span class="inline-flex items-center justify-center px-3 py-1 text-[10px] font-bold uppercase rounded-full border whitespace-nowrap min-w-[80px]"
+                            [ngClass]="
+                              t.overallScore >= 75 ? 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-400 dark:border-emerald-500/30' :
+                              t.overallScore >= 60 ? 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-500/15 dark:text-amber-400 dark:border-amber-500/30' :
+                              'bg-red-100 text-red-700 border-red-200 dark:bg-red-500/15 dark:text-red-400 dark:border-red-500/30'">
+                        {{ t.rating }}
+                      </span>
+                    </td>
 
-              <!-- ANALYSIS ACTION -->
-              <td class="px-6 py-4 text-right">
-                <button
-                  class="inline-flex items-center gap-2 text-[10px] font-bold text-[#003366]
-                        hover:text-[#D4AF37] transition-all uppercase tracking-wider
-                        bg-slate-50 hover:bg-white px-3 py-2 rounded-md
-                        border border-slate-200 hover:border-[#D4AF37]/50 shadow-sm"
-                  [routerLink]="['/air-component', t.airComponentId]">
-                  
-                  <span>View Report</span>
+                    <td class="px-6 py-4">
+                      <div class="flex justify-center">
+                        <span class="inline-flex items-center justify-center w-8 h-8 text-xs font-bold text-slate-500 dark:text-slate-300 bg-slate-100 dark:bg-white/5 rounded-full border border-slate-200 dark:border-white/10">#{{ t.scoreRank }}</span>
+                      </div>
+                    </td>
 
-                  <svg class="w-3 h-3 transform group-hover:translate-x-1 transition-transform"
-                      fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                  </svg>
-                </button>
-              </td>
-
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  </section>
-
+                    <td class="px-6 py-4 text-right">
+                      <button class="inline-flex items-center gap-2 text-[10px] font-bold text-naf-navy dark:text-naf-gold hover:text-naf-gold dark:hover:text-naf-goldLight transition-all uppercase tracking-wider bg-slate-50 dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 px-3 py-2 rounded-md border border-slate-200 dark:border-white/10 hover:border-naf-gold/50 shadow-sm"
+                              [routerLink]="['/air-component', t.airComponentId]">
+                        <span>View Report</span>
+                        <svg class="w-3 h-3 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
       }
 
     } @else if (!loading()) {
-      <div class="text-center py-24 bg-white rounded-xl border border-dashed border-slate-300 flex flex-col items-center justify-center max-w-2xl mx-auto shadow-sm">
-        <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-6 border border-slate-100">
-          <span class="text-3xl text-slate-300">⚠</span>
+      <!-- Empty state -->
+      <div class="text-center py-24 bg-white dark:bg-naf-navyLight rounded-2xl border border-dashed border-slate-300 dark:border-white/10 flex flex-col items-center justify-center max-w-2xl mx-auto shadow-sm">
+        <div class="w-20 h-20 bg-slate-50 dark:bg-white/5 rounded-full flex items-center justify-center mb-6 border border-slate-100 dark:border-white/10">
+          <span class="text-3xl text-slate-300 dark:text-slate-600">⚠</span>
         </div>
-        <h3 class="text-slate-800 font-bold text-lg uppercase tracking-wider mb-2">No Operational Data Loaded</h3>
-        <p class="text-slate-400 font-medium text-sm mb-8 max-w-sm mx-auto">System requires initialization to fetch current intelligence metrics.</p>
-        <button (click)="loadData()" class="bg-[#003366] hover:bg-[#004080] text-white text-xs font-bold uppercase px-8 py-3 rounded-lg transition-all shadow-md hover:shadow-lg flex items-center gap-2">
+        <h3 class="text-slate-800 dark:text-white font-bold text-lg uppercase tracking-wider mb-2">No Operational Data Loaded</h3>
+        <p class="text-slate-400 dark:text-slate-500 font-medium text-sm mb-8 max-w-sm mx-auto">System requires initialization to fetch current intelligence metrics.</p>
+        <button (click)="loadData()" class="bg-naf-navy dark:bg-naf-gold hover:bg-[#004080] dark:hover:bg-naf-goldLight text-white dark:text-naf-navy text-xs font-bold uppercase px-8 py-3 rounded-lg transition-all shadow-md hover:shadow-lg flex items-center gap-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
           Initialize Command Fetch
         </button>
       </div>
     }
 
-  </div>
+  </main>
+
+  <!-- ============================================================
+       FLOATING OBSERVATION NOTE PANEL
+       - Anchored bottom-right, fixed position
+       - Compact size (380px wide, ~480px tall)
+       - Does NOT push the dashboard layout
+       - Slide-in animation when toggled
+       - Overlay shadow for depth
+       ============================================================ -->
+  @if (showObservationPane()) {
+    <div
+      class="observation-float-panel fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-2rem)] bg-white dark:bg-naf-navyLight rounded-2xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden flex flex-col animate-[slideIn_0.25s_ease-out]"
+      style="height: 480px;">
+
+      <!-- Header -->
+      <div class="px-5 py-4 border-b border-slate-100 dark:border-white/5 bg-slate-50/95 dark:bg-white/5 flex items-center justify-between gap-3 flex-shrink-0">
+        <div class="min-w-0">
+          <h3 class="text-xs font-bold uppercase tracking-widest text-slate-800 dark:text-white truncate">{{ observationTitle() }}</h3>
+          <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">Persistent note · linked to current context</p>
+        </div>
+        <button (click)="toggleObservationPane()"
+                class="flex-shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-full border border-slate-300 dark:border-white/10 text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-700 dark:hover:text-white transition-all"
+                aria-label="Close observation pane">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Context chip -->
+      <div class="px-5 py-2.5 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02] flex-shrink-0">
+        <span class="inline-flex items-center gap-1.5 text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-white/5 px-2 py-1 rounded-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-naf-gold"></span>
+          {{ selectedObservationLabel() }}
+        </span>
+      </div>
+
+      <!-- Form -->
+      <form (ngSubmit)="submitObservation()" class="flex flex-col flex-1 min-h-0">
+        <div class="p-4 flex-1 min-h-0 flex">
+          <textarea
+            class="w-full flex-1 min-h-0 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 p-3 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-naf-gold/40 focus:border-naf-gold resize-none placeholder-slate-400 dark:placeholder-slate-500 leading-relaxed"
+            placeholder="Write your observation here..."
+            [value]="observationText()"
+            (input)="setObservationText($any($event.target).value)"
+            [disabled]="submittingObservation()"
+            required></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 px-4 py-3 border-t border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/5 flex-shrink-0">
+          <button type="button" (click)="toggleObservationPane()"
+                  class="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider rounded-lg border border-slate-300 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  [disabled]="submittingObservation()">Cancel</button>
+          <button type="submit"
+                  class="px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider rounded-lg bg-naf-navy dark:bg-naf-gold text-white dark:text-naf-navy hover:bg-[#004080] dark:hover:bg-naf-goldLight transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 shadow-sm"
+                  [disabled]="submittingObservation() || !observationText().trim()">
+            @if (!submittingObservation()) {
+              <span>Submit</span>
+            } @else {
+              <span class="animate-spin inline-block w-3 h-3 border-2 border-current border-t-transparent rounded-full"></span>
+              <span>Saving...</span>
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
 </div>
+
+<!-- ============================================================
+     LOCAL KEYFRAMES (slide-in for floating panel)
+     Drop these into kpi-dashboard.css OR keep them inline here.
+     ============================================================ -->
+<style>
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+</style>

@@ -1,289 +1,487 @@
-<div class="min-h-screen bg-slate-900 text-slate-100 font-sans antialiased selection:bg-[#004b8d]/30 selection:text-white">
+<div class="min-h-screen bg-slate-100 dark:bg-naf-navy text-slate-800 dark:text-slate-200 font-sans selection:bg-naf-gold selection:text-naf-navy antialiased transition-colors duration-300">
 
-  <!-- ===================================================== -->
-  <!-- COMMAND NAVIGATION CENTER -->
-  <!-- ===================================================== -->
-  <nav class="sticky top-0 z-50 border-b border-slate-800 bg-slate-900/80 backdrop-blur-md px-6 py-4">
-    <div class="max-w-[1700px] mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-4">
-        <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-[#002851] to-[#004b8d] flex items-center justify-center border border-white/10 shadow-lg shadow-[#003366]/20">
-          <div class="w-3.5 h-3.5 rounded-sm bg-emerald-400 rotate-45 animate-pulse"></div>
+  <!-- ============================================================
+       HEADER  (shared across dashboard + report pages)
+       ============================================================ -->
+  <header class="sticky top-0 z-50 bg-white/90 dark:bg-naf-navy/95 backdrop-blur-md border-b border-slate-200 dark:border-naf-gold/15 shadow-sm dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] transition-colors duration-300">
+    <div class="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Gold top accent line -->
+      <div class="h-[2px] bg-gradient-to-r from-transparent via-naf-gold to-transparent opacity-60"></div>
+
+      <div class="flex items-center justify-between h-16 sm:h-20">
+
+        <!-- ── LEFT: Branding ── -->
+        <div class="flex items-center gap-4">
+          <div class="relative group cursor-pointer">
+            <div class="absolute inset-0 bg-naf-gold/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div class="relative w-11 h-11 bg-gradient-to-br from-naf-gold to-yellow-600 rounded-xl flex items-center justify-center shadow-lg border border-white/20">
+              <svg class="w-6 h-6 text-naf-navy" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C12 2 8 5 8 9C8 11.5 9.5 13 10.5 13.5L9 18H11L12 15L13 18H15L13.5 13.5C14.5 13 16 11.5 16 9C16 5 12 2 12 2ZM12 4.5C12.8 5.8 14 7.5 14 9C14 10.5 13 11.5 12 12C11 11.5 10 10.5 10 9C10 7.5 11.2 5.8 12 4.5Z"/>
+                <path d="M8 9L2 7L4 9L1 11L8 10.5" opacity="0.85"/>
+                <path d="M16 9L22 7L20 9L23 11L16 10.5" opacity="0.85"/>
+                <circle cx="12" cy="1.2" r="0.7"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="hidden sm:block">
+            <h1 class="text-lg font-black tracking-tight text-naf-navy dark:text-white leading-none">DOPLANS</h1>
+            <p class="text-[10px] font-bold text-naf-gold uppercase tracking-[0.25em] mt-1">KPI Command Center</p>
+          </div>
         </div>
-        <div>
-          <span class="text-[10px] font-black tracking-[0.4em] text-slate-400 uppercase block">Nigerian Air Force</span>
-          <h1 class="text-lg font-black tracking-tight text-white">KPI Intelligence Console</h1>
+
+        <!-- ── CENTER: Navigation ── -->
+        <nav class="hidden lg:flex items-center gap-1" role="navigation" aria-label="Main navigation">
+
+          <a routerLink="/"
+             class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-500 dark:text-blue-200/80 font-semibold text-[11px] uppercase tracking-[0.12em] hover:text-naf-navy dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors duration-200"
+             aria-label="Open KPI Dashboard">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 13h2v8H3zM9 9h2v12H9zM15 5h2v16h-2zM21 1h2v20h-2z"/>
+            </svg>
+            Dashboard
+          </a>
+
+          <!-- Primary Action: KPI Report (Gold) -->
+          <a routerLink="/kpi-report"
+             class="flex items-center gap-2 px-4 py-2 rounded-lg bg-naf-gold text-naf-navy font-bold text-[11px] uppercase tracking-[0.12em] hover:bg-naf-goldLight transition-colors duration-200 shadow-sm"
+             aria-label="View KPI Report">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            KPI Report
+          </a>
+
+          <a routerLink="/report-submission-compliance"
+             class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-500 dark:text-blue-200/80 font-semibold text-[11px] uppercase tracking-[0.12em] hover:text-naf-navy dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors duration-200"
+             aria-label="View Compliance Report">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Compliance
+          </a>
+        </nav>
+
+        <!-- ── RIGHT: Status + Theme + Logout ── -->
+        <div class="flex items-center gap-3 md:gap-4">
+
+          <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/25">
+            <span class="relative flex h-1.5 w-1.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-60"></span>
+              <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+            </span>
+            <span class="text-emerald-700 dark:text-emerald-400 font-bold text-[10px] uppercase tracking-[0.15em]">Operational</span>
+          </div>
+
+          <!-- THEME TOGGLE (global component) -->
+          <app-theme-toggle />
+
+          <div class="h-6 w-px bg-slate-200 dark:bg-white/10"></div>
+
+          <a href="/logout"
+             class="flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-all duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+            </svg>
+            <span class="hidden md:inline">Exit</span>
+          </a>
         </div>
-      </div>
-      
-      <div class="flex items-center gap-3">
-        <a routerLink="/" class="px-4 py-2 text-xs font-bold text-slate-400 hover:text-white rounded-xl hover:bg-slate-800/60 transition">
-          Dashboard View
-        </a>
-        <button type="button" (click)="loadObservations()" class="px-4 py-2 text-xs font-black uppercase tracking-wider bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700/60 rounded-xl transition shadow-sm">
-          Sync Intelligence
-        </button>
       </div>
     </div>
-  </nav>
+  </header>
 
-  <!-- ===================================================== -->
-  <!-- INTERACTIVE WORKSPACE HUB -->
-  <!-- ===================================================== -->
-  <main class="max-w-[1700px] mx-auto px-6 py-8">
-    
-    <!-- DYNAMIC GRID: Switches between 2-column (normal) and 1-column (fullscreen) layout -->
+  <!-- ============================================================
+       MAIN CONTENT
+       ============================================================ -->
+  <main class="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12">
+
+    <!-- INTRO -->
+    <div class="mb-8">
+      <h2 class="text-2xl md:text-3xl font-black text-naf-navy dark:text-white tracking-tight">
+        Strategic Report <span class="text-naf-gold">Composer</span>
+      </h2>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-lg">
+        Synthesize operational metrics with dynamic intelligence visuals. Save, review, and revisit compiled reports by period.
+      </p>
+    </div>
+
+    <!-- DYNAMIC GRID -->
     <div class="grid grid-cols-1 transition-all duration-500 ease-in-out gap-8 items-start"
          [class.xl:grid-cols-[1fr_420px]]="!isFullscreen()"
          [class.xl:grid-cols-1]="isFullscreen()">
-      
-      <!-- LEFT: FOCUS CANVAS & EDITOR -->
+
+      <!-- ============================================================
+           LEFT: FOCUS CANVAS & EDITOR
+           ============================================================ -->
       <div class="space-y-6 w-full">
-        
+
         <!-- OPERATIONAL PARAMETERS -->
-        <div class="bg-slate-950/40 border border-slate-800/80 rounded-2xl p-6 backdrop-blur flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="bg-white dark:bg-naf-navyLight border border-slate-200 dark:border-white/5 rounded-2xl p-6 backdrop-blur flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm">
           <div class="space-y-1">
-            <h2 class="text-xl font-bold text-white tracking-tight">Strategic Report Composer</h2>
-            <p class="text-xs text-slate-400">Synthesize operational metrics with dynamic intelligence visuals.</p>
+            <h2 class="text-xl font-bold text-naf-navy dark:text-white tracking-tight">
+              {{ viewingReport() ? 'Saved Report Viewer' : 'Strategic Report Composer' }}
+            </h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              {{ viewingReport()
+                  ? 'Reviewing saved intelligence — switch back to composer to edit.'
+                  : 'Synthesize operational metrics with dynamic intelligence visuals.' }}
+            </p>
           </div>
-          
+
           <div class="flex flex-wrap items-center gap-4">
-            <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5">
-              <span class="text-[10px] font-black uppercase text-slate-500 tracking-wider">Month:</span>
-              <select [(ngModel)]="selectedMonth" name="month" class="bg-transparent text-xs font-bold text-slate-200 outline-none cursor-pointer pr-2">
+            <!-- Month selector -->
+            <div class="flex items-center gap-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-1.5">
+              <span class="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider">Month:</span>
+              <select [(ngModel)]="selectedMonth"
+                      name="month"
+                      (ngModelChange)="viewingReport() && viewReport()"
+                      class="bg-transparent text-xs font-bold text-slate-700 dark:text-slate-200 outline-none cursor-pointer pr-2">
                 @for (month of months; track month) {
-                  <option [ngValue]="month" class="bg-slate-900 text-slate-200">{{ month }}</option>
+                  <option [ngValue]="month" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">{{ month }}</option>
                 }
               </select>
             </div>
 
-            <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5">
-              <span class="text-[10px] font-black uppercase text-slate-500 tracking-wider">Year:</span>
-              <select [(ngModel)]="selectedYear" name="year" class="bg-transparent text-xs font-bold text-slate-200 outline-none cursor-pointer pr-2">
+            <!-- Year selector -->
+            <div class="flex items-center gap-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-1.5">
+              <span class="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider">Year:</span>
+              <select [(ngModel)]="selectedYear"
+                      name="year"
+                      (ngModelChange)="viewingReport() && viewReport()"
+                      class="bg-transparent text-xs font-bold text-slate-700 dark:text-slate-200 outline-none cursor-pointer pr-2">
                 @for (year of years; track year) {
-                  <option [ngValue]="year" class="bg-slate-900 text-slate-200">{{ year }}</option>
+                  <option [ngValue]="year" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">{{ year }}</option>
                 }
               </select>
             </div>
+
+            <!-- View / Back button -->
+            @if (!viewingReport()) {
+              <button type="button"
+                      (click)="viewReport()"
+                      [disabled]="loadingReport()"
+                      class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-naf-navy dark:bg-naf-gold text-white dark:text-naf-navy border border-naf-navy dark:border-naf-gold hover:bg-[#004080] dark:hover:bg-naf-goldLight text-xs font-black uppercase tracking-wider transition active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none shadow-sm">
+                @if (loadingReport()) {
+                  <span class="h-3 w-3 rounded-full border-2 border-current border-t-transparent animate-spin"></span>
+                  <span>Fetching...</span>
+                } @else {
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <span>View Report</span>
+                }
+              </button>
+            } @else {
+              <button type="button"
+                      (click)="exitViewMode()"
+                      class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400/40 text-xs font-black uppercase tracking-wider transition active:scale-[0.98] shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                <span>Back to Composer</span>
+              </button>
+            }
           </div>
         </div>
 
-        <!-- THE EDITING CANVAS -->
-        <div class="bg-slate-950 border border-slate-800 rounded-[2rem] shadow-2xl overflow-hidden transition-all duration-300 focus-within:border-[#004b8d]/60 focus-within:ring-4 focus-within:ring-[#003366]/20 flex flex-col">
-          
-          <!-- CONTROLS & UTILITIES -->
-          <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 bg-slate-900/40 px-6 py-3">
-            
-            <!-- Format Actions -->
-            <div class="flex items-center gap-2 bg-slate-900 border border-slate-800/60 p-1 rounded-xl overflow-x-auto no-scrollbar">
-              
-              <!-- Basic Styles -->
-              <button type="button" (click)="execCommand('bold')" class="h-9 w-9 shrink-0 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition">B</button>
-              <button type="button" (click)="execCommand('italic')" class="h-9 w-9 shrink-0 rounded-lg italic text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition">I</button>
-              <button type="button" (click)="execCommand('underline')" class="h-9 w-9 shrink-0 rounded-lg underline text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition">U</button>
-              
-              <div class="w-px h-5 bg-slate-800 mx-1 shrink-0"></div>
-
-              <!-- Font Family Selector -->
-              <select (change)="execCommand('fontName', $any($event.target).value)" class="h-9 shrink-0 bg-transparent text-xs font-bold text-slate-400 outline-none cursor-pointer px-2 hover:text-white hover:bg-slate-800 rounded-lg transition border-none">
-                <option value="Arial" class="bg-slate-900 text-slate-200">Arial</option>
-                <option value="Times New Roman" class="bg-slate-900 text-slate-200">Times New Roman</option>
-                <option value="Courier New" class="bg-slate-900 text-slate-200">Courier New</option>
-                <option value="Georgia" class="bg-slate-900 text-slate-200">Georgia</option>
-                <option value="Verdana" class="bg-slate-900 text-slate-200">Verdana</option>
-              </select>
-
-              <!-- Font Size Selector -->
-              <select (change)="execCommand('fontSize', $any($event.target).value)" class="h-9 shrink-0 bg-transparent text-xs font-bold text-slate-400 outline-none cursor-pointer px-2 hover:text-white hover:bg-slate-800 rounded-lg transition border-none">
-                <option value="1" class="bg-slate-900 text-slate-200">8px</option>
-                <option value="2" class="bg-slate-900 text-slate-200">10px</option>
-                <option value="3" selected class="bg-slate-900 text-slate-200">12px</option>
-                <option value="4" class="bg-slate-900 text-slate-200">14px</option>
-                <option value="5" class="bg-slate-900 text-slate-200">18px</option>
-                <option value="6" class="bg-slate-900 text-slate-200">24px</option>
-                <option value="7" class="bg-slate-900 text-slate-200">36px</option>
-              </select>
-
-              <!-- NEW: Case Transform Selector -->
-              <select (change)="transformText($any($event.target).value)" class="h-9 shrink-0 bg-transparent text-xs font-bold text-slate-400 outline-none cursor-pointer px-2 hover:text-white hover:bg-slate-800 rounded-lg transition border-none">
-                <option value="" disabled selected>Case</option>
-                <option value="uppercase" class="bg-slate-900 text-slate-200">UPPERCASE</option>
-                <option value="lowercase" class="bg-slate-900 text-slate-200">lowercase</option>
-                <option value="capitalize" class="bg-slate-900 text-slate-200">Capitalize</option>
-              </select>
-
-              <div class="w-px h-5 bg-slate-800 mx-1 shrink-0"></div>
-
-              <!-- Block Styles: List, Heading, Center -->
-              <button type="button" (click)="execCommand('insertUnorderedList')" class="px-3 h-9 shrink-0 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition uppercase tracking-wider">List</button>
-              <button type="button" (click)="execCommand('formatBlock', 'h3')" class="px-3 h-9 shrink-0 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition uppercase tracking-wider">Heading</button>
-              
-              <!-- Center Align Button -->
-              <button type="button" 
-                      (click)="execCommand('justifyCenter')" 
-                      title="Center Align Text"
-                      class="h-9 w-9 shrink-0 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="21" y1="6" x2="3" y2="6"></line>
-                  <line x1="21" y1="12" x2="3" y2="12"></line>
-                  <line x1="21" y1="18" x2="3" y2="18"></line>
-                </svg>
-              </button>
-
-            </div>
-
-            <!-- View Toggle / Status -->
+        <!-- VIEW-MODE BANNER -->
+        @if (viewingReport()) {
+          <div class="rounded-2xl border border-naf-gold/30 bg-naf-gold/10 dark:bg-naf-gold/5 p-4 flex items-center justify-between gap-3 backdrop-blur-sm">
             <div class="flex items-center gap-3">
-              <div class="text-[11px] font-medium text-slate-500 hidden sm:flex items-center gap-2">
-                <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                <span class="hidden lg:inline">Live Composition Space</span>
+              <div class="w-2 h-2 rounded-full bg-naf-gold animate-pulse"></div>
+              <p class="text-xs font-medium text-slate-700 dark:text-slate-200 tracking-wide">
+                Read-only view —
+                <span class="font-black text-naf-navy dark:text-white">{{ selectedMonth() }} {{ selectedYear() }}</span>
+              </p>
+            </div>
+            <span class="text-[10px] font-black uppercase tracking-wider text-naf-gold bg-naf-gold/20 dark:bg-naf-gold/10 border border-naf-gold/40 rounded px-2 py-0.5">
+              View Mode
+            </span>
+          </div>
+        }
+
+        <!-- THE EDITING / VIEWING CANVAS -->
+        <div class="bg-white dark:bg-naf-navyLight border border-slate-200 dark:border-white/5 rounded-[2rem] shadow-sm dark:shadow-2xl overflow-hidden transition-all duration-300 focus-within:border-naf-gold/60 focus-within:ring-4 focus-within:ring-naf-gold/20 flex flex-col">
+
+          <!-- CONTROLS & UTILITIES — hidden while viewing -->
+          @if (!viewingReport()) {
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 dark:border-white/5 bg-slate-50/40 dark:bg-white/5 px-6 py-3">
+
+              <!-- Format Actions -->
+              <div class="flex items-center gap-2 bg-slate-50 dark:bg-white/5 border border-slate-200/60 dark:border-white/10 p-1 rounded-xl overflow-x-auto no-scrollbar">
+
+                <button type="button" (click)="execCommand('bold')" class="h-9 w-9 shrink-0 rounded-lg text-xs font-bold text-slate-500 dark:text-slate-300 hover:text-naf-navy dark:hover:text-naf-gold hover:bg-slate-200 dark:hover:bg-white/10 transition">B</button>
+                <button type="button" (click)="execCommand('italic')" class="h-9 w-9 shrink-0 rounded-lg italic text-xs font-bold text-slate-500 dark:text-slate-300 hover:text-naf-navy dark:hover:text-naf-gold hover:bg-slate-200 dark:hover:bg-white/10 transition">I</button>
+                <button type="button" (click)="execCommand('underline')" class="h-9 w-9 shrink-0 rounded-lg underline text-xs font-bold text-slate-500 dark:text-slate-300 hover:text-naf-navy dark:hover:text-naf-gold hover:bg-slate-200 dark:hover:bg-white/10 transition">U</button>
+
+                <div class="w-px h-5 bg-slate-200 dark:bg-white/10 mx-1 shrink-0"></div>
+
+                <select (change)="execCommand('fontName', $any($event.target).value)"
+                        class="h-9 shrink-0 bg-transparent text-xs font-bold text-slate-500 dark:text-slate-300 outline-none cursor-pointer px-2 hover:text-naf-navy dark:hover:text-naf-gold hover:bg-slate-200 dark:hover:bg-white/10 rounded-lg transition border-none">
+                  <option value="Arial" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">Arial</option>
+                  <option value="Times New Roman" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">Times New Roman</option>
+                  <option value="Courier New" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">Courier New</option>
+                  <option value="Georgia" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">Georgia</option>
+                  <option value="Verdana" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">Verdana</option>
+                </select>
+
+                <select (change)="execCommand('fontSize', $any($event.target).value)"
+                        class="h-9 shrink-0 bg-transparent text-xs font-bold text-slate-500 dark:text-slate-300 outline-none cursor-pointer px-2 hover:text-naf-navy dark:hover:text-naf-gold hover:bg-slate-200 dark:hover:bg-white/10 rounded-lg transition border-none">
+                  <option value="1" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">8px</option>
+                  <option value="2" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">10px</option>
+                  <option value="3" selected class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">12px</option>
+                  <option value="4" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">14px</option>
+                  <option value="5" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">18px</option>
+                  <option value="6" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">24px</option>
+                  <option value="7" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">36px</option>
+                </select>
+
+                <select (change)="transformText($any($event.target).value)"
+                        class="h-9 shrink-0 bg-transparent text-xs font-bold text-slate-500 dark:text-slate-300 outline-none cursor-pointer px-2 hover:text-naf-navy dark:hover:text-naf-gold hover:bg-slate-200 dark:hover:bg-white/10 rounded-lg transition border-none">
+                  <option value="" disabled selected>Case</option>
+                  <option value="uppercase" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">UPPERCASE</option>
+                  <option value="lowercase" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">lowercase</option>
+                  <option value="capitalize" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">Capitalize</option>
+                </select>
+
+                <div class="w-px h-5 bg-slate-200 dark:bg-white/10 mx-1 shrink-0"></div>
+
+                <button type="button" (click)="execCommand('insertUnorderedList')" class="px-3 h-9 shrink-0 rounded-lg text-xs font-bold text-slate-500 dark:text-slate-300 hover:text-naf-navy dark:hover:text-naf-gold hover:bg-slate-200 dark:hover:bg-white/10 transition uppercase tracking-wider">List</button>
+                <button type="button" (click)="execCommand('formatBlock', 'h3')" class="px-3 h-9 shrink-0 rounded-lg text-xs font-bold text-slate-500 dark:text-slate-300 hover:text-naf-navy dark:hover:text-naf-gold hover:bg-slate-200 dark:hover:bg-white/10 transition uppercase tracking-wider">Heading</button>
+
+                <button type="button"
+                        (click)="execCommand('justifyCenter')"
+                        title="Center Align Text"
+                        class="h-9 w-9 shrink-0 rounded-lg text-slate-500 dark:text-slate-300 hover:text-naf-navy dark:hover:text-naf-gold hover:bg-slate-200 dark:hover:bg-white/10 transition flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <line x1="21" y1="6" x2="3" y2="6"></line>
+                    <line x1="21" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="18" x2="3" y2="18"></line>
+                  </svg>
+                </button>
               </div>
 
-              <!-- Fullscreen Toggle Button -->
-              <button type="button" (click)="toggleFullscreen()" 
-                      [title]="isFullscreen() ? 'Exit Focus Mode' : 'Enter Focus Mode'"
-                      class="h-9 w-9 shrink-0 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition border border-transparent hover:border-slate-700">
-                
-                @if (!isFullscreen()) {
-                  <!-- Expand Icon -->
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M8 3H5a2 2 0 0 0-2 2v3"></path>
-                    <path d="M21 8V5a2 2 0 0 0-2-2h-3"></path>
-                    <path d="M3 16v3a2 2 0 0 0 2 2h3"></path>
-                    <path d="M16 21h3a2 2 0 0 0 2-2v-3"></path>
+              <!-- View Toggle / Status -->
+              <div class="flex items-center gap-3">
+                <div class="text-[11px] font-medium text-slate-400 dark:text-slate-500 hidden sm:flex items-center gap-2">
+                  <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                  <span class="hidden lg:inline">Live Composition Space</span>
+                </div>
+
+                <button type="button" (click)="toggleFullscreen()"
+                        [title]="isFullscreen() ? 'Exit Focus Mode' : 'Enter Focus Mode'"
+                        class="h-9 w-9 shrink-0 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-500 hover:text-naf-navy dark:hover:text-naf-gold hover:bg-slate-200 dark:hover:bg-white/10 transition border border-transparent hover:border-slate-300 dark:hover:border-white/10">
+                  @if (!isFullscreen()) {
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                      <path d="M8 3H5a2 2 0 0 0-2 2v3"></path>
+                      <path d="M21 8V5a2 2 0 0 0-2-2h-3"></path>
+                      <path d="M3 16v3a2 2 0 0 0 2 2h3"></path>
+                      <path d="M16 21h3a2 2 0 0 0 2-2v-3"></path>
+                    </svg>
+                  } @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                      <path d="M4 14h6v6"></path>
+                      <path d="M20 10h-6V4"></path>
+                      <path d="M14 10l7-7"></path>
+                      <path d="M3 21l7-7"></path>
+                    </svg>
+                  }
+                </button>
+              </div>
+            </div>
+          }
+
+          <!-- RICH TEXT LIVE DOCUMENT CANVAS -->
+          <div class="p-8 bg-gradient-to-b from-white to-slate-50/60 dark:from-naf-navyLight dark:to-naf-navy/60 min-h-[700px] relative flex-grow">
+
+            <!-- Loading state -->
+            @if (loadingReport()) {
+              <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 text-slate-400 dark:text-slate-500">
+                <span class="h-6 w-6 rounded-full border-2 border-naf-gold border-t-transparent animate-spin"></span>
+                <p class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Loading saved report...</p>
+              </div>
+            }
+
+            <!-- Empty / not-found state -->
+            @if (viewingReport() && !loadingReport() && reportNotFound()) {
+              <div class="absolute inset-0 flex flex-col items-center justify-center gap-4 text-center">
+                <div class="w-14 h-14 rounded-2xl border border-dashed border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-white/5 flex items-center justify-center text-slate-400 dark:text-slate-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
                   </svg>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-black text-slate-700 dark:text-slate-200">No Saved Report</p>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
+                    Nothing has been compiled for
+                    <span class="font-bold text-naf-navy dark:text-naf-gold">{{ selectedMonth() }} {{ selectedYear() }}</span>
+                    yet. Return to the composer to draft a new intelligence report.
+                  </p>
+                </div>
+                <button type="button"
+                        (click)="exitViewMode()"
+                        class="mt-2 px-4 py-2 rounded-xl bg-naf-navy dark:bg-naf-gold hover:bg-[#004080] dark:hover:bg-naf-goldLight text-white dark:text-naf-navy text-xs font-black uppercase tracking-wider transition shadow-sm">
+                  Open Composer
+                </button>
+              </div>
+            }
+
+            <div
+              #documentCanvas
+              [attr.contenteditable]="!viewingReport()"
+              (input)="onCanvasChange($any($event.target).innerHTML)"
+              (keydown)="handleKeyDown($event)"
+              [class.cursor-default]="viewingReport()"
+              [class.pointer-events-none]="viewingReport() && !loadingReport() && reportNotFound()"
+              class="w-full min-h-[650px] bg-transparent text-slate-800 dark:text-slate-200 text-base leading-relaxed outline-none prose prose-slate dark:prose-invert max-w-none focus:ring-0
+                     before:content-[attr(data-placeholder)] before:text-slate-400 dark:before:text-slate-600 before:absolute before:pointer-events-none empty:before:block before:hidden"
+              [attr.data-placeholder]="viewingReport()
+                ? 'No report content to display for the selected period.'
+                : 'Begin drafting strategic command briefing here...'">
+            </div>
+          </div>
+
+          <!-- REACTIONARY ACTION BAR — hidden while viewing -->
+          @if (!viewingReport()) {
+            <div class="px-8 py-5 border-t border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div class="space-y-0.5">
+                <h4 class="text-xs font-bold text-slate-700 dark:text-slate-200">Command Verification Protocol</h4>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">Review all system assets and intelligence briefs before sealing deployment file.</p>
+              </div>
+
+              <button type="button"
+                      (click)="submitReport()"
+                      class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-naf-navy to-[#004080] dark:from-naf-gold dark:to-naf-goldLight text-white dark:text-naf-navy px-6 py-3.5 text-xs font-black uppercase tracking-widest shadow-lg shadow-naf-navy/30 dark:shadow-naf-gold/30 hover:brightness-110 active:scale-[0.98] transition disabled:opacity-50 disabled:pointer-events-none"
+                      [disabled]="submittingReport() || !isCanvasHasText()">
+                @if (!submittingReport()) {
+                  <span>Compile Intelligence Report</span>
                 } @else {
-                  <!-- Collapse Icon -->
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 14h6v6"></path>
-                    <path d="M20 10h-6V4"></path>
-                    <path d="M14 10l7-7"></path>
-                    <path d="M3 21l7-7"></path>
-                  </svg>
+                  <span class="flex items-center gap-2">
+                    <span class="h-4 w-4 rounded-full border-2 border-current border-t-transparent animate-spin"></span>
+                    Processing Target Vectors...
+                  </span>
                 }
               </button>
             </div>
-          </div>
+          }
 
-          <!-- RICH TEXT LIVE DOCUMENT CANVAS -->
-          <div class="p-8 bg-gradient-to-b from-slate-950 to-slate-900/60 min-h-[700px] relative flex-grow">
-            <div
-              #documentCanvas
-              contenteditable="true"
-              (input)="onCanvasChange($any($event.target).innerHTML)"
-              (keydown)="handleKeyDown($event)"  
-              class="w-full min-h-[650px] bg-transparent text-slate-200 text-base leading-relaxed outline-none prose prose-invert max-w-none focus:ring-0
-                    before:content-[attr(data-placeholder)] before:text-slate-600 before:absolute before:pointer-events-none empty:before:block before:hidden"
-              data-placeholder="Begin drafting strategic command briefing here...">
+          <!-- VIEW-MODE ACTION BAR -->
+          @if (viewingReport() && !loadingReport() && !reportNotFound()) {
+            <div class="px-8 py-5 border-t border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div class="space-y-0.5">
+                <h4 class="text-xs font-bold text-slate-700 dark:text-slate-200">Report Review Console</h4>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                  Viewing saved intelligence report for
+                  <span class="font-bold text-naf-navy dark:text-naf-gold">{{ selectedMonth() }} {{ selectedYear() }}</span>.
+                </p>
+              </div>
+
+              <button type="button"
+                      (click)="exitViewMode()"
+                      class="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 px-6 py-3.5 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-emerald-900/30 hover:brightness-110 active:scale-[0.98] transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                Return to Composer
+              </button>
             </div>
-          </div>
-
-          <!-- REACTIONARY ACTION BAR -->
-          <div class="px-8 py-5 border-t border-slate-800 bg-slate-950 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div class="space-y-0.5">
-              <h4 class="text-xs font-bold text-slate-300">Command Verification Protocol</h4>
-              <p class="text-[11px] text-slate-500">Review all system assets and intelligence briefs before sealing deployment file.</p>
-            </div>
-
-            <button
-              type="button"
-              (click)="submitReport()"
-              class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#003366] to-[#004b8d] px-6 py-3.5 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-[#003366]/30 hover:brightness-110 active:scale-[0.98] transition disabled:opacity-50 disabled:pointer-events-none"
-              [disabled]="submittingReport() || !isCanvasHasText()">
-
-              @if (!submittingReport()) {
-                <span>Compile Intelligence Report</span>
-              } @else {
-                <span class="flex items-center gap-2">
-                  <span class="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin"></span>
-                  Processing Target Vectors...
-                </span>
-              }
-            </button>
-          </div>
+          }
         </div>
 
         <!-- STATUS TOAST OVERLAY -->
         @if (statusMessage()) {
-          <div class="rounded-2xl border border-emerald-500/20 bg-emerald-950/30 p-4 flex items-center gap-3 backdrop-blur-sm">
-            <div class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></div>
-            <p class="text-xs font-medium text-emerald-300 tracking-wide">{{ statusMessage() }}</p>
+          <div class="rounded-2xl border p-4 flex items-center gap-3 backdrop-blur-sm"
+               [class.border-emerald-500/20]="!reportNotFound()"
+               [class.bg-emerald-950/30]="!reportNotFound()"
+               [class.border-amber-500/20]="reportNotFound()"
+               [class.bg-amber-950/30]="reportNotFound()">
+            <div class="w-2 h-2 rounded-full animate-ping"
+                 [class.bg-emerald-400]="!reportNotFound()"
+                 [class.bg-amber-400]="reportNotFound()"></div>
+            <p class="text-xs font-medium tracking-wide"
+               [class.text-emerald-300]="!reportNotFound()"
+               [class.text-amber-300]="reportNotFound()">{{ statusMessage() }}</p>
           </div>
         }
       </div>
 
-      <!-- ===================================================== -->
-      <!-- RIGHT: INTELLIGENCE DRAWER & CONSOLE ASSETS -->
-      <!-- Conditionally hidden if isFullscreen is true -->
-      <!-- ===================================================== -->
+      <!-- ============================================================
+           RIGHT: INTELLIGENCE DRAWER & CONSOLE ASSETS
+           ============================================================ -->
       @if (!isFullscreen()) {
         <aside class="space-y-6 transition-opacity duration-500 ease-in-out">
-  
+
           <!-- EMBEDDED DASHBOARD CHARTS WRITER SECTION -->
-          <div class="bg-slate-950 border border-slate-800 rounded-[2rem] overflow-hidden shadow-xl">
-            <div class="px-6 py-5 border-b border-slate-800 bg-slate-900/20">
+          <div class="bg-white dark:bg-naf-navyLight border border-slate-200 dark:border-white/5 rounded-[2rem] overflow-hidden shadow-sm">
+            <div class="px-6 py-5 border-b border-slate-100 dark:border-white/5 bg-slate-50/20 dark:bg-white/5">
               <div class="flex items-center justify-between">
                 <div>
-                  <span class="text-[9px] font-black uppercase tracking-[0.2em] text-[#004b8d] block mb-1">Asset Pipeline</span>
-                  <h3 class="text-lg font-bold text-white tracking-tight">Dashboard Visuals</h3>
+                  <span class="text-[9px] font-black uppercase tracking-[0.2em] text-naf-gold block mb-1">Asset Pipeline</span>
+                  <h3 class="text-lg font-bold text-naf-navy dark:text-white tracking-tight">Dashboard Visuals</h3>
                 </div>
-                <div class="h-7 px-2.5 rounded-md bg-slate-900 border border-slate-800 flex items-center text-xs font-mono font-bold text-slate-300">
+                <div class="h-7 px-2.5 rounded-md bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center text-xs font-mono font-bold text-slate-600 dark:text-slate-300">
                   {{ selectedCharts().length }}
                 </div>
               </div>
-              
+
               @if (selectedCharts().length > 0) {
                 <div class="mt-4 flex items-center justify-between">
-                  <p class="text-[11px] text-slate-400">Click action to position asset at cursor layout</p>
-                  <button type="button" (click)="clearCharts()" class="text-[10px] font-black uppercase tracking-wider text-red-400 hover:text-red-300 transition">
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                    {{ viewingReport()
+                        ? 'Chart injection disabled in view mode.'
+                        : 'Click action to position asset at cursor layout' }}
+                  </p>
+                  <button type="button" (click)="clearCharts()" class="text-[10px] font-black uppercase tracking-wider text-red-500 hover:text-red-400 transition">
                     Flush Pipeline
                   </button>
                 </div>
               }
             </div>
-  
-            <div class="p-4 max-h-[460px] overflow-y-auto space-y-4 custom-scrollbar bg-slate-950">
+
+            <div class="p-4 max-h-[460px] overflow-y-auto space-y-4 custom-scroll bg-white dark:bg-naf-navyLight">
               @if (selectedCharts().length === 0) {
-                <div class="rounded-2xl border border-dashed border-slate-800 bg-slate-900/10 p-8 text-center space-y-3">
-                  <div class="w-10 h-10 rounded-full border border-slate-800 bg-slate-900 flex items-center justify-center mx-auto text-slate-500">
+                <div class="rounded-2xl border border-dashed border-slate-200 dark:border-white/10 bg-slate-50/10 dark:bg-white/[0.02] p-8 text-center space-y-3">
+                  <div class="w-10 h-10 rounded-full border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 flex items-center justify-center mx-auto text-slate-400 dark:text-slate-500">
                     +
                   </div>
-                  <p class="text-xs text-slate-500 max-w-[240px] mx-auto leading-normal">
+                  <p class="text-xs text-slate-500 dark:text-slate-400 max-w-[240px] mx-auto leading-normal">
                     No charts mapped. Mount charts inside the primary KPI dashboard to instantly expose them inside this intelligence composer.
                   </p>
                 </div>
               } @else {
                 @for (chart of selectedCharts(); track chart.createdAt; let i = $index) {
-                  <div class="group relative rounded-2xl border border-slate-800 bg-slate-900/40 overflow-hidden hover:border-slate-700 transition duration-200">
-                    
-                    <!-- IMAGE WRAPPER -->
-                    <div class="relative aspect-[16/10] bg-slate-950 border-b border-slate-800/80 overflow-hidden">
-                      <img [src]="chart.imageBase64" alt="Chart Execution Data" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition duration-300 group-hover:scale-[1.02]" />
-                      <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60"></div>
+                  <div class="group relative rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 overflow-hidden hover:border-naf-gold/40 dark:hover:border-naf-gold/40 transition duration-200">
+
+                    <div class="relative aspect-[16/10] bg-slate-50 dark:bg-naf-navy border-b border-slate-100 dark:border-white/10 overflow-hidden">
+                      <img [src]="chart.imageBase64" alt="Chart Execution Data" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition duration-300 group-hover:scale-[1.02]" />
+                      <div class="absolute inset-0 bg-gradient-to-t from-slate-50 dark:from-naf-navy via-transparent to-transparent opacity-60"></div>
                     </div>
-  
-                    <!-- ASSET SPECIFICS -->
+
                     <div class="p-4 space-y-3">
                       <div class="flex items-start justify-between gap-2">
                         <div>
-                          <span class="text-[9px] font-mono font-bold uppercase tracking-wider text-[#004b8d] bg-[#003366]/20 border border-[#004b8d]/30 rounded px-1.5 py-0.5">
+                          <span class="text-[9px] font-mono font-bold uppercase tracking-wider text-naf-gold bg-naf-gold/10 dark:bg-naf-gold/15 border border-naf-gold/30 rounded px-1.5 py-0.5">
                             {{ chart.chartType }}
                           </span>
-                          <h4 class="text-xs font-bold text-slate-200 mt-1.5 leading-tight truncate max-w-[220px]">
+                          <h4 class="text-xs font-bold text-slate-700 dark:text-slate-200 mt-1.5 leading-tight truncate max-w-[220px]">
                             {{ chart.title }}
                           </h4>
                         </div>
-                        
-                        <button type="button" (click)="removeChart(i)" class="text-slate-500 hover:text-red-400 p-1 text-[10px] uppercase font-bold transition">
+
+                        <button type="button" (click)="removeChart(i)" class="text-slate-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 p-1 text-[10px] uppercase font-bold transition">
                           Omit
                         </button>
                       </div>
-  
-                      <!-- WORKSPACE INJECTION HOOK -->
-                      <button
-                        type="button"
-                        (click)="insertChartInline(chart)"
-                        class="w-full py-2 bg-slate-800 hover:bg-[#003366] text-slate-200 hover:text-white rounded-xl border border-slate-700/60 hover:border-[#004b8d] text-xs font-black uppercase tracking-wider transition active:scale-[0.99]">
-                        Insert Inline
+
+                      <button type="button"
+                              (click)="insertChartInline(chart)"
+                              [disabled]="viewingReport()"
+                              class="w-full py-2 bg-slate-100 dark:bg-white/5 hover:bg-naf-navy dark:hover:bg-naf-gold text-slate-700 dark:text-slate-200 hover:text-white dark:hover:text-naf-navy rounded-xl border border-slate-200 dark:border-white/10 hover:border-naf-navy dark:hover:border-naf-gold text-xs font-black uppercase tracking-wider transition active:scale-[0.99] disabled:opacity-40 disabled:pointer-events-none disabled:cursor-not-allowed">
+                        {{ viewingReport() ? 'Locked (View Mode)' : 'Insert Inline' }}
                       </button>
                     </div>
                   </div>
@@ -291,34 +489,34 @@
               }
             </div>
           </div>
-  
+
           <!-- OPERATIONAL OBSERVATIONS FEED -->
-          <div class="bg-slate-950 border border-slate-800 rounded-[2rem] overflow-hidden shadow-xl">
-            <div class="px-6 py-5 border-b border-slate-800 bg-slate-900/20">
-              <h3 class="text-base font-bold text-white tracking-tight">Intelligence Feed</h3>
-              <p class="text-[11px] text-slate-400 mt-1">Live updates mapped to target active timeline frame.</p>
+          <div class="bg-white dark:bg-naf-navyLight border border-slate-200 dark:border-white/5 rounded-[2rem] overflow-hidden shadow-sm">
+            <div class="px-6 py-5 border-b border-slate-100 dark:border-white/5 bg-slate-50/20 dark:bg-white/5">
+              <h3 class="text-base font-bold text-naf-navy dark:text-white tracking-tight">Intelligence Feed</h3>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Live updates mapped to target active timeline frame.</p>
             </div>
-  
+
             <div class="p-6">
               @if (loadingObservations()) {
-                <div class="py-8 text-center text-xs text-slate-500 font-medium tracking-wide flex items-center justify-center gap-2">
-                  <span class="h-3 w-3 rounded-full border border-slate-600 border-t-transparent animate-spin"></span>
+                <div class="py-8 text-center text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide flex items-center justify-center gap-2">
+                  <span class="h-3 w-3 rounded-full border border-slate-400 dark:border-slate-500 border-t-transparent animate-spin"></span>
                   Processing Field Logs...
                 </div>
               } @else if (observations().length === 0) {
-                <div class="rounded-xl border border-dashed border-slate-800 bg-slate-900/10 p-6 text-center">
-                  <p class="text-xs text-slate-500">No telemetry observations captured for selected matrix cycle.</p>
+                <div class="rounded-xl border border-dashed border-slate-200 dark:border-white/10 bg-slate-50/10 dark:bg-white/[0.02] p-6 text-center">
+                  <p class="text-xs text-slate-500 dark:text-slate-400">No telemetry observations captured for selected matrix cycle.</p>
                 </div>
               } @else {
-                <div class="space-y-4 max-h-[380px] overflow-y-auto pr-1 custom-scrollbar">
+                <div class="space-y-4 max-h-[380px] overflow-y-auto pr-1 custom-scroll">
                   @for (observation of observations(); track observation.timestamp) {
-                    <div class="rounded-xl border border-slate-800/80 bg-slate-900/30 p-4 space-y-3 hover:bg-slate-900/50 transition">
+                    <div class="rounded-xl border border-slate-200/80 dark:border-white/10 bg-slate-50/30 dark:bg-white/5 p-4 space-y-3 hover:bg-slate-50 dark:hover:bg-white/10 transition">
                       <div class="flex items-center justify-between gap-2 flex-wrap">
-                        <span class="text-[9px] font-black uppercase tracking-wider bg-slate-800 border border-slate-700 text-slate-300 px-2 py-0.5 rounded-md">
+                        <span class="text-[9px] font-black uppercase tracking-wider bg-slate-100 dark:bg-white/10 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-md">
                           {{ observation.period }} {{ observation.year }}
                         </span>
                       </div>
-                      <p class="text-xs text-slate-400 leading-relaxed font-normal">
+                      <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
                         {{ observation.content }}
                       </p>
                     </div>
@@ -327,7 +525,7 @@
               }
             </div>
           </div>
-  
+
         </aside>
       }
     </div>
