@@ -9,10 +9,9 @@ import { ReportMonth } from '../../shared/report-month';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-
-
 @Component({
   selector: 'app-air-component-detail.component',
+  standalone: true,
   imports: [RouterModule, FormsModule, CommonModule],
   templateUrl: './air-component-detail.component.html',
   styleUrl: './air-component-detail.component.css',
@@ -41,7 +40,7 @@ export class AirComponentDetailComponent {
   reportExpanded = signal<boolean>(false);
   filtersExpanded = signal<boolean>(true);
 
-  // ✅ NEW: REPORT CARD TOGGLES
+  // Report card toggles
   reportCards = signal<Record<string, boolean>>({
     mission: false,
     crew: false,
@@ -103,7 +102,6 @@ export class AirComponentDetailComponent {
     return name ? `${name} Observation` : `Observation for ${this.selectedMonth()} ${this.selectedYear()}`;
   });
 
-  // 🔁 MAIN REPORT TOGGLE
   toggleReport() {
     this.reportExpanded.update(v => !v);
   }
@@ -128,7 +126,6 @@ export class AirComponentDetailComponent {
     }));
   }
 
-  // 🔥 CARD TOGGLE SYSTEM
   toggleReportCard(key: string) {
     this.reportCards.update(state => ({
       ...state,

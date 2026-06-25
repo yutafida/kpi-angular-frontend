@@ -1,12 +1,3 @@
-// import { Component } from '@angular/core';
-
-// @Component({
-//   selector: 'app-theme-toggle.component',
-//   imports: [],
-//   templateUrl: './theme-toggle.component.html',
-//   styleUrl: './theme-toggle.component.css',
-// })
-// export class ThemeToggleComponent {}
 
 
 import { Component, inject } from '@angular/core';
@@ -14,17 +5,6 @@ import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../services/theme.service';
 
 
-
-/**
- * Reusable dark/light theme toggle button.
- *
- * Drop it into any header, sidebar, or toolbar:
- *
- *   <app-theme-toggle />
- *
- * Visual: a sliding pill with sun/moon icons that mirrors the
- * DOPLANS launcher page toggle.
- */
 @Component({
   selector: 'app-theme-toggle',
   standalone: true,
