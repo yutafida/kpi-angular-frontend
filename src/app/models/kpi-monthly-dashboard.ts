@@ -14,4 +14,6 @@ export interface KpiMonthlyDashboard {
 
     bestTheatre: string;
     attentionTheatre: string;
+
+    stdDev: number; 
 }
