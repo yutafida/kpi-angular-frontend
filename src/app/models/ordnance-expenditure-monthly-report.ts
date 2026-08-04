@@ -8,5 +8,5 @@ export interface OrdnanceExpenditureMonthlyReport {
     expected: number;
     actual: number;
 
-    variance: number;
+    totalEffectivenessRatio: number;
 }

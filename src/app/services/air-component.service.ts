@@ -8,10 +8,10 @@ import { inject } from '@angular/core/primitives/di';
 @Injectable({ providedIn: 'root' })
 export class AirComponentService {
 
-  private apiUrl = 'http://localhost:3000';
+//  private apiUrl = 'http://localhost:3000';
   private http = inject(HttpClient);
 
-  private baseUrl = 'http://localhost:4040/api/kpi';
+  private baseUrl = 'http://localhost:8080/api/kpi';
 
   
   getComponentSummary(id: number): Observable<AirComponentSummary> {
@@ -54,22 +54,22 @@ export class AirComponentService {
   // constructor(private http: HttpClient) {}
 
 
-  loadData() {
-    this.loading.set(true);
-    this.error.set(null);
+  // loadData() {
+  //   this.loading.set(true);
+  //   this.error.set(null);
 
-    this.http.get<AirComponent[]>(`${this.apiUrl}/airComponents`)
-      .subscribe({
-        next: (data) => {
-          this.airComponents.set(data);
-          this.loading.set(false);
-        },
-        error: (err) => {
-          this.error.set('Failed to load air components');
-          this.loading.set(false);
-        }
-      });
-  }
+  //   this.http.get<AirComponent[]>(`${this.apiUrl}/airComponents`)
+  //     .subscribe({
+  //       next: (data) => {
+  //         this.airComponents.set(data);
+  //         this.loading.set(false);
+  //       },
+  //       error: (err) => {
+  //         this.error.set('Failed to load air components');
+  //         this.loading.set(false);
+  //       }
+  //     });
+  // }
 
 
   selectComponent(component: AirComponent) {

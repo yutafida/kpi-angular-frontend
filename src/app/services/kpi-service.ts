@@ -9,12 +9,17 @@ import { KpiReportWriteUp } from '../models/kpi-report-write-up';
 
 
 
+export type ReportPeriod = 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
+export type ReportQuarter = 'Q1' | 'Q2' | 'Q3' | 'Q4';
+
+
+
 @Injectable({
   providedIn: 'root'
 })
 export class KpiService {
 
-  private baseUrl = 'http://localhost:4040/api/kpi';
+  private baseUrl = 'http://localhost:8080/api/kpi';
 
   constructor(private http: HttpClient) {}
 
@@ -56,24 +61,82 @@ export class KpiService {
     );
   }
 
-  getMonthlyReport(month: string, year: number): Observable<KpiMonthlyDashboard> {
+  // getMonthlyReport(month: string, year: number): Observable<KpiMonthlyDashboard> {
+  //   const params = new HttpParams()
+  //     .set('month', month)
+  //     .set('year', year);
+
+  //   return this.http.get<KpiMonthlyDashboard>(`${this.baseUrl}/monthly`, { params });
+  // }
+
+    getMonthlyReport(month: string, year: number): Observable<KpiMonthlyDashboard> {
     const params = new HttpParams()
       .set('month', month)
-      .set('year', year);
+      .set('year', year)
+      .set('period', 'MONTHLY');
 
     return this.http.get<KpiMonthlyDashboard>(`${this.baseUrl}/monthly`, { params });
   }
 
-  getAirComponentMonthlyDashboard(
+  getQuarterlyReport(quarter: string, year: number): Observable<KpiMonthlyDashboard> {
+    const params = new HttpParams()
+      .set('quarter', quarter)
+      .set('year', year)
+      .set('period', 'QUARTERLY');
+
+    return this.http.get<KpiMonthlyDashboard>(`${this.baseUrl}/monthly`, { params });
+  }
+
+  getReport(
+    year: number,
+    period: 'MONTH' | 'QUARTER',
+    month?: string,
+    quarter?: string
+  ): Observable<KpiReportWriteUp> {
+    let params = new HttpParams().set('year', year.toString()).set('period', period);
+    if (period === 'MONTH' && month) params = params.set('month', month);
+    if (period === 'QUARTER' && quarter) params = params.set('quarter', quarter);
+
+    return this.http.get<KpiReportWriteUp>(`${this.baseUrl}/reports`, { params });
+  }
+
+
+  
+
+  getAirComponentDashboard(
     airComponentId: number,
     year: number,
-    month: ReportMonth
+    period: ReportPeriod = 'MONTHLY',
+    month?: ReportMonth,
+    quarter?: ReportQuarter
   ): Observable<AirComponentMonthlyReport> {
+    
+    let params = new HttpParams().set('period', period);
+    
+    if (month) {
+      params = params.set('month', month);
+    }
+    if (quarter) {
+      params = params.set('quarter', quarter);
+    }
 
     return this.http.get<AirComponentMonthlyReport>(
-      `${this.baseUrl}/${airComponentId}/monthly/${year}/${month}`
+      `${this.baseUrl}/${airComponentId}/dashboard/${year}`,
+      { params }
     );
   }
+
+
+  // getAirComponentMonthlyDashboard(
+  //   airComponentId: number,
+  //   year: number,
+  //   month: ReportMonth
+  // ): Observable<AirComponentMonthlyReport> {
+
+  //   return this.http.get<AirComponentMonthlyReport>(
+  //     `${this.baseUrl}/${airComponentId}/monthly/${year}/${month}`
+  //   );
+  // }
 
   
   submitDashboardObservation(
@@ -145,17 +208,28 @@ export class KpiService {
     );
   }
 
-  getReport(
-    reportMonth: ReportMonth,
-    reportYear: number
-  ): Observable<KpiReportWriteUp> {
+  // getReport(
+  //   reportMonth: ReportMonth,
+  //   reportYear: number
+  // ): Observable<KpiReportWriteUp> {
 
-    return this.http.get<KpiReportWriteUp>(
-      `${this.baseUrl}/reports/${reportMonth}/${reportYear}`
+  //   return this.http.get<KpiReportWriteUp>(
+  //     `${this.baseUrl}/reports/${reportMonth}/${reportYear}`
+  //   );
+  // }
+
+  getReports(): Observable<KpiReportWriteUp[]> {
+    return this.http.get<KpiReportWriteUp[]>(
+      `${this.baseUrl}/reports`
     );
   }
 
-
-  
+  deleteReport(
+    reportId: number
+  ): Observable<void> {
+    return this.http.delete<void>(
+      `${this.baseUrl}/reports/${reportId}`
+    );
+  }
   
 }

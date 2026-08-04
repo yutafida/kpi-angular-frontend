@@ -1,13 +1,14 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AirComponentService } from '../../services/air-component.service';
 import { AirComponentSummary } from '../../models/air-component-summary';
 import { RouterModule } from '@angular/router';
-import { KpiService } from '../../services/kpi-service';
+import { KpiService, ReportPeriod, ReportQuarter } from '../../services/kpi-service';
 import { AirComponentMonthlyReport } from '../../models/air-component-monthly-report';
 import { ReportMonth } from '../../shared/report-month';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-air-component-detail.component',
@@ -16,162 +17,177 @@ import { CommonModule } from '@angular/common';
   templateUrl: './air-component-detail.component.html',
   styleUrl: './air-component-detail.component.css',
 })
-export class AirComponentDetailComponent {
+export class AirComponentDetailComponent implements OnInit {
 
-  private route = inject(ActivatedRoute);
-  private service = inject(AirComponentService);
-  private kpiService = inject(KpiService);
+    private route = inject(ActivatedRoute);
+    private service = inject(AirComponentService);
+    private kpiService = inject(KpiService);
 
-  summary = signal<AirComponentSummary | null>(null);
-  monthlyReport = signal<AirComponentMonthlyReport | null>(null);
-  loading = signal<boolean>(true);
-  componentId = signal<number | null>(null);
+    summary = signal<AirComponentSummary | null>(null);
+    monthlyReport = signal<AirComponentMonthlyReport | null>(null);
+    loading = signal<boolean>(true);
+    componentId = signal<number | null>(null);
 
-  selectedMonth = signal<ReportMonth>(ReportMonth.MAY);
-  selectedYear = signal<number>(2026);
+    selectedPeriod = signal<ReportPeriod>('MONTHLY');
+    selectedMonth = signal<ReportMonth>(ReportMonth.AUGUST);
+    selectedQuarter = signal<ReportQuarter>('Q3'); // Added Quarter State
+    selectedYear = signal<number>(2026);
 
-  // Observation pane state
-  showObservationPane = signal<boolean>(false);
-  observationNotes = signal<Record<string, string>>({});
-  submittingObservation = signal<boolean>(false);
+    periods: ReportPeriod[] = ['MONTHLY', 'QUARTERLY', 'YEARLY'];
+    months = Object.values(ReportMonth);
+    quarters: ReportQuarter[] = ['Q1', 'Q2', 'Q3', 'Q4']; // Added Quarters Array
+    years = [2024, 2025, 2026, 2027, 2028, 2029, 2030];
 
-  // UI toggles
-  kpiExpanded = signal<boolean>(true);
-  reportExpanded = signal<boolean>(false);
-  filtersExpanded = signal<boolean>(true);
+    // Observation pane state
+    showObservationPane = signal<boolean>(false);
+    observationNotes = signal<Record<string, string>>({});
+    submittingObservation = signal<boolean>(false);
 
-  // Report card toggles
-  reportCards = signal<Record<string, boolean>>({
-    mission: false,
-    crew: false,
-    fleet: false,
-    fuel: false,
-    ordnance: false,
-    joint: false
-  });
-
-  months = Object.values(ReportMonth);
-  years = [2024, 2025, 2026, 2027];
-
-  constructor() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-
-    this.componentId.set(id);
-    this.service.getComponentSummary(id).subscribe({
-      next: (data) => {
-        this.summary.set(data);
-        this.loading.set(false);
-      },
-      error: () => this.loading.set(false)
+    // Report card toggles
+    reportCards = signal<Record<string, boolean>>({
+        mission: true,
+        crew: true,
+        fleet: true,
+        fuel: true,
+        ordnance: true,
+        joint: true
     });
 
-    effect(() => {
-      const month = this.selectedMonth();
-      const year = this.selectedYear();
+    constructor() {
+            const id = Number(this.route.snapshot.paramMap.get('id'));
+            this.componentId.set(id);
 
-      this.kpiService.getAirComponentMonthlyDashboard(id, year, month)
+            this.service.getComponentSummary(id).subscribe({
+            next: (data) => {
+                this.summary.set(data);
+                this.loading.set(false);
+            },
+            error: () => this.loading.set(false)
+            });
+    }
+
+    ngOnInit(): void { this.loadReportData(); }
+
+    loadReportData(): void { 
+        const id = this.componentId();
+        if (!id) return;
+
+        this.kpiService.getAirComponentDashboard(
+            id, 
+            this.selectedYear(), 
+            this.selectedPeriod(),
+            this.selectedPeriod() === 'MONTHLY' ? this.selectedMonth() : undefined,
+            this.selectedPeriod() === 'QUARTERLY' ? this.selectedQuarter() : undefined
+        )
         .subscribe({
-          next: (data) => this.monthlyReport.set(data),
-          error: (err) => console.error(err)
+            next: (data) => this.monthlyReport.set(data),
+            error: (err) => console.error(err)
         });
+    }
+
+    onFilterChange(): void {
+        this.loadReportData();
+    }
+
+    // Clamps percentage values between 0 and 100 for safe UI rendering
+    getSafePercentage(value: number | undefined | null, isDecimal: boolean = false): number {
+        if (value == null) return 0;
+        const val = isDecimal ? value * 100 : value;
+        return Math.min(Math.max(val, 0), 100);
+    }
+
+    // Helper computed to dynamically display the correct period label
+    periodLabel = computed(() => {
+        return this.selectedPeriod() === 'QUARTERLY' ? this.selectedQuarter() : this.selectedMonth();
     });
-  }
 
-  selectedObservationKey = computed(() => {
-    const componentId = this.componentId();
-    const month = this.selectedMonth();
-    const year = this.selectedYear();
-    return componentId ? `aircomponent-${componentId}-${month}-${year}` : `aircomponent-unknown-${month}-${year}`;
-  });
+    selectedObservationKey = computed(() => {
+        const componentId = this.componentId();
+        const label = this.periodLabel();
+        const year = this.selectedYear();
+        return componentId ? `aircomponent-${componentId}-${label}-${year}` : `aircomponent-unknown-${label}-${year}`;
+    });
 
-  selectedObservationLabel = computed(() => {
-    const name = this.summary()?.name;
-    if (name) {
-      return `${name} - ${this.selectedMonth()} ${this.selectedYear()}`;
-    }
-    const componentId = this.componentId();
-    return componentId ? `Component ${componentId} - ${this.selectedMonth()} ${this.selectedYear()}` : `${this.selectedMonth()} ${this.selectedYear()}`;
-  });
+    selectedObservationLabel = computed(() => {
+        const name = this.summary()?.name;
+        const label = this.periodLabel();
+        if (name) {
+            return `${name} - ${label} ${this.selectedYear()}`;
+        }
+        const componentId = this.componentId();
+        return componentId ? `Component ${componentId} - ${label} ${this.selectedYear()}` : `${label} ${this.selectedYear()}`;
+    });
 
-  observationText = computed(() => {
-    return this.observationNotes()[this.selectedObservationKey()] || '';
-  });
+    observationText = computed(() => {
+        return this.observationNotes()[this.selectedObservationKey()] || '';
+    });
 
-  observationTitle = computed(() => {
-    const name = this.summary()?.name;
-    return name ? `${name} Observation` : `Observation for ${this.selectedMonth()} ${this.selectedYear()}`;
-  });
+    observationTitle = computed(() => {
+        const name = this.summary()?.name;
+        const label = this.periodLabel();
+        return name ? `${name} Observation` : `Observation for ${label} ${this.selectedYear()}`;
+    });
 
-  toggleReport() {
-    this.reportExpanded.update(v => !v);
-  }
-
-  toggleKpi() {
-    this.kpiExpanded.update(v => !v);
-  }
-
-  toggleFilters() {
-    this.filtersExpanded.update(v => !v);
-  }
-
-  toggleObservationPane(): void {
-    this.showObservationPane.update(v => !v);
-  }
-
-  setObservationText(value: string): void {
-    const key = this.selectedObservationKey();
-    this.observationNotes.update(notes => ({
-      ...notes,
-      [key]: value
-    }));
-  }
-
-  toggleReportCard(key: string) {
-    this.reportCards.update(state => ({
-      ...state,
-      [key]: !state[key]
-    }));
-  }
-
-  isReportOpen(key: string): boolean {
-    return !!this.reportCards()[key];
-  }
-
-  submitObservation(): void {
-    const content = this.observationText();
-    if (!content.trim()) {
-      console.warn('Cannot submit empty observation');
-      return;
+    toggleObservationPane(): void {
+        this.showObservationPane.update(v => !v);
     }
 
-    const componentId = this.componentId();
-    if (!componentId) {
-      console.error('Component ID not available');
-      return;
-    }
-
-    this.submittingObservation.set(true);
-
-    this.kpiService.submitComponentObservation(
-      componentId,
-      this.selectedMonth(),
-      this.selectedYear(),
-      content
-    ).subscribe({
-      next: (response) => {
-        console.log('Component observation submitted successfully:', response);
+    setObservationText(value: string): void {
         const key = this.selectedObservationKey();
         this.observationNotes.update(notes => ({
-          ...notes,
-          [key]: ''
+        ...notes,
+        [key]: value
         }));
-        this.submittingObservation.set(false);
-        this.showObservationPane.set(false);
-      },
-      error: (error) => {
-        console.error('Failed to submit component observation:', error);
-        this.submittingObservation.set(false);
-      }
-    });
-  }
+    }
+
+    toggleReportCard(key: string) {
+        this.reportCards.update(state => ({
+        ...state,
+        [key]: !state[key]
+        }));
+    }
+
+    isReportOpen(key: string): boolean {
+        return !!this.reportCards()[key];
+    }
+
+    submitObservation(): void {
+        const content = this.observationText();
+        if (!content.trim()) {
+        console.warn('Cannot submit empty observation');
+        return;
+        }
+
+        const componentId = this.componentId();
+        if (!componentId) {
+        console.error('Component ID not available');
+        return;
+        }
+
+        this.submittingObservation.set(true);
+
+        // Note: If your observation backend endpoint requires a month specifically, 
+        // you may need to map the quarter to a month here. If it accepts null month for quarterly, this is fine.
+        this.kpiService.submitComponentObservation(
+            componentId,
+            this.selectedMonth(), // Sending the currently selected month
+            this.selectedYear(),
+            content
+        ).subscribe({
+            next: (response) => {
+                console.log('Component observation submitted successfully:', response);
+                const key = this.selectedObservationKey();
+                this.observationNotes.update(notes => ({
+                ...notes,
+                [key]: ''
+                }));
+                this.submittingObservation.set(false);
+                this.showObservationPane.set(false);
+            },
+            error: (error) => {
+                console.error('Failed to submit component observation:', error);
+                this.submittingObservation.set(false);
+            }
+        });
+    }
 }

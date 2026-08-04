@@ -8,6 +8,7 @@ import { ReportMonth } from '../../shared/report-month';
 import { ReportChart } from '../../models/report-chart';
 import { ReportBuilderService } from '../../services/report-builder-service';
 import { ThemeToggleComponent } from '../theme-toggle.component/theme-toggle.component';
+import { KpiReportWriteUp } from '../../models/kpi-report-write-up';
 
 
 
@@ -19,6 +20,8 @@ import { ThemeToggleComponent } from '../theme-toggle.component/theme-toggle.com
   styleUrls: ['./kpi-report.css']
 })
 export class KpiReport implements OnInit {
+
+  readonly reportsPerPage = 10;
 
   // ViewChild reference to target the interactive document canvas
   @ViewChild('documentCanvas') documentCanvas!: ElementRef<HTMLDivElement>;
@@ -226,11 +229,137 @@ export class KpiReport implements OnInit {
 
   ngOnInit(): void {
     this.loadObservations();
+    this.loadSavedReports();
 
     // LOAD CHARTS FROM REPORT BUILDER SERVICE
     this.selectedCharts.set(
       this.reportBuilderService.getCharts()
     );
+  }
+
+  // =====================================================
+  // SAVED REPORTS TABLE
+  // =====================================================
+
+  savedReportsExpanded = signal<boolean>(false);
+
+  savedReports = signal<KpiReportWriteUp[]>([]);
+
+  loadingSavedReports = signal<boolean>(false);
+
+  deletingReportId = signal<number | null>(null);
+
+  currentReportsPage = signal<number>(1);
+
+  get paginatedSavedReports(): KpiReportWriteUp[] {
+    const start = (this.currentReportsPage() - 1) * this.reportsPerPage;
+    const end = start + this.reportsPerPage;
+    return this.savedReports().slice(start, end);
+  }
+
+  get totalReportsPages(): number {
+    return Math.max(
+      1,
+      Math.ceil(this.savedReports().length / this.reportsPerPage)
+    );
+  }
+
+  toggleSavedReportsSection(): void {
+    this.savedReportsExpanded.update((expanded) => !expanded);
+
+    if (this.savedReportsExpanded() && this.savedReports().length === 0) {
+      this.loadSavedReports();
+    }
+  }
+
+  loadSavedReports(): void {
+    this.loadingSavedReports.set(true);
+
+    this.kpiService.getReports().subscribe({
+      next: (reports) => {
+        const sortedReports = [...(reports || [])].sort((a, b) => {
+          const aTime = new Date(a.timestamp).getTime();
+          const bTime = new Date(b.timestamp).getTime();
+          return bTime - aTime;
+        });
+
+        this.savedReports.set(sortedReports);
+
+        if (this.currentReportsPage() > this.totalReportsPages) {
+          this.currentReportsPage.set(this.totalReportsPages);
+        }
+
+        this.loadingSavedReports.set(false);
+      },
+      error: (error) => {
+        console.error('Failed to load saved reports', error);
+        this.loadingSavedReports.set(false);
+      }
+    });
+  }
+
+  goToReportsPage(page: number): void {
+    if (page < 1 || page > this.totalReportsPages) return;
+    this.currentReportsPage.set(page);
+  }
+
+  openReportFromTable(report: KpiReportWriteUp): void {
+    this.selectedMonth.set(report.reportMonth);
+    this.selectedYear.set(report.reportYear);
+    this.loadReport(report.reportMonth, report.reportYear);
+  }
+
+  getReportPreview(content: string, maxLength: number = 80): string {
+    const textOnly = (content || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+
+    if (!textOnly) {
+      return 'No content preview available.';
+    }
+
+    if (textOnly.length <= maxLength) {
+      return textOnly;
+    }
+
+    return `${textOnly.slice(0, maxLength)}...`;
+  }
+
+  deleteSavedReport(report: KpiReportWriteUp): void {
+    if (!report.id) {
+      this.statusMessage.set('Unable to delete report: invalid report id.');
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Delete saved report for ${report.reportMonth} ${report.reportYear}? This action cannot be undone.`
+    );
+
+    if (!confirmed) return;
+
+    this.deletingReportId.set(report.id);
+
+    this.kpiService.deleteReport(report.id).subscribe({
+      next: () => {
+        this.statusMessage.set(
+          `Deleted report for ${report.reportMonth} ${report.reportYear}.`
+        );
+
+        if (
+          this.viewingReport() &&
+          this.selectedMonth() === report.reportMonth &&
+          this.selectedYear() === report.reportYear
+        ) {
+          this.exitViewMode();
+        }
+
+        this.loadSavedReports();
+        this.deletingReportId.set(null);
+      },
+      error: (error) => {
+        console.error('Failed to delete report', error);
+        this.statusMessage.set('Failed to delete report.');
+        this.deletingReportId.set(null);
+      }
+    });
   }
 
   // =====================================================
