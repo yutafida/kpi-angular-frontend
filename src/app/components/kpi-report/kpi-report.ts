@@ -45,7 +45,7 @@ export class KpiReport implements OnInit {
     this.reportNotFound.set(false);
 
     this.kpiService
-      .getReport(month, year)
+      .getReport(year, 'MONTH', month)
       .subscribe({
         next: (report) => {
           // Handle the case where the backend returns an empty / null payload

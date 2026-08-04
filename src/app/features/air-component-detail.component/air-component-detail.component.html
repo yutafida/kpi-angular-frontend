@@ -58,45 +58,48 @@
 
       <!-- STICKY FILTERS TOOLBAR -->
       <div class="sticky top-0 z-30 bg-white/95 dark:bg-naf-navy/95 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl shadow-md p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-500 dark:text-slate-400">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
-          </div>
-          <div>
-            <h3 class="text-sm font-bold text-naf-navy dark:text-white uppercase tracking-wide">Reporting Parameters</h3>
-            <p class="text-[10px] text-slate-400 dark:text-slate-500">Adjust timeline filters</p>
-          </div>
-        </div>
-
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        
+        <div class="flex flex-wrap items-center gap-4 w-full md:w-auto justify-center md:justify-start">
           
-          <!-- Period Dropdown (Monthly / Quarterly / Yearly) -->
-          <div class="flex items-center gap-2 bg-slate-50 dark:bg-naf-navyLight border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 focus-within:border-naf-gold/60 focus-within:ring-4 focus-within:ring-naf-gold/20 transition-all">
-            <select class="w-full bg-transparent text-xs font-bold text-slate-700 dark:text-slate-200 outline-none cursor-pointer pr-2"
-              [ngModel]="selectedPeriod()" (ngModelChange)="selectedPeriod.set($event); onFilterChange()">
-              @for (p of periods; track p) {
-                <option [value]="p" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">{{ p }}</option>
-              }
-            </select>
+          <!-- Mode toggle (Month / Quarter) -->
+          <div class="flex items-center bg-slate-100 dark:bg-white/5 rounded-lg p-1 border border-slate-200 dark:border-white/10">
+            <button (click)="setFilterType('MONTH')"
+                    [class.bg-white]="filterType()==='MONTH'"
+                    [class.dark:bg-naf-navy]="filterType()==='MONTH'"
+                    [class.shadow-sm]="filterType()==='MONTH'"
+                    [class.text-naf-navy]="filterType()==='MONTH'"
+                    [class.dark:text-naf-gold]="filterType()==='MONTH'"
+                    class="px-4 py-1.5 text-[10px] font-bold uppercase transition-all rounded-md hover:text-slate-600 dark:hover:text-slate-200 text-slate-500 dark:text-slate-400">
+              Month
+            </button>
+            <button (click)="setFilterType('QUARTER')"
+                    [class.bg-white]="filterType()==='QUARTER'"
+                    [class.dark:bg-naf-navy]="filterType()==='QUARTER'"
+                    [class.shadow-sm]="filterType()==='QUARTER'"
+                    [class.text-naf-navy]="filterType()==='QUARTER'"
+                    [class.dark:text-naf-gold]="filterType()==='QUARTER'"
+                    class="px-4 py-1.5 text-[10px] font-bold uppercase transition-all rounded-md hover:text-slate-600 dark:hover:text-slate-200 text-slate-500 dark:text-slate-400">
+              Quarter
+            </button>
           </div>
 
-          <!-- Month Dropdown (Visible only if MONTHLY) -->
-          @if (selectedPeriod() === 'MONTHLY') {
+          <div class="w-px h-6 bg-slate-200 dark:bg-white/10 hidden md:block"></div>
+
+          <!-- Month Dropdown (Visible only if MONTH) -->
+          @if (filterType() === 'MONTH') {
             <div class="flex items-center gap-2 bg-slate-50 dark:bg-naf-navyLight border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 focus-within:border-naf-gold/60 focus-within:ring-4 focus-within:ring-naf-gold/20 transition-all">
               <select class="w-full bg-transparent text-xs font-bold text-slate-700 dark:text-slate-200 outline-none cursor-pointer pr-2"
-                [ngModel]="selectedMonth()" (ngModelChange)="selectedMonth.set($event); onFilterChange()">
+                [ngModel]="selectedMonth()" (ngModelChange)="selectedMonth.set($event); loadReportData()">
                 @for (m of months; track m) {
                   <option [ngValue]="m" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">{{ m }}</option>
                 }
               </select>
             </div>
-          }
-
-          <!-- Quarter Dropdown (Visible only if QUARTERLY) -->
-          @if (selectedPeriod() === 'QUARTERLY') {
+          } @else {
+            <!-- Quarter Dropdown (Visible only if QUARTER) -->
             <div class="flex items-center gap-2 bg-slate-50 dark:bg-naf-navyLight border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 focus-within:border-naf-gold/60 focus-within:ring-4 focus-within:ring-naf-gold/20 transition-all">
               <select class="w-full bg-transparent text-xs font-bold text-slate-700 dark:text-slate-200 outline-none cursor-pointer pr-2"
-                [ngModel]="selectedQuarter()" (ngModelChange)="selectedQuarter.set($event); onFilterChange()">
+                [ngModel]="selectedQuarter()" (ngModelChange)="selectedQuarter.set($event); loadReportData()">
                 @for (q of quarters; track q) {
                   <option [value]="q" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">{{ q }}</option>
                 }
@@ -107,7 +110,7 @@
           <!-- Year Dropdown -->
           <div class="flex items-center gap-2 bg-slate-50 dark:bg-naf-navyLight border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 focus-within:border-naf-gold/60 focus-within:ring-4 focus-within:ring-naf-gold/20 transition-all">
             <select class="w-full bg-transparent text-xs font-bold text-slate-700 dark:text-slate-200 outline-none cursor-pointer pr-2"
-              [ngModel]="selectedYear()" (ngModelChange)="selectedYear.set($event); onFilterChange()">
+              [ngModel]="selectedYear()" (ngModelChange)="selectedYear.set(+$event); loadReportData()">
               @for (y of years; track y) {
                 <option [value]="y" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">{{ y }}</option>
               }

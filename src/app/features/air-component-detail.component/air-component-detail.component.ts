@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 
+
 @Component({
   selector: 'app-air-component-detail.component',
   standalone: true,
@@ -28,14 +29,17 @@ export class AirComponentDetailComponent implements OnInit {
     loading = signal<boolean>(true);
     componentId = signal<number | null>(null);
 
-    selectedPeriod = signal<ReportPeriod>('MONTHLY');
+    // Replaced selectedPeriod with filterType to match KpiDashboard
+    filterType = signal<'MONTH' | 'QUARTER'>('MONTH');
     selectedMonth = signal<ReportMonth>(ReportMonth.AUGUST);
-    selectedQuarter = signal<ReportQuarter>('Q3'); // Added Quarter State
+    
+    // Properly typed as ReportQuarter
+    selectedQuarter = signal<ReportQuarter>('Q3');
+    quarters: ReportQuarter[] = ['Q1', 'Q2', 'Q3', 'Q4']; 
+    
     selectedYear = signal<number>(2026);
 
-    periods: ReportPeriod[] = ['MONTHLY', 'QUARTERLY', 'YEARLY'];
     months = Object.values(ReportMonth);
-    quarters: ReportQuarter[] = ['Q1', 'Q2', 'Q3', 'Q4']; // Added Quarters Array
     years = [2024, 2025, 2026, 2027, 2028, 2029, 2030];
 
     // Observation pane state
@@ -54,39 +58,46 @@ export class AirComponentDetailComponent implements OnInit {
     });
 
     constructor() {
-            const id = Number(this.route.snapshot.paramMap.get('id'));
-            this.componentId.set(id);
+        const id = Number(this.route.snapshot.paramMap.get('id'));
+        this.componentId.set(id);
 
-            this.service.getComponentSummary(id).subscribe({
+        this.service.getComponentSummary(id).subscribe({
             next: (data) => {
                 this.summary.set(data);
                 this.loading.set(false);
             },
             error: () => this.loading.set(false)
-            });
+        });
     }
 
-    ngOnInit(): void { this.loadReportData(); }
+    ngOnInit(): void { 
+        this.loadReportData(); 
+    }
+
+    setFilterType(type: 'MONTH' | 'QUARTER') {
+        this.filterType.set(type);
+        this.loadReportData();
+    }
 
     loadReportData(): void { 
         const id = this.componentId();
         if (!id) return;
 
+        const period: ReportPeriod = this.filterType() === 'MONTH' ? 'MONTHLY' : 'QUARTERLY';
+        const month = this.filterType() === 'MONTH' ? this.selectedMonth() : undefined;
+        const quarter = this.filterType() === 'QUARTER' ? this.selectedQuarter() : undefined;
+
         this.kpiService.getAirComponentDashboard(
             id, 
             this.selectedYear(), 
-            this.selectedPeriod(),
-            this.selectedPeriod() === 'MONTHLY' ? this.selectedMonth() : undefined,
-            this.selectedPeriod() === 'QUARTERLY' ? this.selectedQuarter() : undefined
+            period,
+            month,
+            quarter
         )
         .subscribe({
             next: (data) => this.monthlyReport.set(data),
             error: (err) => console.error(err)
         });
-    }
-
-    onFilterChange(): void {
-        this.loadReportData();
     }
 
     // Clamps percentage values between 0 and 100 for safe UI rendering
@@ -98,7 +109,7 @@ export class AirComponentDetailComponent implements OnInit {
 
     // Helper computed to dynamically display the correct period label
     periodLabel = computed(() => {
-        return this.selectedPeriod() === 'QUARTERLY' ? this.selectedQuarter() : this.selectedMonth();
+        return this.filterType() === 'QUARTER' ? this.selectedQuarter() : this.selectedMonth();
     });
 
     selectedObservationKey = computed(() => {
@@ -135,15 +146,15 @@ export class AirComponentDetailComponent implements OnInit {
     setObservationText(value: string): void {
         const key = this.selectedObservationKey();
         this.observationNotes.update(notes => ({
-        ...notes,
-        [key]: value
+            ...notes,
+            [key]: value
         }));
     }
 
     toggleReportCard(key: string) {
         this.reportCards.update(state => ({
-        ...state,
-        [key]: !state[key]
+            ...state,
+            [key]: !state[key]
         }));
     }
 
@@ -154,23 +165,24 @@ export class AirComponentDetailComponent implements OnInit {
     submitObservation(): void {
         const content = this.observationText();
         if (!content.trim()) {
-        console.warn('Cannot submit empty observation');
-        return;
+            console.warn('Cannot submit empty observation');
+            return;
         }
 
         const componentId = this.componentId();
         if (!componentId) {
-        console.error('Component ID not available');
-        return;
+            console.error('Component ID not available');
+            return;
         }
 
         this.submittingObservation.set(true);
 
-        // Note: If your observation backend endpoint requires a month specifically, 
-        // you may need to map the quarter to a month here. If it accepts null month for quarterly, this is fine.
+        // Pass the dynamically selected month or quarter as the period context
+        const observationPeriod = this.filterType() === 'MONTH' ? this.selectedMonth() : this.selectedQuarter();
+
         this.kpiService.submitComponentObservation(
             componentId,
-            this.selectedMonth(), // Sending the currently selected month
+            observationPeriod as any,
             this.selectedYear(),
             content
         ).subscribe({
@@ -178,8 +190,8 @@ export class AirComponentDetailComponent implements OnInit {
                 console.log('Component observation submitted successfully:', response);
                 const key = this.selectedObservationKey();
                 this.observationNotes.update(notes => ({
-                ...notes,
-                [key]: ''
+                    ...notes,
+                    [key]: ''
                 }));
                 this.submittingObservation.set(false);
                 this.showObservationPane.set(false);
