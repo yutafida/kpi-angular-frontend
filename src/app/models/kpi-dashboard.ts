@@ -1,11 +1,11 @@
 
 import { AirComponentMonthlyScore } from "./air-component-monthly-score"; 
-import { KpiMonthlyEvaluationReport } from "./kpi-monthly-evaluation-report";
+import { KpiEvaluationReport } from "./kpi-evaluation-report";
 
 
 export interface KpiMonthlyDashboard {
 
-    reports: KpiMonthlyEvaluationReport[];
+    reports: KpiEvaluationReport[];
     scores: AirComponentMonthlyScore[];
 
     nafAverageScore: number;

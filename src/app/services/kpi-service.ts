@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { KpiMonthlyDashboard } from '../models/kpi-monthly-dashboard'; 
+import { KpiMonthlyDashboard } from '../models/kpi-dashboard'; 
 import { ReportMonth } from '../shared/report-month';
 import { AirComponentMonthlyReport } from '../models/air-component-monthly-report';
 import { ReportSubmissionLog } from '../models/report-submission-log';
@@ -20,6 +20,9 @@ export type ReportQuarter = 'Q1' | 'Q2' | 'Q3' | 'Q4';
 export class KpiService {
 
   private baseUrl = 'http://localhost:8080/api/kpi';
+
+  // private baseUrl = '/api/kpi';
+
 
   constructor(private http: HttpClient) {}
 

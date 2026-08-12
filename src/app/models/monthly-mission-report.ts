@@ -1,5 +1,7 @@
 import { ReportMonth } from "../shared/report-month";
 
+
+
 export interface MonthlyMissionReport {
 
     month: ReportMonth;

@@ -1,8 +1,13 @@
 <div class="min-h-screen bg-slate-100 dark:bg-naf-navy text-slate-800 dark:text-slate-200 font-sans selection:bg-naf-gold selection:text-naf-navy antialiased transition-colors duration-300">
 
+
+
+
   <!-- ============================================================
        HEADER  (matches DOPLANS launcher)
        ============================================================ -->
+
+
   <header class="sticky top-0 z-50 bg-white/90 dark:bg-naf-navy/95 backdrop-blur-md border-b border-slate-200 dark:border-naf-gold/15 shadow-sm dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] transition-colors duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Gold top accent line -->
@@ -13,7 +18,13 @@
         <!-- ── LEFT: Branding ── -->
         <div class="flex items-center gap-4">
           <div class="relative group cursor-pointer">
+
+
             <div class="absolute inset-0 bg-naf-gold/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+            
+
+            
             <div class="relative w-11 h-11 bg-gradient-to-br from-naf-gold to-yellow-600 rounded-xl flex items-center justify-center shadow-lg border border-white/20">
               <svg class="w-6 h-6 text-naf-navy" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C12 2 8 5 8 9C8 11.5 9.5 13 10.5 13.5L9 18H11L12 15L13 18H15L13.5 13.5C14.5 13 16 11.5 16 9C16 5 12 2 12 2ZM12 4.5C12.8 5.8 14 7.5 14 9C14 10.5 13 11.5 12 12C11 11.5 10 10.5 10 9C10 7.5 11.2 5.8 12 4.5Z"/>
@@ -22,13 +33,20 @@
                 <circle cx="12" cy="1.2" r="0.7"/>
               </svg>
             </div>
+
+
           </div>
+
 
           <div class="hidden sm:block">
             <h1 class="text-lg font-black tracking-tight text-naf-navy dark:text-white leading-none">DOPLANS</h1>
             <p class="text-[10px] font-bold text-naf-gold uppercase tracking-[0.25em] mt-1">KPI Command Center</p>
           </div>
+
+
         </div>
+
+
 
         <!-- ── CENTER: Navigation ── -->
         <nav class="hidden lg:flex items-center gap-1" role="navigation" aria-label="Main navigation">
@@ -52,7 +70,7 @@
 
 
           <!-- ── NEW: Compliance Link ── -->
-          <a routerLink="/report-submission-compliance"
+          <!-- <a routerLink="/report-submission-compliance"
              class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-500 dark:text-blue-200/80 font-semibold text-[11px] uppercase tracking-[0.12em] hover:text-naf-navy dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors duration-200"
              aria-label="View Report Submission Compliance">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -60,7 +78,7 @@
             </svg>
             Compliance
           </a>
-          
+           -->
         </nav>
 
         <!-- ── RIGHT: Status + Theme + Logout ── -->
@@ -153,28 +171,34 @@
         </div>
 
         <!-- Top Performer -->
-        <div class="bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 relative overflow-hidden group hover:shadow-xl hover:border-emerald-500/30 transition-all">
-          <div class="flex justify-between items-start mb-4">
-            <h3 class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-[0.2em]">Top Performer</h3>
-            <div class="p-1.5 bg-emerald-50 dark:bg-emerald-500/10 rounded text-emerald-600 dark:text-emerald-400">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+        @if (bestPerformingComponent(); as bestComponent) {
+          <a [routerLink]="['/air-component', bestComponent.airComponentId]"
+             class="bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 relative overflow-hidden group hover:shadow-xl hover:border-emerald-500/30 transition-all focus:outline-none focus:ring-2 focus:ring-naf-gold/40">
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-[0.2em]">Top Performer</h3>
+              <div class="p-1.5 bg-emerald-50 dark:bg-emerald-500/10 rounded text-emerald-600 dark:text-emerald-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+              </div>
             </div>
-          </div>
-          <p class="text-lg font-bold text-slate-800 dark:text-white truncate mb-1">{{ dashboard.bestTheatre }}</p>
-          <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Leading Theatre Command</div>
-        </div>
+            <p class="text-lg font-bold text-slate-800 dark:text-white truncate mb-1">{{ bestComponent.airComponentName }}</p>
+            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">View component details</div>
+          </a>
+        }
 
         <!-- Critical -->
-        <div class="bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 relative overflow-hidden group hover:shadow-xl hover:border-red-500/30 transition-all">
-          <div class="flex justify-between items-start mb-4">
-            <h3 class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-[0.2em]">Critical</h3>
-            <div class="p-1.5 bg-red-50 dark:bg-red-500/10 rounded text-red-600 dark:text-red-400">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        @if (lowestPerformingComponent(); as lowComponent) {
+          <a [routerLink]="['/air-component', lowComponent.airComponentId]"
+             class="bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 relative overflow-hidden group hover:shadow-xl hover:border-red-500/30 transition-all focus:outline-none focus:ring-2 focus:ring-naf-gold/40">
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-[0.2em]">Critical</h3>
+              <div class="p-1.5 bg-red-50 dark:bg-red-500/10 rounded text-red-600 dark:text-red-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              </div>
             </div>
-          </div>
-          <p class="text-lg font-bold text-slate-800 dark:text-white truncate mb-1">{{ dashboard.attentionTheatre }}</p>
-          <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Requires Immediate Action</div>
-        </div>
+            <p class="text-lg font-bold text-slate-800 dark:text-white truncate mb-1">{{ lowComponent.airComponentName }}</p>
+            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">View component details</div>
+          </a>
+        }
 
         <!-- On Target -->
         <div class="bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 flex flex-col justify-center hover:shadow-xl transition-all">
@@ -239,9 +263,10 @@
               <label class="text-[9px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-0.5 ml-1">Timeline</label>
               <select [ngModel]="selectedMonth()" 
                       (ngModelChange)="selectedMonth.set($event); loadData()"
-                      class="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-700 dark:text-slate-200 rounded-md px-3 py-1.5 focus:ring-2 focus:ring-naf-gold/40 focus:border-naf-gold outline-none w-32 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors cursor-pointer">
+                      class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-700 dark:text-slate-200 rounded-md px-3 py-1.5 focus:ring-2 focus:ring-naf-gold/40 focus:border-naf-gold outline-none w-32 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer">
                 @for (m of months; track m) { 
-                  <option [value]="m">{{ m }}</option> 
+                  <!-- Explicit dark mode classes applied to option -->
+                  <option [value]="m" class="bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200">{{ m }}</option> 
                 }
               </select>
             </div>
@@ -250,9 +275,10 @@
               <label class="text-[9px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-0.5 ml-1">Quarter</label>
               <select [ngModel]="selectedQuarter()" 
                       (ngModelChange)="selectedQuarter.set($event); loadData()"
-                      class="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-700 dark:text-slate-200 rounded-md px-3 py-1.5 focus:ring-2 focus:ring-naf-gold/40 focus:border-naf-gold outline-none w-32 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors cursor-pointer">
+                      class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-700 dark:text-slate-200 rounded-md px-3 py-1.5 focus:ring-2 focus:ring-naf-gold/40 focus:border-naf-gold outline-none w-32 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer">
                 @for (q of quarters; track q) { 
-                  <option [value]="q">{{ q }}</option> 
+                  <!-- Explicit dark mode classes applied to option -->
+                  <option [value]="q" class="bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200">{{ q }}</option> 
                 }
               </select>
             </div>
@@ -264,7 +290,7 @@
             <input type="number" 
                   [ngModel]="selectedYear()" 
                   (ngModelChange)="selectedYear.set(+$event); loadData()"
-                  class="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-700 dark:text-slate-200 w-24 rounded-md px-3 py-1.5 focus:ring-2 focus:ring-naf-gold/40 focus:border-naf-gold outline-none hover:bg-slate-100 dark:hover:bg-white/10 transition-colors" />
+                  class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-700 dark:text-slate-200 w-24 rounded-md px-3 py-1.5 focus:ring-2 focus:ring-naf-gold/40 focus:border-naf-gold outline-none hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" />
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 
-export interface KpiMonthlyEvaluationReport {
+export interface KpiEvaluationReport {
 
     id: number;
     reportMonth: string;

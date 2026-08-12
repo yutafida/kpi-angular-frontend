@@ -5,17 +5,18 @@ import { FormsModule } from '@angular/forms';
 import { Chart, registerables, ChartData, ChartOptions} from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { BaseChartDirective, provideCharts,withDefaultRegisterables } from 'ng2-charts';
-import { KpiMonthlyDashboard } from '../../models/kpi-monthly-dashboard';
+import { KpiMonthlyDashboard } from '../../models/kpi-dashboard';
+import { AirComponentMonthlyScore } from '../../models/air-component-monthly-score';
 import { KpiService } from '../../services/kpi-service';
 import { ReportChart } from '../../models/report-chart';
 import { ChartExportService } from '../../services/chart-export-service';
 import { ReportBuilderService } from '../../services/report-builder-service';
 import { ThemeToggleComponent } from '../theme-toggle.component/theme-toggle.component';
 import { ThemeService } from '../../services/theme.service';
+import { FilterStateService } from '../../services/filter-state';
 
 
 Chart.register(...registerables, annotationPlugin);
-
 
 @Component({
     selector: 'app-kpi-dashboard',
@@ -35,6 +36,8 @@ Chart.register(...registerables, annotationPlugin);
 export class KpiDashboard implements OnInit {
 
     readonly theme = inject(ThemeService);
+    private filterState = inject(FilterStateService); 
+
 
     constructor(
         private kpiService: KpiService,
@@ -44,6 +47,7 @@ export class KpiDashboard implements OnInit {
 
     data = signal<KpiMonthlyDashboard | null>(null);
     loading = signal(false);
+
 
     showChart = signal(true);
     showDimensionTable = signal(true);
@@ -55,11 +59,11 @@ export class KpiDashboard implements OnInit {
     observationNotes = signal<Record<string, string>>({});
     submittingObservation = signal<boolean>(false);
 
-    filterType = signal<'MONTH' | 'QUARTER'>('MONTH');
 
-    selectedMonth = signal('AUGUST');
-    selectedQuarter = signal('Q3');
-    selectedYear = signal(2026);
+     filterType = this.filterState.filterType;
+    selectedMonth = this.filterState.selectedMonth;
+    selectedQuarter = this.filterState.selectedQuarter;
+    selectedYear = this.filterState.selectedYear;
 
     months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
     quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
@@ -67,9 +71,26 @@ export class KpiDashboard implements OnInit {
     activeChartType = signal<'bar'>('bar');
 
     setFilterType(type: 'MONTH' | 'QUARTER') {
-        this.filterType.set(type);
+        this.filterType.set(type); // Updates shared state
         this.loadData();
     }
+
+
+    // filterType = signal<'MONTH' | 'QUARTER'>('MONTH');
+
+    // selectedMonth = signal('AUGUST');
+    // selectedQuarter = signal('Q3');
+    // selectedYear = signal(2026);
+
+    // months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+    // quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
+
+    // activeChartType = signal<'bar'>('bar');
+
+    // setFilterType(type: 'MONTH' | 'QUARTER') {
+    //     this.filterType.set(type);
+    //     this.loadData();
+    // }
 
     private readonly chartTickColor = computed(() =>
         this.theme.isDark() ? '#94a3b8' : '#64748b'
@@ -195,6 +216,26 @@ export class KpiDashboard implements OnInit {
 
     belowTargetCount = computed(() => {
         return this.data()?.scores.filter(s => s.overallScore < 75).length || 0;
+    });
+
+    bestPerformingComponent = computed<AirComponentMonthlyScore | null>(() => {
+        const scores = this.data()?.scores ?? [];
+        return scores.reduce<AirComponentMonthlyScore | null>((best, current) => {
+            if (!best || current.overallScore > best.overallScore) {
+                return current;
+            }
+            return best;
+        }, null);
+    });
+
+    lowestPerformingComponent = computed<AirComponentMonthlyScore | null>(() => {
+        const scores = this.data()?.scores ?? [];
+        return scores.reduce<AirComponentMonthlyScore | null>((lowest, current) => {
+            if (!lowest || current.overallScore < lowest.overallScore) {
+                return current;
+            }
+            return lowest;
+        }, null);
     });
 
     // =========================================================
