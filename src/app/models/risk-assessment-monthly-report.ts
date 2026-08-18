@@ -8,8 +8,13 @@ export interface RiskAssessmentMonthlyReport {
     year: number;
 
     roeComplianceRate: number;
-    opsecComplianceRate: number;
-    safetyComplianceRate: number;
+    numberOfRoeCompliantFlights: number;
 
+    opsecComplianceRate: number;
+    numberOfOpsecCompliantFlights: number;
+
+    safetyComplianceRate: number;
+    numberOfSafetyCompliantFlights: number;
+ 
     scofeScore: number;
 }

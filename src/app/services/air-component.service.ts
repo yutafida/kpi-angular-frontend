@@ -8,7 +8,7 @@ import { inject } from '@angular/core/primitives/di';
 @Injectable({ providedIn: 'root' })
 export class AirComponentService {
 
-//  private apiUrl = 'http://localhost:3000';
+
   private http = inject(HttpClient);
 
   private baseUrl = 'http://localhost:8080/api/kpi';

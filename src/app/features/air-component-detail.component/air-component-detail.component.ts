@@ -10,8 +10,6 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FilterStateService } from '../../services/filter-state';
 
-
-
 @Component({
   selector: 'app-air-component-detail.component',
   standalone: true,
@@ -25,7 +23,7 @@ export class AirComponentDetailComponent implements OnInit {
     private service = inject(AirComponentService);
     private kpiService = inject(KpiService);
     private filterState = inject(FilterStateService); 
-    
+
     summary = signal<AirComponentSummary | null>(null);
     monthlyReport = signal<AirComponentMonthlyReport | null>(null);
     loading = signal<boolean>(true);
@@ -45,17 +43,19 @@ export class AirComponentDetailComponent implements OnInit {
     observationNotes = signal<Record<string, string>>({});
     submittingObservation = signal<boolean>(false);
 
-    activeReport = signal<string>('mission');
+    // Toggle state for the Remarks section (true = expanded, false = collapsed)
+    isRemarksOpen = true;
+
+    // Single source of truth for which dimension is currently visible
+    activeReport = signal<string>('ops');
 
     reportCardConfig = [
-        { key: 'mission', label: 'Mission' },
-        { key: 'crew', label: 'Crew' },
-        { key: 'fleet', label: 'Fleet' },
-        { key: 'fuel', label: 'Fuel' },
-        { key: 'ordnance', label: 'Ordnance' },
-        { key: 'joint', label: 'Joint' },
-        { key: 'risk', label: 'Risk' },
-        { key: 'enemy', label: 'Enemy' }
+        { key: 'ops',        label: 'Ops Effect' },
+        { key: 'joint',      label: 'Joint Coord' },
+        { key: 'resource',   label: 'Resource Mgmt' },
+        { key: 'personnel',  label: 'Personnel Dev' },
+        { key: 'strategic',  label: 'Strategic Impact' },
+        { key: 'risk',       label: 'Risk Assessment' }
     ];
 
     constructor() {

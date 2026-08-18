@@ -67,18 +67,6 @@
             </svg>
             KPI Report
           </a>
-
-
-          <!-- ── NEW: Compliance Link ── -->
-          <!-- <a routerLink="/report-submission-compliance"
-             class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-500 dark:text-blue-200/80 font-semibold text-[11px] uppercase tracking-[0.12em] hover:text-naf-navy dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors duration-200"
-             aria-label="View Report Submission Compliance">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            Compliance
-          </a>
-           -->
         </nav>
 
         <!-- ── RIGHT: Status + Theme + Logout ── -->
@@ -139,91 +127,99 @@
     }
 
     @if (data(); as dashboard) {
-
       <!-- ============================================================
-           EXECUTIVE SUMMARY PANEL  (Bento grid)
-           ============================================================ -->
+          EXECUTIVE SUMMARY PANEL  (Bento grid)
+          ============================================================ -->
       <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
-        <!-- Main Score Card (span 2) -->
-        <div class="bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 relative overflow-hidden group hover:shadow-xl hover:border-naf-gold/30 transition-all lg:col-span-2">
-          <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity text-naf-navy dark:text-naf-gold">
+        <!-- Main Score Card (span 2 on md & lg) -->
+        <div class="col-span-1 md:col-span-2 lg:col-span-2 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 relative overflow-hidden group hover:shadow-xl hover:border-naf-gold/30 transition-all duration-300 flex flex-col justify-between min-h-[160px]">
+          <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity text-naf-navy dark:text-naf-gold pointer-events-none">
             <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
           </div>
-          <h3 class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-[0.2em] mb-2">NAF Average Score</h3>
-          <div class="flex items-baseline gap-3">
-            <span class="text-5xl font-black text-naf-navy dark:text-white tabular-nums tracking-tight">
-              {{ dashboard.nafAverageScore | number:'1.1-1' }}<span class="text-2xl text-slate-400 dark:text-slate-500 ml-1">%</span>
-            </span>
-            <span
-              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ring-1 ring-inset"
-              [ngClass]="
-                dashboard.nafAverageScore >= 75 ? 'bg-emerald-50 text-emerald-700 ring-emerald-600/20 dark:bg-emerald-500/10 dark:text-emerald-400 dark:ring-emerald-500/30' :
-                dashboard.nafAverageScore >= 60 ? 'bg-amber-50 text-amber-700 ring-amber-600/20 dark:bg-amber-500/10 dark:text-amber-400 dark:ring-amber-500/30' :
-                'bg-red-50 text-red-700 ring-red-600/20 dark:bg-red-500/10 dark:text-red-400 dark:ring-red-500/30'
-              ">
-              {{ dashboard.nafRating }}
-            </span>
+          
+          <div class="relative z-10">
+            <h3 class="text-[11px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-3">NAF Average Score</h3>
+            <div class="flex items-baseline gap-3">
+              <span class="text-5xl font-black text-naf-navy dark:text-white tabular-nums tracking-tight">
+                {{ dashboard.nafAverageScore | number:'1.1-1' }}<span class="text-2xl text-slate-400 dark:text-slate-500 ml-1">%</span>
+              </span>
+              <span
+                class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ring-1 ring-inset"
+                [ngClass]="
+                  dashboard.nafAverageScore >= 75 ? 'bg-emerald-50 text-emerald-700 ring-emerald-600/20 dark:bg-emerald-500/10 dark:text-emerald-400 dark:ring-emerald-500/30' :
+                  dashboard.nafAverageScore >= 60 ? 'bg-amber-50 text-amber-700 ring-amber-600/20 dark:bg-amber-500/10 dark:text-amber-400 dark:ring-amber-500/30' :
+                  'bg-red-50 text-red-700 ring-red-600/20 dark:bg-red-500/10 dark:text-red-400 dark:ring-red-500/30'
+                ">
+                {{ dashboard.nafRating }}
+              </span>
+            </div>
           </div>
-          <div class="mt-4 w-full bg-slate-100 dark:bg-white/5 rounded-full h-1.5 overflow-hidden">
-            <div class="bg-gradient-to-r from-naf-navy to-naf-gold dark:from-naf-gold dark:to-naf-goldLight h-full rounded-full transition-all duration-1000" [style.width.%]="dashboard.nafAverageScore"></div>
+
+          <div class="relative z-10 mt-4 w-full bg-slate-100 dark:bg-white/5 rounded-full h-1.5 overflow-hidden">
+            <div class="bg-gradient-to-r from-naf-navy to-naf-gold dark:from-naf-gold dark:to-naf-goldLight h-full rounded-full transition-all duration-1000 ease-out" [style.width.%]="dashboard.nafAverageScore"></div>
           </div>
         </div>
 
         <!-- Top Performer -->
         @if (bestPerformingComponent(); as bestComponent) {
           <a [routerLink]="['/air-component', bestComponent.airComponentId]"
-             class="bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 relative overflow-hidden group hover:shadow-xl hover:border-emerald-500/30 transition-all focus:outline-none focus:ring-2 focus:ring-naf-gold/40">
-            <div class="flex justify-between items-start mb-4">
-              <h3 class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-[0.2em]">Top Performer</h3>
-              <div class="p-1.5 bg-emerald-50 dark:bg-emerald-500/10 rounded text-emerald-600 dark:text-emerald-400">
+            class="group bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 relative overflow-hidden hover:shadow-xl hover:border-emerald-500/30 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-naf-gold/40 flex flex-col justify-between min-h-[160px]">
+            <div class="flex justify-between items-start">
+              <h3 class="text-[11px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider">Top Performer</h3>
+              <div class="p-1.5 bg-emerald-50 dark:bg-emerald-500/10 rounded-lg text-emerald-600 dark:text-emerald-400">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
               </div>
             </div>
-            <p class="text-lg font-bold text-slate-800 dark:text-white truncate mb-1">{{ bestComponent.airComponentName }}</p>
-            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">View component details</div>
+            <div class="mt-auto">
+              <p class="text-lg font-bold text-slate-800 dark:text-white truncate mb-2">{{ bestComponent.airComponentName }}</p>
+              <div class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+                View details 
+                <svg class="w-3 h-3 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </div>
+            </div>
           </a>
         }
 
         <!-- Critical -->
         @if (lowestPerformingComponent(); as lowComponent) {
           <a [routerLink]="['/air-component', lowComponent.airComponentId]"
-             class="bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 relative overflow-hidden group hover:shadow-xl hover:border-red-500/30 transition-all focus:outline-none focus:ring-2 focus:ring-naf-gold/40">
-            <div class="flex justify-between items-start mb-4">
-              <h3 class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-[0.2em]">Critical</h3>
-              <div class="p-1.5 bg-red-50 dark:bg-red-500/10 rounded text-red-600 dark:text-red-400">
+            class="group bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 relative overflow-hidden hover:shadow-xl hover:border-red-500/30 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-naf-gold/40 flex flex-col justify-between min-h-[160px]">
+            <div class="flex justify-between items-start">
+              <h3 class="text-[11px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider">Critical</h3>
+              <div class="p-1.5 bg-red-50 dark:bg-red-500/10 rounded-lg text-red-600 dark:text-red-400">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
               </div>
             </div>
-            <p class="text-lg font-bold text-slate-800 dark:text-white truncate mb-1">{{ lowComponent.airComponentName }}</p>
-            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">View component details</div>
+            <div class="mt-auto">
+              <p class="text-lg font-bold text-slate-800 dark:text-white truncate mb-2">{{ lowComponent.airComponentName }}</p>
+              <div class="text-xs font-semibold text-red-600 dark:text-red-400 flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+                View details 
+                <svg class="w-3 h-3 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </div>
+            </div>
           </a>
         }
 
-        <!-- On Target -->
-        <div class="bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 flex flex-col justify-center hover:shadow-xl transition-all">
-          <p class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-[0.2em] mb-2">On Target (≥75%)</p>
-          <p class="text-3xl font-black text-emerald-600 dark:text-emerald-400 tabular-nums">{{ aboveTargetCount() }}</p>
+        <!-- On Target (span 2) -->
+        <div class="col-span-1 md:col-span-2 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 flex items-center justify-between hover:shadow-lg transition-all duration-300 min-h-[120px]">
+          <div class="pr-4">
+            <p class="text-[11px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-1">On Target</p>
+            <p class="text-xs text-slate-400 dark:text-slate-500">Components scoring ≥ 75%</p>
+          </div>
+          <p class="text-4xl font-black text-emerald-600 dark:text-emerald-400 tabular-nums">{{ aboveTargetCount() }}</p>
         </div>
 
-        <!-- Below Target -->
-        <div class="bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 flex flex-col justify-center hover:shadow-xl transition-all">
-          <p class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-[0.2em] mb-2">Below Target</p>
-          <p class="text-3xl font-black text-red-600 dark:text-red-400 tabular-nums">{{ belowTargetCount() }}</p>
+        <!-- Below Target (span 2) -->
+        <div class="col-span-1 md:col-span-2 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 flex items-center justify-between hover:shadow-lg transition-all duration-300 min-h-[120px]">
+          <div class="pr-4">
+            <p class="text-[11px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-1">Below Target</p>
+            <p class="text-xs text-slate-400 dark:text-slate-500">Components scoring < 75%</p>
+          </div>
+          <p class="text-4xl font-black text-red-600 dark:text-red-400 tabular-nums">{{ belowTargetCount() }}</p>
         </div>
 
-        <!-- Operational Cycle banner -->
-        <div class="lg:col-span-2 bg-gradient-to-r from-naf-navy to-[#004080] dark:from-naf-navyLight dark:to-naf-navy rounded-2xl shadow-lg p-6 flex items-center justify-between text-white border border-naf-gold/10">
-          <div>
-            <h4 class="font-bold text-sm text-naf-gold uppercase tracking-wider mb-1">Operational Cycle</h4>
-            <p class="text-xs text-blue-100 dark:text-slate-300 opacity-80">Current data reflects active fiscal year performance metrics.</p>
-          </div>
-          <div class="h-10 w-10 rounded-full border-2 border-naf-gold flex items-center justify-center">
-            <span class="w-2 h-2 rounded-full bg-naf-gold animate-pulse"></span>
-          </div>
-        </div>
       </section>
-
 
       <!-- ============================================================
           CONTROL DECK  (toolbar)

@@ -7,9 +7,11 @@ export interface FuelConsumptionMonthlyReport {
     month: ReportMonth;
     year: number;
 
-    flightHours: number;
+    flightHours: string;
     expectedFuelConsumption: number;
     actualFuelConsumption: number;
+    fuelEfficiencyIndex: number;
 
     variance: number;
 }
+

@@ -12,4 +12,9 @@ export interface CrewCurrencyMonthlyReport {
     current50Crew: number;
     current25Crew: number;
     notCurrentCrew: number;
+    crewReadinessIndex: number;
+
+    crewCurrencyAssessment: string;
 }
+
+
