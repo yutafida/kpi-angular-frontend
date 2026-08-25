@@ -75,6 +75,8 @@ export class AirComponentDetailComponent implements OnInit {
         this.loadReportData(); 
     }
 
+ 
+
     setFilterType(type: 'MONTH' | 'QUARTER') {
         this.filterType.set(type); // Updates shared state globally
         this.loadReportData();

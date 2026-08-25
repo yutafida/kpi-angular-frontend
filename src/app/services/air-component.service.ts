@@ -13,7 +13,7 @@ export class AirComponentService {
 
   private baseUrl = 'http://localhost:8080/api/kpi';
    
-  // private baseUrl = '/api/kpi';
+  //private baseUrl = '/api/kpi';
 
 
   
