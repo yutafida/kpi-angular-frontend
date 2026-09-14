@@ -21,9 +21,6 @@
 
 
             <div class="absolute inset-0 bg-naf-gold/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-            
-
             
             <div class="relative w-11 h-11 bg-gradient-to-br from-naf-gold to-yellow-600 rounded-xl flex items-center justify-center shadow-lg border border-white/20">
               <svg class="w-6 h-6 text-naf-navy" fill="currentColor" viewBox="0 0 24 24">
@@ -33,7 +30,6 @@
                 <circle cx="12" cy="1.2" r="0.7"/>
               </svg>
             </div>
-
 
           </div>
 
@@ -47,18 +43,52 @@
         </div>
 
 
-
         <!-- ── CENTER: Navigation ── -->
+        <!-- <nav class="hidden lg:flex items-center gap-1" role="navigation" aria-label="Main navigation">
+       
+        <a href="http://localhost:8080/kpi/dashboard"
+            class="flex items-center gap-2 px-4 py-2 rounded-lg bg-naf-gold text-naf-navy font-bold text-[11px] uppercase tracking-[0.12em] hover:bg-naf-goldLight transition-colors duration-200 shadow-sm"
+            aria-label="Open KPI Dashboard">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 13h2v8H3zM9 9h2v12H9zM15 5h2v16h-2zM21 1h2v20h-2z"/>
+            </svg>
+            Main Dashboard
+        </a>
+          
+
+          <a routerLink="/kpi-report"
+             class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-500 dark:text-blue-200/80 font-semibold text-[11px] uppercase tracking-[0.12em] hover:text-naf-navy dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors duration-200"
+             aria-label="View KPI Report">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            KPI Report
+          </a>
+        </nav> -->
+
         <nav class="hidden lg:flex items-center gap-1" role="navigation" aria-label="Main navigation">
-          <a routerLink="/kpi-dashboard"
+
+          <!-- Main Dashboard (Spring Boot Reload) -->
+          <a href="http://localhost:8080/kpi/dashboard"
              class="flex items-center gap-2 px-4 py-2 rounded-lg bg-naf-gold text-naf-navy font-bold text-[11px] uppercase tracking-[0.12em] hover:bg-naf-goldLight transition-colors duration-200 shadow-sm"
              aria-label="Open KPI Dashboard">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 13h2v8H3zM9 9h2v12H9zM15 5h2v16h-2zM21 1h2v20h-2z"/>
             </svg>
-            Dashboard
+            Main Dashboard
           </a>
 
+          <!-- Reports Dashboard (New Link) -->
+          <a routerLink="/reports-dashboard"
+             class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-500 dark:text-blue-200/80 font-semibold text-[11px] uppercase tracking-[0.12em] hover:text-naf-navy dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors duration-200"
+             aria-label="View Reports Dashboard">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 6h18M3 14h18M3 18h18" />
+            </svg>
+            Reports Archive
+          </a>
+
+          <!-- KPI Report -->
           <a routerLink="/kpi-report"
              class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-500 dark:text-blue-200/80 font-semibold text-[11px] uppercase tracking-[0.12em] hover:text-naf-navy dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors duration-200"
              aria-label="View KPI Report">
@@ -84,16 +114,7 @@
           <!-- THEME TOGGLE (global component) -->
           <app-theme-toggle />
 
-          <div class="h-6 w-px bg-slate-200 dark:bg-white/10"></div>
-
-          <!-- Logout -->
-          <a href="/logout"
-             class="flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
-            </svg>
-            <span class="hidden md:inline">Exit</span>
-          </a>
+       
         </div>
       </div>
     </div>
@@ -202,23 +223,47 @@
         }
 
         <!-- On Target (span 2) -->
-        <div class="col-span-1 md:col-span-2 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 flex items-center justify-between hover:shadow-lg transition-all duration-300 min-h-[120px]">
-          <div class="pr-4">
-            <p class="text-[11px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-1">On Target</p>
-            <p class="text-xs text-slate-400 dark:text-slate-500">Components scoring ≥ 75%</p>
+                <!-- On Target (span 2) -->
+        <div class="col-span-1 md:col-span-2 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between hover:shadow-lg hover:border-emerald-500/30 transition-all duration-300 min-h-[120px]">
+          
+          <div class="pr-4 mb-3 sm:mb-0 w-full">
+            <p class="text-[11px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-2">On Target</p>
+            <div class="flex flex-wrap gap-x-3 gap-y-1">
+              @for (component of aboveTargetComponents(); track component.airComponentId) {
+                <a [routerLink]="['/air-component', component.airComponentId]" 
+                   class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 opacity-80 hover:opacity-100 hover:underline transition-opacity truncate max-w-[150px]">
+                  {{ component.airComponentName }}
+                </a>
+              } @empty {
+                <p class="text-xs text-slate-400 dark:text-slate-500">No components on target</p>
+              }
+            </div>
           </div>
-          <p class="text-4xl font-black text-emerald-600 dark:text-emerald-400 tabular-nums">{{ aboveTargetCount() }}</p>
+          
+          <p class="text-4xl font-black text-emerald-600 dark:text-emerald-400 tabular-nums self-end sm:self-auto">{{ aboveTargetCount() }}</p>
         </div>
 
         <!-- Below Target (span 2) -->
-        <div class="col-span-1 md:col-span-2 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 flex items-center justify-between hover:shadow-lg transition-all duration-300 min-h-[120px]">
-          <div class="pr-4">
-            <p class="text-[11px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-1">Below Target</p>
-            <p class="text-xs text-slate-400 dark:text-slate-500">Components scoring < 75%</p>
+        <div class="col-span-1 md:col-span-2 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between hover:shadow-lg hover:border-red-500/30 transition-all duration-300 min-h-[120px]">
+          
+          <div class="pr-4 mb-3 sm:mb-0 w-full">
+            <p class="text-[11px] font-bold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-2">Below Target</p>
+            <div class="flex flex-wrap gap-x-3 gap-y-1">
+              @for (component of belowTargetComponents(); track component.airComponentId) {
+                <a [routerLink]="['/air-component', component.airComponentId]" 
+                   class="text-xs font-semibold text-red-600 dark:text-red-400 opacity-80 hover:opacity-100 hover:underline transition-opacity truncate max-w-[150px]">
+                  {{ component.airComponentName }}
+                </a>
+              } @empty {
+                <p class="text-xs text-slate-400 dark:text-slate-500">All components on target</p>
+              }
+            </div>
           </div>
-          <p class="text-4xl font-black text-red-600 dark:text-red-400 tabular-nums">{{ belowTargetCount() }}</p>
+          
+          <p class="text-4xl font-black text-red-600 dark:text-red-400 tabular-nums self-end sm:self-auto">{{ belowTargetCount() }}</p>
         </div>
 
+        
       </section>
 
       <!-- ============================================================
@@ -294,6 +339,16 @@
         <div class="flex items-center gap-2 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0 px-2">
           <div class="text-[10px] font-bold uppercase text-slate-300 dark:text-slate-600 tracking-widest whitespace-nowrap mr-2">Views</div>
 
+
+          <button (click)="toggleHeatMap()"
+                  class="flex items-center gap-1.5 px-3 py-2 text-[10px] font-bold uppercase rounded-lg border transition-all duration-200 whitespace-nowrap"
+                  [ngClass]="showHeatMap() ? 'bg-naf-navy dark:bg-naf-gold text-white dark:text-naf-navy border-naf-navy dark:border-naf-gold shadow-md' : 'bg-white dark:bg-white/5 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/10 hover:text-slate-700 dark:hover:text-slate-200'">
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>
+            
+              Heatmap
+          </button>
+
+
           <button (click)="toggleChart()"
                   class="flex items-center gap-1.5 px-3 py-2 text-[10px] font-bold uppercase rounded-lg border transition-all duration-200 whitespace-nowrap"
                   [ngClass]="showChart() ? 'bg-naf-navy dark:bg-naf-gold text-white dark:text-naf-navy border-naf-navy dark:border-naf-gold shadow-md' : 'bg-white dark:bg-white/5 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/10 hover:text-slate-700 dark:hover:text-slate-200'">
@@ -339,7 +394,7 @@
       </div>
 
       <!-- OBSERVATION PANE -->
-      @if (showObservationPane()) {
+      <!-- @if (showObservationPane()) {
         <section class="mt-6 bg-white dark:bg-naf-navyLight rounded-2xl shadow-xl border border-slate-200 dark:border-white/5 overflow-hidden transition-all duration-300">
           <div class="px-6 py-5 border-b border-slate-100 dark:border-white/5 bg-slate-50/95 dark:bg-white/5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
             <div>
@@ -377,7 +432,97 @@
             </div>
           </form>
         </section>
+      } -->
+
+
+
+    
+     
+      <!-- ============================================================
+       PERFORMANCE HEATMAP
+      ============================================================ -->
+      @if (showHeatMap()) {
+        <section class="mt-6 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 overflow-hidden transition-shadow duration-300 hover:shadow-xl">
+          
+          <!-- Hidden Canvas for Export -->
+          <canvas id="heatmapCanvas" class="hidden"></canvas>
+
+          <!-- Header -->
+          <div class="px-6 py-5 border-b border-slate-100 dark:border-white/5 bg-gradient-to-r from-slate-50/80 to-transparent dark:from-white/5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h3 class="text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-white flex items-center gap-2">
+                <svg class="w-4 h-4 text-naf-navy dark:text-naf-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                Performance Heatmap
+              </h3>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-medium">Component vs Dimension Performance Matrix</p>
+            </div>
+
+            <!-- Add to Report Button (Same functionality as other charts) -->
+            <button (click)="drawHeatmapToCanvas(); insertChartIntoReport('heatmapCanvas', 'Performance Heatmap', 'HEATMAP')"
+                    [disabled]="isChartAlreadyAdded('Performance Heatmap')"
+                    class="px-4 py-2 rounded-lg text-white dark:text-naf-navy text-[10px] font-bold uppercase tracking-wider shadow-sm transition-all shrink-0"
+                    [ngClass]="isChartAlreadyAdded('Performance Heatmap') ? 'bg-slate-400 dark:bg-slate-600 cursor-not-allowed opacity-70' : 'bg-naf-navy dark:bg-naf-gold hover:bg-[#004080] dark:hover:bg-naf-goldLight'">
+              {{ isChartAlreadyAdded('Performance Heatmap') ? 'Already Added' : 'Add To Report' }}
+            </button>
+          </div>
+          
+          <!-- Grid Container -->
+          <div class="p-6 overflow-x-auto">
+            <div class="min-w-[700px] rounded-xl overflow-hidden shadow-inner bg-slate-200 dark:bg-slate-700 border border-slate-200 dark:border-white/10 p-px">
+              
+              <!-- Header Row -->
+              <div class="grid grid-cols-7 gap-px">
+                <div class="col-span-1 px-4 py-3 bg-slate-50 dark:bg-white/5 text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-widest flex items-center">
+                  Component
+                </div>
+                @for (dim of heatMapDimensions; track dim.key) {
+                  <div class="px-2 py-3 text-center text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider bg-slate-50 dark:bg-white/5">
+                    {{ dim.label }}
+                  </div>
+                }
+              </div>
+
+              <!-- Data Rows -->
+              @for (component of dashboard.scores; track component.airComponentId) {
+                <div class="grid grid-cols-7 gap-px mt-px group/row">
+                  
+                  <!-- Component Name -->
+                  <div class="col-span-1 px-4 py-3 bg-white dark:bg-naf-navyLight flex items-center transition-colors group-hover/row:bg-slate-50 dark:group-hover/row:bg-white/[0.03]">
+                    <span class="text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide truncate block" [title]="component.airComponentName">
+                      {{ component.airComponentName }}
+                    </span>
+                  </div>
+                  
+                  <!-- Dimension Cells -->
+                  @for (dim of heatMapDimensions; track dim.key) {
+                    <div class="relative flex items-center justify-center group/cell transition-all duration-300 hover:scale-[1.08] hover:z-10 cursor-default py-4"
+                         [ngClass]="getHeatMapClasses($any(component)[dim.key])">
+                      
+                      <span class="text-[11px] font-black tabular-nums transition-all drop-shadow-sm">
+                        {{ $any(component)[dim.key] | number:'1.2-2' }}%
+                      </span>
+                      
+                      <!-- Premium Hover Tooltip -->
+                      <div class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover/cell:opacity-100 transition-all duration-200 scale-95 group-hover/cell:scale-100 pointer-events-none z-30">
+                        <div class="bg-slate-900 dark:bg-black text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-xl whitespace-nowrap border border-white/10">
+                          {{ component.airComponentName }} - {{ dim.label }}
+                          <div class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-t-4 border-t-slate-900 dark:border-t-black"></div>
+                        </div>
+                      </div>
+
+                    </div>
+                  }
+                </div>
+              }
+
+            </div>
+          </div>
+        </section>
       }
+
+
 
       <!-- ============================================================
            MAIN CHART  (Theatre Readiness Matrix)
@@ -454,69 +599,82 @@
         </section>
       }
 
-      <!-- ============================================================
-           BULLET CHART + DIMENSION TARGET CONTROL
+            <!-- ============================================================
+           DIMENSION BULLET CHART & TARGET CONTROL (Unified)
            ============================================================ -->
       @if (showBulletChart()) {
-
-        <!-- Dimension target control panel -->
-        <section class="mt-6 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 p-6">
-          <div class="flex flex-col lg:flex-row lg:items-end gap-6">
-            <div class="flex-1">
-              <h3 class="text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-white">KPI Dimension Targets</h3>
-              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Configure operational targets for each KPI dimension.</p>
+        <section class="mt-6 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 overflow-hidden transition-shadow duration-300 hover:shadow-xl">
+          
+          <!-- Unified Header -->
+          <div class="px-6 py-5 border-b border-slate-100 dark:border-white/5 bg-gradient-to-r from-slate-50/80 to-transparent dark:from-white/5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h3 class="text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-white flex items-center gap-2">
+                <svg class="w-4 h-4 text-naf-navy dark:text-naf-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+                KPI Dimensions & Target Matrix
+              </h3>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 font-medium flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                Adjust operational targets to visualize performance gaps instantly.
+              </p>
             </div>
-
-            <div class="flex flex-col">
-              <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Select Dimension</label>
-              <select [value]="selectedTargetDimension()"
-                      (change)="selectedTargetDimension.set($any($event.target).value)"
-                      class="px-4 py-3 rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-sm font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-naf-gold/40">
-                @for (d of dimensions; track d) { <option [value]="d">{{ d }}</option> }
-              </select>
-            </div>
-
-            <div class="flex flex-col">
-              <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 mb-2">Target (%)</label>
-              <input type="number" min="0" max="100" [value]="selectedTargetValue()"
-                     (input)="selectedTargetValue.set(+$any($event.target).value)"
-                     class="px-4 py-3 rounded-xl border border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-white/5 text-sm font-semibold text-slate-800 dark:text-slate-100 w-36 focus:outline-none focus:ring-2 focus:ring-naf-gold/40" />
-            </div>
-
-            <button (click)="updateDimensionTarget()"
-                    class="px-6 py-3 rounded-xl bg-naf-navy dark:bg-naf-gold hover:bg-[#004080] dark:hover:bg-naf-goldLight text-white dark:text-naf-navy text-xs font-bold uppercase tracking-wider shadow-md transition-all">
-              Update Target
-            </button>
-          </div>
-
-          <!-- Target preview grid -->
-          <div class="mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            @for (d of dimensions; track d) {
-              <div class="rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 p-4 text-center">
-                <p class="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">{{ d }}</p>
-                <p class="mt-2 text-2xl font-black text-naf-navy dark:text-naf-gold">{{ dimensionTargets()[d] }}%</p>
-              </div>
-            }
-          </div>
-        </section>
-
-        <section class="mt-6 bg-white dark:bg-naf-navyLight rounded-2xl shadow-sm border border-slate-200 dark:border-white/5 overflow-hidden hover:shadow-xl transition-shadow duration-300">
-          <div class="px-6 py-5 border-b border-slate-100 dark:border-white/5 bg-slate-50/30 dark:bg-white/5 flex justify-between items-center">
-            <h3 class="text-sm font-bold uppercase tracking-widest text-slate-800 dark:text-white flex items-center gap-2">
-              <svg class="w-4 h-4 text-naf-navy dark:text-naf-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-              </svg>
-              KPI Dimensions Bullet Chart
-            </h3>
 
             <button (click)="insertChartIntoReport('bulletChart', 'KPI Bullet Chart', 'BULLET')"
                     [disabled]="isChartAlreadyAdded('KPI Bullet Chart')"
-                    class="px-4 py-2 rounded-lg text-white dark:text-naf-navy text-[10px] font-bold uppercase tracking-wider shadow-sm transition-all"
+                    class="px-4 py-2 rounded-lg text-white dark:text-naf-navy text-[10px] font-bold uppercase tracking-wider shadow-sm transition-all shrink-0"
                     [ngClass]="isChartAlreadyAdded('KPI Bullet Chart') ? 'bg-slate-400 dark:bg-slate-600 cursor-not-allowed opacity-70' : 'bg-naf-navy dark:bg-naf-gold hover:bg-[#004080] dark:hover:bg-naf-goldLight'">
               {{ isChartAlreadyAdded('KPI Bullet Chart') ? 'Already Added' : 'Add To Report' }}
             </button>
           </div>
 
+          <!-- Integrated Control Deck -->
+          <div class="px-6 py-5 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02]">
+            <div class="flex flex-col xl:flex-row xl:items-center gap-6">
+              
+              <!-- Target Configuration Inputs -->
+              <div class="flex flex-wrap items-end gap-4">
+                <div class="flex flex-col">
+                  <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 mb-1.5 tracking-wider">Dimension</label>
+                  <select [value]="selectedTargetDimension()"
+                          (change)="selectedTargetDimension.set($any($event.target).value)"
+                          class="px-3 py-2.5 rounded-lg border border-slate-300 dark:border-white/10 bg-white dark:bg-white/5 text-xs font-bold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-naf-gold/40 cursor-pointer transition-colors hover:border-naf-gold/40">
+                    @for (d of dimensions; track d) { <option [value]="d">{{ d }}</option> }
+                  </select>
+                </div>
+
+                <div class="flex flex-col">
+                  <label class="text-[10px] font-bold uppercase text-slate-500 dark:text-slate-400 mb-1.5 tracking-wider">Target (%)</label>
+                  <input type="number" min="0" max="100" [value]="selectedTargetValue()"
+                         (input)="selectedTargetValue.set(+$any($event.target).value)"
+                         class="px-3 py-2.5 rounded-lg border border-slate-300 dark:border-white/10 bg-white dark:bg-white/5 text-xs font-bold text-slate-800 dark:text-slate-100 w-24 focus:outline-none focus:ring-2 focus:ring-naf-gold/40 transition-colors hover:border-naf-gold/40" />
+                </div>
+
+                <button (click)="updateDimensionTarget()"
+                        class="px-5 py-2.5 rounded-lg bg-naf-navy dark:bg-naf-gold hover:bg-[#004080] dark:hover:bg-naf-goldLight text-white dark:text-naf-navy text-[10px] font-bold uppercase tracking-wider shadow-md transition-all transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95">
+                  Update
+                </button>
+              </div>
+
+              <!-- Visual Divider -->
+              <div class="hidden xl:block h-12 w-px bg-slate-200 dark:bg-white/10"></div>
+
+              <!-- Compact Target Preview Chips -->
+              <div class="flex-1 flex flex-wrap items-center gap-2">
+                @for (d of dimensions; track d) {
+                  <div class="group flex items-center gap-2 px-3 py-1.5 rounded-full border text-[10px] font-bold uppercase tracking-wider transition-all cursor-default"
+                       [ngClass]="selectedTargetDimension() === d 
+                         ? 'bg-naf-gold/10 border-naf-gold/40 text-naf-navy dark:text-naf-gold' 
+                         : 'bg-slate-100 dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:border-naf-gold/30'">
+                    <span class="opacity-70">{{ d }}</span>
+                    <span class="font-black text-naf-navy dark:text-white">{{ dimensionTargets()[d] }}%</span>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart Canvas -->
           <div class="p-6 relative h-[400px] bg-white dark:bg-naf-navyLight">
             <canvas id="bulletChart" baseChart
                     [data]="bulletChartData()"
@@ -525,6 +683,7 @@
           </div>
         </section>
       }
+
 
       <!-- ============================================================
            DIMENSION PERFORMANCE TABLE

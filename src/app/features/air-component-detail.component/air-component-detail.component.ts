@@ -3,17 +3,22 @@ import { ActivatedRoute } from '@angular/router';
 import { AirComponentService } from '../../services/air-component.service';
 import { AirComponentSummary } from '../../models/air-component-summary';
 import { RouterModule } from '@angular/router';
-import { KpiService, ReportPeriod, ReportQuarter } from '../../services/kpi-service';
+
+import { KpiService, ReportQuarter, DashboardPeriod } from '../../services/kpi-service';
 import { AirComponentMonthlyReport } from '../../models/air-component-monthly-report';
 import { ReportMonth } from '../../shared/report-month';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FilterStateService } from '../../services/filter-state';
+import { ThemeToggleComponent } from "../../components/theme-toggle.component/theme-toggle.component";
+import { ReportViewerComponent } from '../../components/report-viewer-component/report-viewer-component';
+import { ReportComposerComponent } from '../../components/report-composer-component/report-composer-component';
+
 
 @Component({
   selector: 'app-air-component-detail.component',
   standalone: true,
-  imports: [RouterModule, FormsModule, CommonModule],
+  imports: [RouterModule, FormsModule, CommonModule, ThemeToggleComponent, ReportViewerComponent, ReportComposerComponent],
   templateUrl: './air-component-detail.component.html',
   styleUrl: './air-component-detail.component.css',
 })
@@ -35,6 +40,9 @@ export class AirComponentDetailComponent implements OnInit {
     selectedQuarter = this.filterState.selectedQuarter as WritableSignal<ReportQuarter>;
     selectedYear = this.filterState.selectedYear;
 
+    // Helper computed for HTML binding
+    isMonthlyMode = computed(() => this.filterType() === 'MONTH');
+
     quarters: ReportQuarter[] = ['Q1', 'Q2', 'Q3', 'Q4']; 
     months = Object.values(ReportMonth);
     years = [2024, 2025, 2026, 2027, 2028, 2029, 2030];
@@ -45,6 +53,26 @@ export class AirComponentDetailComponent implements OnInit {
 
     // Toggle state for the Remarks section (true = expanded, false = collapsed)
     isRemarksOpen = true;
+
+     // Toggle states for the Write-up section
+  showWriteUp = signal<boolean>(false);
+  isComposing = signal<boolean>(false); // true = editor, false = viewer
+
+  get currentWriteUpMode(): 'AIR_COMPONENT_MONTHLY' | 'AIR_COMPONENT_QUARTERLY' {
+    return this.filterType() === 'MONTH' ? 'AIR_COMPONENT_MONTHLY' : 'AIR_COMPONENT_QUARTERLY';
+  }
+
+  toggleWriteUp(): void {
+    this.showWriteUp.update(v => !v);
+    this.isComposing.set(false); // Default to viewer when opened
+  }
+
+  toggleComposeMode(): void {
+    this.isComposing.update(v => !v);
+  }
+
+    // ADD: Toggle state for the Write-Up Viewer
+    //showWriteUp = signal<boolean>(false);
 
     // Single source of truth for which dimension is currently visible
     activeReport = signal<string>('ops');
@@ -75,8 +103,6 @@ export class AirComponentDetailComponent implements OnInit {
         this.loadReportData(); 
     }
 
- 
-
     setFilterType(type: 'MONTH' | 'QUARTER') {
         this.filterType.set(type); // Updates shared state globally
         this.loadReportData();
@@ -86,7 +112,7 @@ export class AirComponentDetailComponent implements OnInit {
         const id = this.componentId();
         if (!id) return;
 
-        const period: ReportPeriod = this.filterType() === 'MONTH' ? 'MONTHLY' : 'QUARTERLY';
+        const period: DashboardPeriod = this.filterType() === 'MONTH' ? 'MONTHLY' : 'QUARTERLY';
         const month = this.filterType() === 'MONTH' ? this.selectedMonth() as ReportMonth : undefined;
         const quarter = this.filterType() === 'QUARTER' ? this.selectedQuarter() as ReportQuarter : undefined;
 
@@ -195,4 +221,9 @@ export class AirComponentDetailComponent implements OnInit {
             }
         });
     }
+
+    // ADD: Toggle method for Write-Up Viewer
+    // toggleWriteUp(): void {
+    //     this.showWriteUp.update(v => !v);
+    // }
 }

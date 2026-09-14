@@ -14,7 +14,13 @@
 
       <!-- HERO BANNER WITH SCORE SUMMARY -->
       <header class="relative bg-gradient-to-br from-naf-navy to-[#00284d] rounded-[2rem] shadow-xl dark:shadow-2xl border border-white/10 dark:border-naf-gold/15 p-6 sm:p-10 text-white overflow-hidden">
-        <!-- Background Ambient Lights -->
+          
+        <!-- THEME TOGGLE (global component) -->
+        <div class="absolute top-6 right-6 z-50">
+          <app-theme-toggle />
+        </div>
+
+        <!-- Background Ambient Lights -->        
         <div class="absolute top-0 right-0 w-96 h-96 bg-naf-gold/10 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
         <div class="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-2xl -ml-20 -mb-20 pointer-events-none"></div>
 
@@ -216,11 +222,16 @@
             <span class="text-xs font-black text-naf-navy dark:text-naf-gold bg-naf-navy/10 dark:bg-naf-gold/10 border border-naf-navy/10 dark:border-naf-gold/30 px-3 py-1.5 rounded-lg hidden sm:block">
               {{ periodLabel() }} {{ selectedYear() }}
             </span>
-            <!-- <button (click)="toggleObservationPane()"
-                    class="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-black uppercase rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10 hover:border-naf-gold/40 hover:text-naf-navy dark:hover:text-naf-gold transition-all active:scale-[0.97]">
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-              Add Note
-            </button> -->
+            
+            <!-- WRITE-UP VIEWER TOGGLE BUTTON -->
+            <button (click)="toggleWriteUp()"
+                    class="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-black uppercase rounded-lg border transition-all active:scale-[0.97]"
+                    [ngClass]="showWriteUp() ? 'bg-naf-navy dark:bg-naf-gold text-white dark:text-naf-navy border-naf-navy dark:border-naf-gold shadow-md' : 'border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/10 hover:border-naf-gold/40 hover:text-naf-navy dark:hover:text-naf-gold'">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              {{ showWriteUp() ? 'Hide Write-up' : 'View Write-up' }}
+            </button>
 
           </div>
         </div>
@@ -263,52 +274,75 @@
         </div>
       </div>
 
-      <!-- OBSERVATION PANE -->
-      <!-- @if (showObservationPane()) {
-        <section class="bg-white dark:bg-naf-navyLight rounded-2xl border border-slate-200 dark:border-white/10 shadow-xl dark:shadow-2xl flex flex-col overflow-hidden animate-fadeIn">
-          <div class="px-6 py-5 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <!-- AIR COMPONENT WRITE-UP VIEWER SECTION -->
+
+            <!-- AIR COMPONENT WRITE-UP VIEWER / COMPOSER SECTION -->
+      @if (showWriteUp()) {
+        <div class="bg-white dark:bg-naf-navyLight border border-slate-200 dark:border-white/5 rounded-[2rem] shadow-sm p-6 sm:p-8 animate-fadeIn">
+          
+          <!-- Sub-Toolbar for Write-Up -->
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-slate-100 dark:border-white/5 pb-4">
             <div>
-              <h4 class="text-sm font-black uppercase tracking-widest text-naf-navy dark:text-white">{{ observationTitle() }}</h4>
-              <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Notes are saved per report context and persist while you navigate this page.</p>
+              <h3 class="text-lg font-bold text-naf-navy dark:text-white">Component Write-up</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">View or compose the intelligence report for {{ summary()?.name }}.</p>
             </div>
             <div class="flex items-center gap-2">
-              <span class="text-xs font-black uppercase tracking-wider text-naf-gold bg-naf-gold/10 dark:bg-naf-gold/15 border border-naf-gold/30 rounded-md px-3 py-1.5">
-                {{ selectedObservationLabel() }}
-              </span>
-              <button (click)="toggleObservationPane()" type="button"
-                      class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-red-500 dark:hover:text-red-400 transition-all">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              <!-- View / Compose Toggle -->
+              <div class="flex items-center bg-slate-100 dark:bg-white/5 rounded-lg p-1 border border-slate-200 dark:border-white/10">
+                <button (click)="isComposing.set(false)"
+                        [class.bg-white]="!isComposing()"
+                        [class.dark:bg-naf-navy]="!isComposing()"
+                        [class.shadow-sm]="!isComposing()"
+                        [class.text-naf-navy]="!isComposing()"
+                        [class.dark:text-naf-gold]="!isComposing()"
+                        class="px-4 py-1.5 text-[10px] font-bold uppercase rounded-md transition-all text-slate-500 dark:text-slate-400">
+                  View Saved
+                </button>
+                <button (click)="isComposing.set(true)"
+                        [class.bg-white]="isComposing()"
+                        [class.dark:bg-naf-navy]="isComposing()"
+                        [class.shadow-sm]="isComposing()"
+                        [class.text-naf-navy]="isComposing()"
+                        [class.dark:text-naf-gold]="isComposing()"
+                        class="px-4 py-1.5 text-[10px] font-bold uppercase rounded-md transition-all text-slate-500 dark:text-slate-400">
+                  Compose New
+                </button>
+              </div>
+
+              <button (click)="toggleWriteUp()" class="text-slate-400 hover:text-red-500 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
               </button>
             </div>
           </div>
-          <form (ngSubmit)="submitObservation()" class="flex flex-col flex-1">
-            <div class="p-6 flex-1 flex flex-col">
-              <textarea
-                name="observation"
-                class="w-full flex-1 min-h-[200px] rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.02] p-5 text-base text-slate-800 dark:text-slate-200 focus:outline-none focus:border-naf-gold/60 focus:ring-4 focus:ring-naf-gold/20 resize-none transition-all"
-                placeholder="Write your observation here..."
-                [ngModel]="observationText()"
-                (ngModelChange)="setObservationText($event)"
-                [ngModelOptions]="{ standalone: true }"
-                [disabled]="submittingObservation()"
-                required>
-              </textarea>
-            </div>
-            <div class="flex items-center justify-end gap-4 px-6 py-4 border-t border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/[0.02]">
-              <button type="button" (click)="toggleObservationPane()" class="px-5 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 bg-white dark:bg-white/5 hover:bg-slate-50 dark:hover:bg-white/10 transition-all disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98]" [disabled]="submittingObservation()">
-                Cancel
-              </button>
-              <button type="submit" class="px-6 py-2.5 text-xs font-black uppercase tracking-wider rounded-xl bg-naf-navy dark:bg-naf-gold text-white dark:text-naf-navy border border-naf-navy dark:border-naf-gold hover:bg-[#004080] dark:hover:bg-naf-goldLight transition-all disabled:opacity-50 disabled:pointer-events-none flex items-center gap-2 shadow-sm active:scale-[0.98]" [disabled]="submittingObservation() || !observationText().trim()">
-                @if (!submittingObservation()) {
-                  <span>Submit Observation</span>
-                } @else {
-                  <span class="h-4 w-4 rounded-full border-2 border-current border-t-transparent animate-spin"></span>
-                  <span>Processing...</span>
-                }
-              </button>
-            </div>
-          </form>
-        </section>
+
+          <!-- Render Component based on mode -->
+          @if (isComposing()) {
+            <app-report-composer 
+                [mode]="currentWriteUpMode" 
+                [airComponentId]="componentId()"
+                (reportSaved)="isComposing.set(false)">
+            </app-report-composer>
+          } @else {
+            <app-report-viewer-component 
+                [mode]="currentWriteUpMode"
+                [airComponentId]="componentId()"
+                [isVisible]="!isComposing()"
+                (exitViewMode)="toggleWriteUp()">
+            </app-report-viewer-component>
+          }
+
+        </div>
+      }
+      
+      <!-- @if (showWriteUp()) {
+        <div class="animate-fadeIn">
+          <app-report-viewer-component 
+              [mode]="isMonthlyMode() ? 'AIR_COMPONENT_MONTHLY' : 'AIR_COMPONENT_QUARTERLY'"
+              [airComponentId]="componentId()"
+              [isVisible]="showWriteUp()"
+              (exitViewMode)="toggleWriteUp()">
+          </app-report-viewer-component>
+        </div>
       } -->
 
       <!-- ACTIVE REPORT CARD (One Dimension at a time) -->
@@ -317,7 +351,6 @@
           @if (monthlyReport(); as report) {
             <div class="max-w-6xl mx-auto space-y-8">
 
-              
               <!-- ==========================================
                   DIMENSION 1: OPERATIONAL EFFECTIVENESS
                   ========================================== -->
@@ -759,7 +792,6 @@
                 }
               }
 
-              
               <!-- ==========================================
                     DIMENSION 4: PERSONNEL DEVELOPMENT
                     ========================================== -->
@@ -877,8 +909,6 @@
                     </div>
                   }
                 }
-
-                
 
               <!-- ==========================================
                   DIMENSION 5: STRATEGIC IMPACT

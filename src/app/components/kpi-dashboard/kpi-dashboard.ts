@@ -59,8 +59,11 @@ export class KpiDashboard implements OnInit {
     observationNotes = signal<Record<string, string>>({});
     submittingObservation = signal<boolean>(false);
 
+    showHeatMap = signal(true);
 
-     filterType = this.filterState.filterType;
+
+    
+    filterType = this.filterState.filterType;
     selectedMonth = this.filterState.selectedMonth;
     selectedQuarter = this.filterState.selectedQuarter;
     selectedYear = this.filterState.selectedYear;
@@ -75,22 +78,6 @@ export class KpiDashboard implements OnInit {
         this.loadData();
     }
 
-
-    // filterType = signal<'MONTH' | 'QUARTER'>('MONTH');
-
-    // selectedMonth = signal('AUGUST');
-    // selectedQuarter = signal('Q3');
-    // selectedYear = signal(2026);
-
-    // months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
-    // quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
-
-    // activeChartType = signal<'bar'>('bar');
-
-    // setFilterType(type: 'MONTH' | 'QUARTER') {
-    //     this.filterType.set(type);
-    //     this.loadData();
-    // }
 
     private readonly chartTickColor = computed(() =>
         this.theme.isDark() ? '#94a3b8' : '#64748b'
@@ -148,6 +135,103 @@ export class KpiDashboard implements OnInit {
         }));
     }
 
+    // =========================================================
+    // DRAW HEATMAP TO CANVAS FOR EXPORT
+    // =========================================================
+
+    drawHeatmapToCanvas(): void {
+        const canvas = document.getElementById('heatmapCanvas') as HTMLCanvasElement;
+        const dashboard = this.data();
+        if (!canvas || !dashboard) return;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const components = dashboard.scores;
+        const dimensions = this.heatMapDimensions;
+        
+        // Sizing
+        const cellWidth = 120;
+        const cellHeight = 50;
+        const headerHeight = 40;
+        const nameWidth = 180;
+        const padding = 10;
+        
+        canvas.width = nameWidth + (dimensions.length * cellWidth) + (padding * 2);
+        canvas.height = headerHeight + (components.length * cellHeight) + (padding * 2);
+
+        // Background
+        ctx.fillStyle = this.theme.isDark() ? '#0f172a' : '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Helper to get colors matching the Tailwind classes
+        const getColors = (score: number) => {
+            if (score >= 90) return { bg: '#10b981', text: '#ffffff' };
+            if (score >= 75) return { bg: '#34d399', text: '#022c22' };
+            if (score >= 70) return { bg: '#fbbf24', text: '#ffffff' };
+            if (score >= 60) return { bg: '#fcd34d', text: '#451a03' };
+            if (score >= 50) return { bg: '#f97316', text: '#ffffff' };
+            if (score >= 40) return { bg: '#ef4444', text: '#ffffff' };
+            return { bg: '#fca5a5', text: '#450a0a' };
+        };
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        // Draw Header Row
+        ctx.fillStyle = this.theme.isDark() ? '#1e293b' : '#f8fafc';
+        ctx.fillRect(padding, padding, canvas.width - (padding * 2), headerHeight);
+        
+        ctx.fillStyle = this.theme.isDark() ? '#94a3b8' : '#475569';
+        ctx.font = 'bold 12px Arial';
+        ctx.textAlign = 'left';
+        ctx.fillText('COMPONENT', padding + 15, padding + headerHeight / 2);
+
+        dimensions.forEach((dim, i) => {
+            ctx.textAlign = 'center';
+            ctx.fillText(dim.label.toUpperCase(), padding + nameWidth + (i * cellWidth) + cellWidth / 2, padding + headerHeight / 2);
+        });
+
+        // Draw Data Rows
+        components.forEach((comp, rowIndex) => {
+            const y = padding + headerHeight + (rowIndex * cellHeight);
+            
+            // Component Name
+            ctx.fillStyle = this.theme.isDark() ? '#0f172a' : '#ffffff';
+            ctx.fillRect(padding, y, nameWidth, cellHeight);
+            
+            ctx.fillStyle = this.theme.isDark() ? '#e2e8f0' : '#1e293b';
+            ctx.font = 'bold 12px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText(comp.airComponentName.toUpperCase(), padding + 15, y + cellHeight / 2);
+
+            // Dimension Cells
+            dimensions.forEach((dim, colIndex) => {
+                const x = padding + nameWidth + (colIndex * cellWidth);
+                
+                // FIX: Use standard TS casting here instead of $any()
+                const score = (comp as any)[dim.key]; 
+                
+                const colors = getColors(score);
+
+                // Cell Background
+                ctx.fillStyle = colors.bg;
+                ctx.fillRect(x, y, cellWidth, cellHeight);
+
+                // Cell Text
+                ctx.fillStyle = colors.text;
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(`${score.toFixed(2)}%`, x + cellWidth / 2, y + cellHeight / 2);
+
+                // Cell Borders
+                ctx.strokeStyle = this.theme.isDark() ? '#0f172a' : '#e2e8f0';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(x, y, cellWidth, cellHeight);
+            });
+        });
+    }
+    
     insertChartIntoReport(chartId: string, title: string, chartType: string): void {
         const alreadyExists = this.reportBuilderService
             .getCharts()
@@ -214,9 +298,19 @@ export class KpiDashboard implements OnInit {
         return this.data()?.scores.filter(s => s.overallScore >= 75).length || 0;
     });
 
+    aboveTargetComponents = computed<AirComponentMonthlyScore[]>(() => {
+        return (this.data()?.scores ?? []).filter(s => s.overallScore >= 75);
+    });
+
+  
     belowTargetCount = computed(() => {
         return this.data()?.scores.filter(s => s.overallScore < 75).length || 0;
     });
+
+    belowTargetComponents = computed<AirComponentMonthlyScore[]>(() => {
+        return (this.data()?.scores ?? []).filter(s => s.overallScore < 75);
+    });
+
 
     bestPerformingComponent = computed<AirComponentMonthlyScore | null>(() => {
         const scores = this.data()?.scores ?? [];
@@ -460,6 +554,8 @@ export class KpiDashboard implements OnInit {
     });
 
     // Calculate annotations separately based on data and dimension targets
+
+        // Calculate annotations separately based on data and dimension targets
     bulletAnnotations = computed(() => {
         const reports = this.data()?.reports || [];
         const targets = this.dimensionTargets();
@@ -481,9 +577,7 @@ export class KpiDashboard implements OnInit {
             return match ? match[1] : 75;
         };
 
-        const lineColor = this.theme.isDark() ? '#D4AF37' : '#0b1a2e';
-        const labelBg = this.theme.isDark() ? '#D4AF37' : '#0b1a2e';
-        const labelColor = this.theme.isDark() ? '#0b1a2e' : '#ffffff';
+        const lineColor = this.theme.isDark() ? 'rgb(55, 212, 92)' : '#25db40';
 
         reports.forEach((report, index) => {
             const target = getTargetValue(report.dimension);
@@ -494,29 +588,20 @@ export class KpiDashboard implements OnInit {
                 yScaleID: 'y',
                 xMin: target,
                 xMax: target,
-                yMin: index,
-                yMax: index,
+                yMin: index - 0.15,   // Limits the vertical height to create a "small bar" effect
+                yMax: index + 0.15,   // Limits the vertical height to create a "small bar" effect
                 borderColor: lineColor,
-                borderWidth: 4,
+                borderWidth: 8,       // Makes the line thick so it looks like a small bar
                 drawTime: 'afterDatasetsDraw',
-                label: {
-                    display: true,
-                    content: `${target}%`,
-                    position: 'center',
-                    backgroundColor: labelBg,
-                    color: labelColor,
-                    padding: { top: 2, bottom: 2, left: 4, right: 4 },
-                    font: {
-                        size: 9,
-                        weight: 'bold'
-                    }
-                }
+                // The label object has been completely removed to hide the numbers and percentage
             };
         });
 
         return dynamicAnnotations;
     });
 
+    
+    
     bulletChartOptions = computed<ChartOptions<'bar'>>(() => {
         const tick = this.chartTickColor();
         const grid = this.chartGridColor();
@@ -560,6 +645,30 @@ export class KpiDashboard implements OnInit {
         };
     });
 
+
+
+    // Heatmap dimension configuration
+    heatMapDimensions = [
+        { key: 'opsEffectiveness', label: 'Ops' },
+        { key: 'jointCoord', label: 'Joint' },
+        { key: 'resourceManagement', label: 'Resource' },
+        { key: 'personnelDev', label: 'Personnel' },
+        { key: 'strategicImpact', label: 'Strategic' },
+        { key: 'riskAssessment', label: 'Risk' }
+    ];
+
+   
+    // Returns Tailwind gradient classes based on score thresholds (Dark/Light mode aware)
+    getHeatMapClasses(score: number): string {
+        if (score >= 90) return 'bg-gradient-to-br from-emerald-400 to-emerald-600 text-white';
+        if (score >= 75) return 'bg-gradient-to-br from-emerald-300 to-emerald-500 text-emerald-950';
+        if (score >= 70) return 'bg-gradient-to-br from-lime-300 to-amber-400 text-white';
+        if (score >= 60) return 'bg-gradient-to-br from-amber-300 to-amber-500 text-amber-950';
+        if (score >= 50) return 'bg-gradient-to-br from-orange-400 to-red-500 text-white';
+        if (score >= 40) return 'bg-gradient-to-br from-red-400 to-red-600 text-white';
+        return 'bg-gradient-to-br from-red-300 to-red-400 text-red-950';
+    }
+
     // =========================================================
     // LOAD DATA
     // =========================================================
@@ -600,6 +709,10 @@ export class KpiDashboard implements OnInit {
     // =========================================================
     // HELPERS
     // =========================================================
+
+    toggleHeatMap(): void {
+        this.showHeatMap.update(v => !v);
+    }
 
     setChartType(type: 'bar'): void {
         this.activeChartType.set(type);
@@ -678,4 +791,8 @@ export class KpiDashboard implements OnInit {
                 }
             });
     }
+}
+
+function $any(comp: AirComponentMonthlyScore) {
+    throw new Error('Function not implemented.');
 }
