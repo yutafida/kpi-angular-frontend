@@ -1,6 +1,7 @@
 import { ReportMonth } from '../shared/report-month';
 import { ReportQuarter } from '../shared/report-quarter';
 
+
 export interface KpiWriteUpBase {
   id: number;
   reportYear: number;

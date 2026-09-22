@@ -1,11 +1,23 @@
-import { Component, ElementRef, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
-import { FilterStateService } from '../../services/filter-state';
-import { KpiService } from '../../services/kpi-service';
+import {
+  Component,
+  input,
+  output,
+  computed,
+  signal,
+  inject,
+  DestroyRef,
+  ChangeDetectionStrategy,
+  effect,
+  untracked,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject, Observable, EMPTY, catchError, debounceTime, filter, switchMap } from 'rxjs';
+
+import { KpiService, ReportQuarter } from '../../services/kpi-service';
 import { ReportMonth } from '../../shared/report-month';
-import { ReportQuarter } from '../../shared/report-quarter';
-
-
+import { FilterStateService } from '../../services/filter-state';
 
 export type WriteUpMode =
   | 'GENERAL_MONTHLY'
@@ -13,166 +25,166 @@ export type WriteUpMode =
   | 'AIR_COMPONENT_MONTHLY'
   | 'AIR_COMPONENT_QUARTERLY';
 
-
-
+interface ReportResponse {
+  content?: string;
+}
 
 @Component({
   selector: 'app-report-viewer-component',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './report-viewer-component.html',
   styleUrl: './report-viewer-component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-// export class ReportViewerComponent {}
-export class ReportViewerComponent implements OnChanges {
+export class ReportViewerComponent {
+  // ===== Signal inputs (parent uses them like normal @Input/@Output) =====
+  readonly mode = input<WriteUpMode>('GENERAL_MONTHLY');
+  readonly airComponentId = input<number | null>(null);
+  readonly isVisible = input<boolean>(false);
 
-  @ViewChild('documentCanvas') documentCanvas!: ElementRef<HTMLDivElement>;
+  readonly exitViewMode = output<void>();
 
-  // Inputs driven by the parent composer
-  @Input() mode: WriteUpMode = 'GENERAL_MONTHLY';
-  @Input() airComponentId: number | null = null;
-  @Input() isVisible: boolean = false;
+  // ===== Injected deps =====
+  private readonly kpiService = inject(KpiService);
+  private readonly filterState = inject(FilterStateService);
+  private readonly sanitizer = inject(DomSanitizer);
+  private readonly destroyRef = inject(DestroyRef);
 
-  // Output to tell parent to close the viewer
-  @Output() exitViewMode = new EventEmitter<void>();
+  // ===== Shared filter signals =====
+  private readonly selectedMonth = this.filterState.selectedMonth;
+  private readonly selectedQuarter = this.filterState.selectedQuarter;
+  private readonly selectedYear = this.filterState.selectedYear;
+  private readonly filterType = this.filterState.filterType;
 
-  private kpiService = inject(KpiService);
-  private filterState = inject(FilterStateService);
+  // ===== UI state as signals (works perfectly with OnPush) =====
+  readonly loading = signal(false);
+  readonly notFound = signal(false);
+  readonly error = signal<string | null>(null);
+  readonly reportContent = signal<SafeHtml>('');
+  /** Bumped on every successful load so the canvas re-runs its fade-in. */
+  readonly renderKey = signal(0);
 
-  // Read shared filter state
-  selectedMonth = this.filterState.selectedMonth;
-  selectedQuarter = this.filterState.selectedQuarter;
-  selectedYear = this.filterState.selectedYear;
+  // ===== Computed =====
+  readonly periodLabel = computed(() => {
+    const m = this.mode();
+    const isMonthly = m === 'GENERAL_MONTHLY' || m === 'AIR_COMPONENT_MONTHLY';
+    const period = isMonthly
+      ? String(this.selectedMonth() ?? '')
+      : String(this.selectedQuarter() ?? '');
+    const year = this.selectedYear() ?? '';
+    return `${period} ${year}`.trim();
+  });
 
-  // Internal UI state
-  loading = false;
-  notFound = false;
-  reportContent = '';
+  readonly hasContent = computed(() => !!this.reportContent());
 
-  // Computed label for UI display
-  get periodLabel(): string {
-    const isMonthly = this.mode === 'GENERAL_MONTHLY' || this.mode === 'AIR_COMPONENT_MONTHLY';
-    const period = isMonthly ? String(this.selectedMonth()) : String(this.selectedQuarter());
-    return `${period} ${this.selectedYear()}`;
-  }
+  /**
+   * Single load pipeline.
+   *  - debounceTime  → rapid filter changes coalesce into one request.
+   *  - filter        → only when the panel is actually visible.
+   *  - switchMap     → cancels any in-flight request automatically.
+   *  - catchError   → a failed fetch can never kill the pipeline.
+   *  - takeUntilDestroyed → auto-unsubscribes on destroy.
+   */
+  private readonly loadTrigger$ = new Subject<void>();
 
-  // Listen for changes to inputs or filter state to auto-reload
-  // FIX: Added SimpleChanges parameter and import to satisfy strict type checking
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.isVisible) {
-      this.loadReport();
-    }
-  }
+  constructor() {
+    this.loadTrigger$       .pipe(
+        debounceTime(60),
+        filter(() => this.isVisible()),
+        switchMap(() =>
+          this.buildRequest$().pipe(
+            catchError((err) => {
+              this.handleError(err);
+              return EMPTY;
+            }),
+          ),
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((report) => this.handleReport(report as ReportResponse));
 
-  // =====================================================
-  // LOAD REPORT DATA
-  // =====================================================
+    // One effect that tracks ALL relevant signals; side-effect runs untracked
+    // so internal signal writes don't retrigger it.
+    effect(() => {
+      this.isVisible();
+      this.mode();
+      this.airComponentId();
+      this.selectedMonth();
+      this.selectedQuarter();
+      this.selectedYear();
+      this.filterType();
 
-  loadReport(): void {
-    if ((this.mode === 'AIR_COMPONENT_MONTHLY' || this.mode === 'AIR_COMPONENT_QUARTERLY') && this.airComponentId == null) {
-      this.notFound = true;
-      return;
-    }
-
-    this.loading = true;
-    this.notFound = false;
-
-    const year = this.selectedYear();
-    const currentMode = this.mode;
-    const componentId = this.airComponentId;
-
-    let request$!: Observable<any>;
-
-    if (currentMode === 'GENERAL_MONTHLY') {
-      request$ = this.kpiService.getGeneralMonthlyWriteUp(this.selectedMonth() as ReportMonth, year);
-    } else if (currentMode === 'GENERAL_QUARTERLY') {
-      request$ = this.kpiService.getGeneralQuarterlyWriteUp(this.selectedQuarter() as ReportQuarter, year);
-    } else if (currentMode === 'AIR_COMPONENT_MONTHLY') {
-      request$ = this.kpiService.getAirComponentMonthlyWriteUp(this.selectedMonth() as ReportMonth, year, componentId as number);
-    } else {
-      request$ = this.kpiService.getAirComponentQuarterlyWriteUp(this.selectedQuarter() as ReportQuarter, year, componentId as number);
-    }
-
-    request$.subscribe({
-      next: (report) => {
-        const content: string = report?.content ?? '';
-
-        if (!content || !content.trim()) {
-          this.notFound = true;
-          this.reportContent = '';
-          this.loading = false;
-          return;
-        }
-
-        this.reportContent = content;
-
-        // Inject HTML safely into the DOM
-        if (this.documentCanvas) {
-          this.documentCanvas.nativeElement.innerHTML = content;
-        }
-
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Failed to load saved report', error);
-        this.notFound = true;
-        this.loading = false;
-      }
+      untracked(() => this.loadTrigger$.next());
     });
   }
 
-  // =====================================================
-  // EXPORT TO MS WORD
-  // =====================================================
+  /** Public hook in case the parent wants to force a reload. */
+  reload(): void {
+    this.loadTrigger$.next();
+  }
 
-  exportToWord(): void {
-    if (!this.documentCanvas || !this.reportContent.trim()) {
+  // ---------- internals ----------
+
+  private buildRequest$(): Observable<ReportResponse> {
+    const mode = this.mode();
+    const airId = this.airComponentId();
+
+    // Pre-flight: air-component modes require an id.
+    if (
+      (mode === 'AIR_COMPONENT_MONTHLY' || mode === 'AIR_COMPONENT_QUARTERLY') &&
+      airId == null
+    ) {
+      this.loading.set(false);
+      this.notFound.set(true);
+      this.error.set(null);
+      this.reportContent.set('');
+      return EMPTY;
+    }
+
+    this.loading.set(true);
+    this.notFound.set(false);
+    this.error.set(null);
+    this.reportContent.set('');
+
+    const year = this.selectedYear();
+    const month = this.selectedMonth() as ReportMonth;
+    const quarter = this.selectedQuarter() as ReportQuarter;
+
+    if (mode === 'GENERAL_MONTHLY') {
+      return this.kpiService.getGeneralMonthlyWriteUp(month, year);
+    }
+    if (mode === 'GENERAL_QUARTERLY') {
+      return this.kpiService.getGeneralQuarterlyWriteUp(quarter, year);
+    }
+    if (mode === 'AIR_COMPONENT_MONTHLY') {
+      return this.kpiService.getAirComponentMonthlyWriteUp(month, year, airId as number);
+    }
+    return this.kpiService.getAirComponentQuarterlyWriteUp(quarter, year, airId as number);
+  }
+
+  private handleReport(report: ReportResponse): void {
+    const content: string = report?.content ?? '';
+
+    if (!content || !content.trim()) {
+      this.notFound.set(true);
+      this.loading.set(false);
+      this.reportContent.set('');
       return;
     }
 
-    const innerContent = this.documentCanvas.nativeElement.innerHTML;
-    const label = this.periodLabel;
+    this.reportContent.set(this.sanitizer.bypassSecurityTrustHtml(content));
+    this.loading.set(false);
+    this.notFound.set(false);
+    this.error.set(null);
+    this.renderKey.update((v) => v + 1);
+  }
 
-    const header = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-      <head>
-        <meta charset='utf-8'>
-        <title>${label} KPI Report</title>
-        <!--[if gte mso 9]>
-        <xml>
-          <w:WordDocument>
-            <w:View>Print</w:View>
-            <w:Zoom>90</w:Zoom>
-            <w:DoNotPromptForConvert/>
-            <w:DoNotShowInsertionsAndDeletions/>
-          </w:WordDocument>
-        </xml>
-        <![endif]-->
-        <style>
-          @page WordSection1 { size: 8.5in 11.0in; mso-page-orientation: portrait; margin: 1.0in 1.0in 1.0in 1.0in; }
-          div.WordSection1 { page: WordSection1; }
-          body { font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.5; color: #000; }
-          img { max-width: 100%; height: auto; }
-          h1, h2, h3 { font-family: Arial, sans-serif; }
-        </style>
-      </head>
-      <body>
-        <div class="WordSection1">
-          <h1 style="text-align: center; text-transform: uppercase; border-bottom: 2px solid #000; padding-bottom: 10px;">${label} KPI Report</h1>
-          <br/>
-          ${innerContent}
-        </div>
-      </body>
-    </html>`;
-
-    const blob = new Blob(['\ufeff', header], { type: 'application/msword' });
-    const filename = `KPI_Report_${label.replace(/\s+/g, '_')}.doc`;
-
-    const downloadLink = document.createElement('a');
-    document.body.appendChild(downloadLink);
-    const url = URL.createObjectURL(blob);
-    downloadLink.href = url;
-    downloadLink.download = filename;
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-    URL.revokeObjectURL(url);
+  private handleError(err: unknown): void {
+    console.error('Failed to load saved report', err);
+    this.loading.set(false);
+    this.notFound.set(true);
+    this.error.set('Unable to load this report. Please try again.');
+    this.reportContent.set('');
   }
 }

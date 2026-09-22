@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class AirComponentMonthlyReportComponent {
 
-   @Input() report: AirComponentMonthlyReport | null = null;
+    @Input() report: AirComponentMonthlyReport | null = null;
 
    
 

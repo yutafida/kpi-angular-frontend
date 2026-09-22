@@ -1,86 +1,76 @@
-<!-- THE VIEWING CANVAS -->
-<div class="bg-white dark:bg-naf-navyLight border border-slate-200 dark:border-white/5 rounded-[2rem] shadow-sm dark:shadow-2xl overflow-hidden transition-all duration-300 focus-within:border-naf-gold/60 focus-within:ring-4 focus-within:ring-naf-gold/20 flex flex-col">
+<div class="bg-white dark:bg-naf-navyLight border border-slate-200 dark:border-white/5 rounded-[2rem] shadow-sm dark:shadow-2xl overflow-hidden transition-all duration-300 animate-fadeIn">
 
-  <div class="p-8 bg-gradient-to-b from-white to-slate-50/60 dark:from-naf-navyLight dark:to-naf-navy/60 min-h-[700px] relative flex-grow">
-
-    <!-- Loading state -->
-    @if (loading) {
-      <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 text-slate-400 dark:text-slate-500">
-        <span class="h-6 w-6 rounded-full border-2 border-naf-gold border-t-transparent animate-spin"></span>
-        <p class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Loading saved report...</p>
-      </div>
-    }
-
-    <!-- Empty / not-found state -->
-    @if (!loading && notFound) {
-      <div class="absolute inset-0 flex flex-col items-center justify-center gap-4 text-center">
-        <div class="w-14 h-14 rounded-2xl border border-dashed border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-white/5 flex items-center justify-center text-slate-400 dark:text-slate-500">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-          </svg>
-        </div>
-        <div class="space-y-1">
-          <p class="text-sm font-black text-slate-700 dark:text-slate-200">No Saved Report</p>
-          <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
-            Nothing has been compiled for 
-            <span class="font-bold text-naf-navy dark:text-naf-gold">{{ periodLabel }}</span> 
-            yet. Return to the composer to draft a new intelligence report.
-          </p>
-        </div>
-        <button type="button"
-                (click)="exitViewMode.emit()"
-                class="mt-2 px-4 py-2 rounded-xl bg-naf-navy dark:bg-naf-gold hover:bg-[#004080] dark:hover:bg-naf-goldLight text-white dark:text-naf-navy text-xs font-black uppercase tracking-wider transition shadow-sm">
-          Open Composer
-        </button>
-      </div>
-    }
-
-    <!-- Report Content Injection -->
-    <div
-      #documentCanvas
-      [class.cursor-default]="true"
-      [class.pointer-events-none]="loading || notFound"
-      class="w-full min-h-[650px] bg-transparent text-slate-800 dark:text-slate-200 text-base leading-relaxed outline-none prose prose-slate dark:prose-invert max-w-none focus:ring-0
-             before:content-[attr(data-placeholder)] before:text-slate-400 dark:before:text-slate-600 before:absolute before:pointer-events-none empty:before:block before:hidden"
-      [attr.data-placeholder]="notFound ? 'No report content to display for the selected period.' : 'No report content to display.'">
+  <!-- ============ VIEWER HEADER ============ -->
+  <div class="flex items-center justify-between gap-4 px-6 py-4 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/5">
+    <div class="min-w-0">
+      <span class="text-[9px] font-black uppercase tracking-[0.2em] text-naf-gold block mb-1">Archive Intelligence</span>
+      <h3 class="text-lg font-bold text-naf-navy dark:text-white tracking-tight truncate">
+        {{ periodLabel() }} Report
+      </h3>
     </div>
+    <button
+      (click)="exitViewMode.emit()"
+      class="inline-flex shrink-0 items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400/40 text-xs font-black uppercase tracking-wider transition active:scale-[0.98] shadow-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+        <path stroke-linecap="round" stroke-linejoin="round" d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+      </svg>
+      <span>Back to Composer</span>
+    </button>
   </div>
 
-  <!-- VIEW-MODE ACTION BAR -->
-  @if (!loading && !notFound) {
-    <div class="px-8 py-5 border-t border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <div class="space-y-0.5">
-        <h4 class="text-xs font-bold text-slate-700 dark:text-slate-200">Report Review Console</h4>
-        <p class="text-[11px] text-slate-500 dark:text-slate-400">
-          Viewing saved intelligence report for
-          <span class="font-bold text-naf-navy dark:text-naf-gold">{{ periodLabel }}</span>.
+  <!-- ============ VIEWER CONTENT AREA ============ -->
+  <div class="p-8 min-h-[650px] relative bg-gradient-to-b from-white to-slate-50/60 dark:from-naf-navyLight dark:to-naf-navy/60">
+
+    <!-- LOADING -->
+    @if (loading()) {
+      <div class="absolute inset-0 flex flex-col items-center justify-center bg-white/80 dark:bg-naf-navy/80 backdrop-blur-sm z-10 space-y-4">
+        <span class="h-8 w-8 rounded-full border-4 border-naf-gold border-t-transparent animate-spin"></span>
+        <p class="text-sm font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">
+          Decrypting Intelligence...
         </p>
       </div>
+    }
 
-      <div class="flex items-center gap-3 flex-wrap">
-        <!-- Export to Word Button -->
-        <button type="button"
-                (click)="exportToWord()"
-                class="inline-flex items-center justify-center gap-2 rounded-xl bg-naf-navy dark:bg-naf-gold px-6 py-3.5 text-xs font-black uppercase tracking-widest text-white dark:text-naf-navy shadow-lg shadow-naf-navy/30 dark:shadow-naf-gold/30 hover:brightness-110 active:scale-[0.98] transition">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
+    <!-- ERROR -->
+    @if (error() && !loading()) {
+      <div class="flex flex-col items-center justify-center text-center h-full py-16">
+        <div class="w-16 h-16 rounded-2xl border border-dashed border-rose-300 dark:border-rose-400/30 bg-rose-50 dark:bg-rose-500/5 flex items-center justify-center mx-auto mb-4 text-rose-500">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
           </svg>
-          Export to Word
-        </button>
-
-        <button type="button"
-                (click)="exitViewMode.emit()"
-                class="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 px-6 py-3.5 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-emerald-900/30 hover:brightness-110 active:scale-[0.98] transition">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-          </svg>
-          Return to Composer
+        </div>
+        <p class="text-lg font-bold text-slate-700 dark:text-slate-200">Something went wrong</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-sm">{{ error() }}</p>
+        <button (click)="reload()"
+          class="mt-4 px-4 py-2 rounded-xl bg-slate-800 dark:bg-white/10 text-white text-xs font-black uppercase tracking-wider hover:bg-slate-700 dark:hover:bg-white/20 transition">
+          Retry
         </button>
       </div>
-    </div>
-  }
+    }
+
+    <!-- NOT FOUND / EMPTY -->
+    @if (notFound() && !loading() && !error()) {
+      <div class="flex flex-col items-center justify-center text-center h-full py-16">
+        <div class="w-16 h-16 rounded-2xl border border-dashed border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.02] flex items-center justify-center mx-auto mb-4 text-slate-400 dark:text-slate-500">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <p class="text-lg font-bold text-slate-700 dark:text-slate-200">No Saved Report Found</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-sm">
+          No write-up exists for {{ periodLabel() }}. Close this view and click "Compose New" to create one.
+        </p>
+      </div>
+    }
+
+    <!-- RICH TEXT CANVAS -->
+    @if (hasContent() && !loading() && !error() && !notFound()) {
+      <div
+        [innerHTML]="reportContent()"
+        [attr.data-render-key]="renderKey()"
+        class="report-canvas w-full min-h-[500px] bg-transparent text-slate-800 dark:text-slate-200 text-base leading-relaxed outline-none prose prose-slate dark:prose-invert max-w-none prose-headings:font-black prose-headings:text-naf-navy dark:prose-headings:text-white prose-strong:text-naf-navy dark:prose-strong:text-naf-gold prose-a:text-blue-600 dark:prose-a:text-blue-400">
+      </div>
+    }
+  </div>
 </div>

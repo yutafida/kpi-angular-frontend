@@ -1,16 +1,19 @@
-// import { Component } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+  inject,
+  AfterViewInit,
+  signal,
+  effect
+} from '@angular/core';
 
-// @Component({
-//   selector: 'app-report-composer-component',
-//   imports: [],
-//   templateUrl: './report-composer-component.html',
-//   styleUrl: './report-composer-component.css',
-// })
-// export class ReportComposerComponent {}
-
-
-
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -19,6 +22,7 @@ import { ReportMonth } from '../../shared/report-month';
 import { ReportChart } from '../../models/report-chart';
 import { ReportBuilderService } from '../../services/report-builder-service';
 import { FilterStateService } from '../../services/filter-state';
+import { AirComponentMonthlyScore } from '../../models/air-component-monthly-score';
 
 export type WriteUpMode =
   | 'GENERAL_MONTHLY'
@@ -33,13 +37,15 @@ export type WriteUpMode =
   templateUrl: './report-composer-component.html',
   styleUrl: './report-composer-component.css',
 })
-export class ReportComposerComponent implements OnInit {
+export class ReportComposerComponent implements OnInit, OnChanges, AfterViewInit {
 
   @ViewChild('documentCanvas') documentCanvas!: ElementRef<HTMLDivElement>;
 
   // Inputs to make the component context-aware
+  @Input() aiGeneratedContent: string | null = null;
   @Input() mode: WriteUpMode = 'GENERAL_MONTHLY';
   @Input() airComponentId: number | null = null;
+  @Input() monthlyScore: AirComponentMonthlyScore | null = null;
   
   // Output to notify parent when a report is saved
   @Output() reportSaved = new EventEmitter<void>();
@@ -52,6 +58,7 @@ export class ReportComposerComponent implements OnInit {
   selectedMonth = this.filterState.selectedMonth;
   selectedQuarter = this.filterState.selectedQuarter;
   selectedYear = this.filterState.selectedYear;
+  filterType = this.filterState.filterType;
 
   // Local UI State
   selectedCharts = signal<ReportChart[]>([]);
@@ -59,6 +66,30 @@ export class ReportComposerComponent implements OnInit {
   submittingReport = signal<boolean>(false);
   statusMessage = signal<string>('');
   isFullscreen = signal<boolean>(false);
+
+  // AI State
+  aiPrompt = signal<string>('');
+  isGeneratingAi = signal<boolean>(false);
+
+  constructor() {
+    // Listen for filter changes to seamlessly clear the canvas
+    effect(() => {
+      const month = this.selectedMonth();
+      const quarter = this.selectedQuarter();
+      const year = this.selectedYear();
+      const type = this.filterType();
+
+      // Clear the composer state when filters change
+      this.reportContent.set('');
+      this.aiPrompt.set('');
+      this.statusMessage.set('');
+
+      // Clear the DOM canvas if it exists
+      if (this.documentCanvas?.nativeElement) {
+        this.documentCanvas.nativeElement.innerHTML = '';
+      }
+    });
+  }
 
   // Computed helpers
   get isAirComponentMode(): boolean {
@@ -89,6 +120,25 @@ export class ReportComposerComponent implements OnInit {
 
   onCanvasChange(rawHtml: string): void {
     this.reportContent.set(rawHtml);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['aiGeneratedContent'] && this.aiGeneratedContent) {
+      this.populateAiGeneratedContent(this.aiGeneratedContent);
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (this.aiGeneratedContent) {
+      this.populateAiGeneratedContent(this.aiGeneratedContent);
+    }
+  }
+
+  private populateAiGeneratedContent(content: string): void {
+    this.reportContent.set(content);
+    if (this.documentCanvas) {
+      this.documentCanvas.nativeElement.innerHTML = content;
+    }
   }
 
   isCanvasHasText(): boolean {
@@ -184,6 +234,55 @@ export class ReportComposerComponent implements OnInit {
     }
 
     this.onCanvasChange(this.documentCanvas.nativeElement.innerHTML);
+  }
+
+  // =====================================================
+  // AI GENERATION
+  // =====================================================
+
+  generateAiReport(): void {
+    const promptText = this.aiPrompt().trim();
+    if (!promptText) {
+      this.statusMessage.set('Please enter a prompt for the AI assistant.');
+      return;
+    }
+
+    if (this.isAirComponentMode && !this.monthlyScore) {
+      this.statusMessage.set('Error: Air Component score data is missing for AI context.');
+      return;
+    }
+
+    this.isGeneratingAi.set(true);
+    this.statusMessage.set('Generating AI draft... Please wait.');
+
+    const currentMode = this.mode;
+    let request$!: Observable<any>;
+
+    if (this.isAirComponentMode) {
+      request$ = this.kpiService.generateAiWriteUp(promptText, currentMode, this.monthlyScore);
+    } else {
+      request$ = this.kpiService.generateGeneralAiWriteUp(
+        promptText, 
+        currentMode, 
+        this.selectedMonth() as ReportMonth | null, 
+        this.selectedQuarter() as ReportQuarter | null, 
+        this.selectedYear()
+      );
+    }
+
+    request$.subscribe({
+      next: (response: any) => {
+        const aiContent = response.content || response.writeUp || response; 
+        this.populateAiGeneratedContent(aiContent);
+        this.isGeneratingAi.set(false);
+        this.statusMessage.set('AI draft loaded. Review and edit before saving.');
+      },
+      error: (error) => {
+        console.error('AI generation failed', error);
+        this.statusMessage.set('Failed to generate AI draft.');
+        this.isGeneratingAi.set(false);
+      }
+    });
   }
 
   // =====================================================

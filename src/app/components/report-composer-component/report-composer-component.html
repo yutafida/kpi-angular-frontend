@@ -137,6 +137,45 @@
           }
         </div>
       </div>
+
+      <!-- NEW: AI ASSISTANT PANEL -->
+      <div class="bg-white dark:bg-naf-navyLight border border-slate-200 dark:border-white/5 rounded-[2rem] overflow-hidden shadow-sm">
+        <div class="px-6 py-5 border-b border-slate-100 dark:border-white/5 bg-slate-50/20 dark:bg-white/5">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[9px] font-black uppercase tracking-[0.2em] text-naf-gold block mb-1">AI Assistant</span>
+              <h3 class="text-lg font-bold text-naf-navy dark:text-white tracking-tight">Intelligence Generator</h3>
+            </div>
+          </div>
+        </div>
+        
+        <div class="p-4 space-y-3 bg-white dark:bg-naf-navyLight">
+          <textarea 
+            [ngModel]="aiPrompt()" 
+            (ngModelChange)="aiPrompt.set($event)"
+            rows="4" 
+            placeholder="e.g., 'Draft a summary of quarterly flight hours and highlight anomalies in fuel consumption...'" 
+            class="w-full bg-slate-50 dark:bg-naf-navy border border-slate-200 dark:border-white/10 rounded-xl p-3 text-xs text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-naf-gold/40 transition resize-none custom-scroll"></textarea>
+          
+          <button 
+            type="button" 
+            (click)="generateAiReport()" 
+            [disabled]="isGeneratingAi()" 
+            class="w-full py-2.5 bg-gradient-to-r from-naf-navy to-[#004080] dark:from-naf-gold dark:to-naf-goldLight text-white dark:text-naf-navy rounded-xl text-xs font-black uppercase tracking-wider shadow-md hover:brightness-110 active:scale-[0.99] transition disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2">
+            
+            @if (!isGeneratingAi()) {
+              <span>Generate Draft</span>
+            } @else {
+              <span class="h-4 w-4 rounded-full border-2 border-current border-t-transparent animate-spin"></span>
+              <span>Processing Vectors...</span>
+            }
+          </button>
+
+          @if (statusMessage().includes('AI') || statusMessage().includes('generate')) {
+            <p class="text-[10px] text-slate-500 dark:text-slate-400 italic text-center">{{ statusMessage() }}</p>
+          }
+        </div>
+      </div>
     </aside>
   }
 </div>

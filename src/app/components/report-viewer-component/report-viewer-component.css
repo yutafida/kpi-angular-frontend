@@ -1,0 +1,46 @@
+/* Smooth fade-in every time a new report is rendered.
+   Works because the canvas is removed from the DOM while loading(),
+   so each successful load re-mounts the node and the animation replays. */
+.report-canvas {
+  animation: rv-fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes rv-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Respect reduced-motion preferences. */
+@media (prefers-reduced-motion: reduce) {
+  .report-canvas {
+    animation: none;
+  }
+}
+
+/* Prose tweaks for saved HTML reports —
+   keeps inline styles from the composer looking consistent. */
+.report-canvas img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+}
+.report-canvas table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+.report-canvas th,
+.report-canvas td {
+  border: 1px solid rgb(203 213 225);
+  padding: 0.5rem 0.75rem;
+}
+.dark .report-canvas th,
+.dark .report-canvas td {
+  border-color: rgb(255 255 255 / 0.1);
+}

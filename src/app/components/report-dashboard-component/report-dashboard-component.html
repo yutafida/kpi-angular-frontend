@@ -1,166 +1,260 @@
-<div class="space-y-6">
+<div class="min-h-screen bg-slate-50 dark:bg-naf-navy text-slate-900 dark:text-slate-100">
 
-  <!-- FILTERS & TOOLBAR -->
-  <div class="bg-white dark:bg-naf-navyLight border border-slate-200 dark:border-white/5 rounded-2xl p-6 backdrop-blur flex flex-col md:flex-row md:items-center md:justify-between gap-6 shadow-sm">
-    
-    <div class="flex flex-col gap-4 flex-1">
-      <div>
-        <h2 class="text-xl font-bold text-naf-navy dark:text-white tracking-tight">Reports Dashboard</h2>
-        <p class="text-xs text-slate-500 dark:text-slate-400">Browse all generated general and component reports for the selected period.</p>
-      </div>
+  <!-- ============================================================
+       HEADER (Sticky & Shared)
+       ============================================================ -->
+  <header class="sticky top-0 z-50 bg-white/90 dark:bg-naf-navy/95 backdrop-blur-lg border-b border-slate-200 dark:border-naf-gold/15 shadow-sm dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] transition-colors duration-300">
+    <div class="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="h-[2px] bg-gradient-to-r from-transparent via-naf-gold to-transparent opacity-60"></div>
 
-      <!-- Mode Toggle -->
-      <div class="flex flex-wrap items-center gap-3">
-        <div class="flex items-center gap-2">
-          <span class="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider">Period:</span>
-          <div class="flex items-center bg-slate-100 dark:bg-white/5 rounded-lg p-1 border border-slate-200 dark:border-white/10">
-            <button type="button" (click)="setFilterType('MONTH')"
-                    [class.bg-white]="isMonthlyMode"
-                    [class.dark:bg-naf-navy]="isMonthlyMode"
-                    [class.shadow-sm]="isMonthlyMode"
-                    [class.text-naf-navy]="isMonthlyMode"
-                    [class.dark:text-naf-gold]="isMonthlyMode"
-                    class="px-4 py-1.5 text-[10px] font-bold uppercase rounded-md transition-all text-slate-500 dark:text-slate-400">
-              Monthly
-            </button>
-            <button type="button" (click)="setFilterType('QUARTER')"
-                    [class.bg-white]="!isMonthlyMode"
-                    [class.dark:bg-naf-navy]="!isMonthlyMode"
-                    [class.shadow-sm]="!isMonthlyMode"
-                    [class.text-naf-navy]="!isMonthlyMode"
-                    [class.dark:text-naf-gold]="!isMonthlyMode"
-                    class="px-4 py-1.5 text-[10px] font-bold uppercase rounded-md transition-all text-slate-500 dark:text-slate-400">
-              Quarterly
-            </button>
+      <div class="flex items-center justify-between h-16 sm:h-20">
+        <!-- Logo / Brand -->
+        <div class="flex items-center gap-4">
+          <div class="relative group cursor-pointer">
+            <div class="absolute inset-0 bg-naf-gold/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div class="relative w-11 h-11 bg-gradient-to-br from-naf-gold to-yellow-600 rounded-xl flex items-center justify-center shadow-lg border border-white/20">
+              <svg class="w-6 h-6 text-naf-navy" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C12 2 8 5 8 9C8 11.5 9.5 13 10.5 13.5L9 18H11L12 15L13 18H15L13.5 13.5C14.5 13 16 11.5 16 9C16 5 12 2 12 2ZM12 4.5C12.8 5.8 14 7.5 14 9C14 10.5 13 11.5 12 12C11 11.5 10 10.5 10 9C10 7.5 11.2 5.8 12 4.5Z"/>
+                <path d="M8 9L2 7L4 9L1 11L8 10.5" opacity="0.85"/>
+                <path d="M16 9L22 7L20 9L23 11L16 10.5" opacity="0.85"/>
+                <circle cx="12" cy="1.2" r="0.7"/>
+              </svg>
+            </div>
+          </div>
+          <div class="hidden sm:block">
+            <h1 class="text-lg font-black tracking-tight text-naf-navy dark:text-white leading-none">DOPLANS</h1>
+            <p class="text-[10px] font-bold text-naf-gold uppercase tracking-[0.25em] mt-1">KPI Command Center</p>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div class="flex flex-wrap items-center gap-4 md:justify-end">
-      @if (isMonthlyMode) {
-        <div class="flex items-center gap-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2">
-          <span class="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider">Month:</span>
-          <select [ngModel]="selectedMonth()" (ngModelChange)="selectedMonth.set($event); loadData()" class="bg-transparent text-xs font-bold text-slate-700 dark:text-slate-200 outline-none cursor-pointer pr-2">
-            @for (month of months; track month) {
-              <option [ngValue]="month" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">{{ month }}</option>
-            }
-          </select>
-        </div>
-      } @else {
-        <div class="flex items-center gap-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2">
-          <span class="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider">Quarter:</span>
-          <select [ngModel]="selectedQuarter()" (ngModelChange)="selectedQuarter.set($event); loadData()" class="bg-transparent text-xs font-bold text-slate-700 dark:text-slate-200 outline-none cursor-pointer pr-2">
-            @for (quarter of quarters; track quarter) {
-              <option [ngValue]="quarter" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">{{ quarter }}</option>
-            }
-          </select>
-        </div>
-      }
-
-      <div class="flex items-center gap-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2">
-        <span class="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider">Year:</span>
-        <select [ngModel]="selectedYear()" (ngModelChange)="selectedYear.set($event); loadData()" class="bg-transparent text-xs font-bold text-slate-700 dark:text-slate-200 outline-none cursor-pointer pr-2">
-          @for (year of years; track year) {
-            <option [ngValue]="year" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">{{ year }}</option>
-          }
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <!-- VIEWER OR TABLE -->
-  @if (viewingReport()) {
-    <!-- REUSED REPORT VIEWER -->
-    <div class="bg-white dark:bg-naf-navyLight border border-slate-200 dark:border-white/5 rounded-[2rem] shadow-sm dark:shadow-2xl overflow-hidden transition-all duration-300 flex flex-col">
-      
-      <!-- Sub-toolbar to exit view mode -->
-      <div class="px-6 py-4 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/5 flex justify-between items-center">
-        <h3 class="text-sm font-bold uppercase tracking-widest text-slate-700 dark:text-white">Viewing Saved Report</h3>
-        <button type="button" (click)="exitViewMode()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400/40 text-xs font-black uppercase tracking-wider transition active:scale-[0.98] shadow-sm">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-          </svg>
-          Back to List
-        </button>
-      </div>
-
-      <app-report-viewer-component 
-          [mode]="activeMode()"
-          [airComponentId]="activeAirComponentId()"
-          [isVisible]="viewingReport()"
-          (exitViewMode)="exitViewMode()">
-      </app-report-viewer-component>
-    </div>
-  } @else {
-    <!-- REPORTS TABLE -->
-    <div class="bg-white dark:bg-naf-navyLight border border-slate-200 dark:border-white/5 rounded-2xl shadow-sm overflow-hidden">
-      
-      @if (loading()) {
-        <div class="p-12 flex flex-col items-center justify-center gap-3 text-slate-400 dark:text-slate-500">
-          <span class="h-8 w-8 rounded-full border-4 border-naf-gold border-t-transparent animate-spin"></span>
-          <p class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Loading reports...</p>
-        </div>
-      } @else if (reports().length === 0) {
-        <div class="p-12 flex flex-col items-center justify-center gap-4 text-center">
-          <div class="w-14 h-14 rounded-2xl border border-dashed border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-white/5 flex items-center justify-center text-slate-400 dark:text-slate-500">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
+        <!-- Navigation -->
+        <nav class="hidden lg:flex items-center gap-1" role="navigation" aria-label="Main navigation">
+          <a routerLink="/" class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-500 dark:text-blue-200/80 font-semibold text-[11px] uppercase tracking-[0.12em] hover:text-naf-navy dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors duration-200">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 13h2v8H3zM9 9h2v12H9zM15 5h2v16h-2zM21 1h2v20h-2z"/>
             </svg>
+            Dashboard
+          </a>
+        </nav>
+
+        <!-- Right Actions -->
+        <div class="flex items-center gap-3 md:gap-4">
+          <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/25">
+            <span class="relative flex h-1.5 w-1.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-60"></span>
+              <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+            </span>
+            <span class="text-emerald-700 dark:text-emerald-400 font-bold text-[10px] uppercase tracking-[0.15em]">Operational</span>
           </div>
-          <p class="text-base font-bold text-slate-700 dark:text-slate-200">No Reports Found</p>
-          <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm">No reports have been compiled for this period yet.</p>
+          <app-theme-toggle />
+
+          <div class="h-6 w-px bg-slate-200 dark:bg-white/10"></div>
+          <a href="/logout" class="flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-all duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+            </svg>
+            <span class="hidden md:inline">Exit</span>
+          </a>
         </div>
-      } @else {
-        <div class="overflow-x-auto">
-          <table class="min-w-full text-xs sm:text-sm">
-            <thead class="bg-slate-100/80 dark:bg-white/10 text-slate-600 dark:text-slate-300 uppercase tracking-wider border-b border-slate-200 dark:border-white/10">
-              <tr>
-                <th class="px-6 py-4 text-left font-black">Report Scope</th>
-                <th class="px-6 py-4 text-left font-black">Period</th>
-                <th class="px-6 py-4 text-left font-black hidden md:table-cell">Preview</th>
-                <th class="px-6 py-4 text-right font-black">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-200 dark:divide-white/10 bg-white dark:bg-naf-navyLight">
-              @for (report of reports(); track report.airComponentId + report.scope) {
-                <tr class="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors duration-150 group">
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="flex items-center gap-3">
-                      <span class="w-2 h-2 rounded-full" [class.bg-naf-gold]="report.scope === 'General'" [class.bg-blue-500]="report.scope === 'Air Component'"></span>
-                      <div class="flex flex-col">
-                        <span class="font-bold text-naf-navy dark:text-white">{{ report.scope }}</span>
-                        @if (report.scope === 'Air Component') {
-                          <span class="text-[10px] text-slate-400 dark:text-slate-500 font-mono">ID: {{ report.airComponentId }}</span>
-                        }
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-slate-600 dark:text-slate-300 whitespace-nowrap">
-                    {{ isMonthlyMode ? selectedMonth() : selectedQuarter() }} {{ selectedYear() }}
-                  </td>
-                  <td class="px-6 py-4 text-slate-500 dark:text-slate-400 max-w-[400px] truncate hidden md:table-cell">
-                    {{ getPreview(report.preview) }}
-                  </td>
-                  <td class="px-6 py-4">
-                    <div class="flex items-center justify-end gap-2">
-                      <button type="button" (click)="viewReport(report.mode, report.airComponentId)" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-naf-navy dark:bg-naf-gold text-white dark:text-naf-navy text-[10px] font-black uppercase tracking-wider hover:bg-[#004080] dark:hover:bg-naf-goldLight transition-colors duration-200 shadow-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                          <circle cx="12" cy="12" r="3"></circle>
-                        </svg>
-                        View Report
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      }
+      </div>
     </div>
-  }
+  </header>
+
+  <!-- ============================================================
+       MAIN CONTENT AREA
+       ============================================================ -->
+  <main class="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    
+    <!-- PAGE TITLE & FILTERS TOOLBAR -->
+    <div class="bg-white dark:bg-naf-navyLight border border-slate-200 dark:border-white/5 rounded-2xl shadow-sm p-6 md:p-8 transition-all duration-300">
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+        
+        <!-- Title Section -->
+        <div>
+          <span class="text-[10px] font-black uppercase tracking-[0.25em] text-naf-gold block mb-2">Archive & Intelligence</span>
+          <h2 class="text-2xl md:text-3xl font-black tracking-tight text-naf-navy dark:text-white">Reports Dashboard</h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-xl">
+            Browse, analyze, and manage all generated general and component reports for the selected period.
+          </p>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="flex flex-col sm:flex-row sm:items-center gap-4 lg:gap-6">
+          
+          <!-- Period Toggle (Segmented Control) -->
+          <div class="flex items-center gap-3">
+            <span class="hidden md:block text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider">Period:</span>
+            <div class="flex items-center bg-slate-100 dark:bg-white/5 rounded-xl p-1.5 border border-slate-200 dark:border-white/10">
+              <button type="button" (click)="setFilterType('MONTH')"
+                      class="px-5 py-2 text-[11px] font-black uppercase rounded-lg transition-all duration-300"
+                      [class.bg-white]="isMonthlyMode"
+                      [class.dark:bg-naf-navy]="isMonthlyMode"
+                      [class.shadow-sm]="isMonthlyMode"
+                      [class.text-naf-navy]="isMonthlyMode"
+                      [class.dark:text-naf-gold]="isMonthlyMode"
+                      [class.text-slate-500]="!isMonthlyMode"
+                      [class.dark:text-slate-400]="!isMonthlyMode">
+                Monthly
+              </button>
+              <button type="button" (click)="setFilterType('QUARTER')"
+                      class="px-5 py-2 text-[11px] font-black uppercase rounded-lg transition-all duration-300"
+                      [class.bg-white]="!isMonthlyMode"
+                      [class.dark:bg-naf-navy]="!isMonthlyMode"
+                      [class.shadow-sm]="!isMonthlyMode"
+                      [class.text-naf-navy]="!isMonthlyMode"
+                      [class.dark:text-naf-gold]="!isMonthlyMode"
+                      [class.text-slate-500]="isMonthlyMode"
+                      [class.dark:text-slate-400]="isMonthlyMode">
+                Quarterly
+              </button>
+            </div>
+          </div>
+
+          <!-- Dropdowns -->
+          <div class="flex items-center gap-3">
+            <!-- Month/Quarter Select -->
+            <div class="relative flex items-center bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2.5 transition-all focus-within:border-naf-gold focus-within:ring-2 focus-within:ring-naf-gold/20">
+              <span class="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider mr-3 pointer-events-none">
+                {{ isMonthlyMode ? 'Month:' : 'Quarter:' }}
+              </span>
+              @if (isMonthlyMode) {
+                <select [ngModel]="selectedMonth()" (ngModelChange)="selectedMonth.set($event); loadData()" class="bg-transparent text-sm font-bold text-slate-700 dark:text-slate-200 outline-none cursor-pointer appearance-none pr-6">
+                  @for (month of months; track month) {
+                    <option [ngValue]="month" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">{{ month }}</option>
+                  }
+                </select>
+              } @else {
+                <select [ngModel]="selectedQuarter()" (ngModelChange)="selectedQuarter.set($event); loadData()" class="bg-transparent text-sm font-bold text-slate-700 dark:text-slate-200 outline-none cursor-pointer appearance-none pr-6">
+                  @for (quarter of quarters; track quarter) {
+                    <option [ngValue]="quarter" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">{{ quarter }}</option>
+                  }
+                </select>
+              }
+              <!-- Custom Chevron -->
+              <svg class="w-4 h-4 text-slate-400 absolute right-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </div>
+
+            <!-- Year Select -->
+            <div class="relative flex items-center bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2.5 transition-all focus-within:border-naf-gold focus-within:ring-2 focus-within:ring-naf-gold/20">
+              <span class="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider mr-3 pointer-events-none">Year:</span>
+              <select [ngModel]="selectedYear()" (ngModelChange)="selectedYear.set($event); loadData()" class="bg-transparent text-sm font-bold text-slate-700 dark:text-slate-200 outline-none cursor-pointer appearance-none pr-6">
+                @for (year of years; track year) {
+                  <option [ngValue]="year" class="bg-white dark:bg-naf-navy text-slate-700 dark:text-slate-200">{{ year }}</option>
+                }
+              </select>
+              <svg class="w-4 h-4 text-slate-400 absolute right-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============================================================
+         DYNAMIC CONTENT AREA (VIEWER OR TABLE)
+         ============================================================ -->
+    @if (viewingReport()) {
+      <!-- REUSED REPORT VIEWER -->
+      <!-- The component has its own outer styling and header, so we render it cleanly -->
+      <div class="animate-fadeIn">
+        <app-report-viewer-component 
+            [mode]="activeMode()"
+            [airComponentId]="activeAirComponentId()"
+            [isVisible]="viewingReport()"
+            (exitViewMode)="exitViewMode()">
+        </app-report-viewer-component>
+      </div>
+    } @else {
+      <!-- REPORTS TABLE CARD -->
+      <div class="bg-white dark:bg-naf-navyLight border border-slate-200 dark:border-white/5 rounded-2xl shadow-sm overflow-hidden transition-all duration-300">
+        
+        @if (loading()) {
+          <!-- LOADING STATE -->
+          <div class="p-16 flex flex-col items-center justify-center gap-4 text-slate-400 dark:text-slate-500">
+            <span class="h-10 w-10 rounded-full border-4 border-naf-gold border-t-transparent animate-spin"></span>
+            <p class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Compiling Reports...</p>
+          </div>
+        } @else if (reports().length === 0) {
+          <!-- EMPTY STATE -->
+          <div class="p-16 flex flex-col items-center justify-center gap-5 text-center">
+            <div class="w-20 h-20 rounded-2xl border border-dashed border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-white/5 flex items-center justify-center text-slate-400 dark:text-slate-500">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <path d="M12 18v-6"></path>
+                <path d="M9 15h6"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-lg font-bold text-slate-700 dark:text-slate-200">No Reports Found</p>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-sm">No reports have been compiled for this period yet. Adjust filters or generate a new report.</p>
+            </div>
+          </div>
+        } @else {
+          <!-- TABLE -->
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-sm">
+              <thead class="bg-slate-50 dark:bg-white/5 text-slate-500 dark:text-slate-400 uppercase text-[10px] tracking-[0.1em] border-b border-slate-200 dark:border-white/10">
+                <tr>
+                  <th class="px-8 py-5 text-left font-black">Report Scope</th>
+                  <th class="px-8 py-5 text-left font-black">Period</th>
+                  <th class="px-8 py-5 text-left font-black hidden md:table-cell">Preview</th>
+                  <th class="px-8 py-5 text-right font-black">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-white/5 bg-white dark:bg-naf-navyLight">
+                @for (report of reports(); track report.airComponentId + report.scope) {
+                  <tr class="hover:bg-slate-50 dark:hover:bg-white/[0.03] transition-colors duration-200 group">
+                    <td class="px-8 py-6 whitespace-nowrap">
+                      <div class="flex items-center gap-4">
+                        <span class="w-2.5 h-2.5 rounded-full transition-transform duration-300 group-hover:scale-150" 
+                              [class.bg-naf-gold]="report.scope === 'General'" 
+                              [class.bg-blue-500]="report.scope === 'Air Component'"></span>
+                        <div class="flex flex-col">
+                          <span class="font-bold text-slate-800 dark:text-white text-base">{{ report.scope }}</span>
+                          @if (report.scope === 'Air Component') {
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500 font-mono mt-1">ID: {{ report.airComponentId }}</span>
+                          }
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-8 py-6 text-slate-600 dark:text-slate-300 whitespace-nowrap font-medium">
+                      {{ isMonthlyMode ? selectedMonth() : selectedQuarter() }} {{ selectedYear() }}
+                    </td>
+                    <td class="px-8 py-6 text-slate-500 dark:text-slate-400 max-w-[400px] truncate hidden md:table-cell text-[13px]">
+                      {{ getPreview(report.preview) }}
+                    </td>
+                    <td class="px-8 py-6">
+                      <div class="flex items-center justify-end gap-3">
+                        <button type="button" (click)="viewReport(report.mode, report.airComponentId)" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-naf-navy dark:bg-naf-gold text-white dark:text-naf-navy text-[11px] font-black uppercase tracking-wider hover:bg-[#004080] dark:hover:bg-yellow-500 transition-all duration-300 shadow-sm hover:shadow-md">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                          </svg>
+                          View Report
+                        </button>
+                        <button type="button" (click)="deleteReport(report)" [disabled]="deletingReportId() !== null" class="p-2.5 rounded-xl bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20 hover:bg-red-100 dark:hover:bg-red-500/20 transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none">
+                          @if (deletingReportId() === report.airComponentId) {
+                            <span class="block w-[14px] h-[14px] rounded-full border-2 border-red-600 dark:border-red-400 border-t-transparent animate-spin"></span>
+                          } @else {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                          }
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    }
+  </main>
 </div>

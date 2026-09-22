@@ -1,4 +1,4 @@
-import { Component, OnInit, WritableSignal, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, WritableSignal, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AirComponentService } from '../../services/air-component.service';
 import { AirComponentSummary } from '../../models/air-component-summary';
@@ -14,6 +14,21 @@ import { ThemeToggleComponent } from "../../components/theme-toggle.component/th
 import { ReportViewerComponent } from '../../components/report-viewer-component/report-viewer-component';
 import { ReportComposerComponent } from '../../components/report-composer-component/report-composer-component';
 
+// import { Component, OnInit, WritableSignal, computed, inject, signal, effect } from '@angular/core';
+// import { ActivatedRoute } from '@angular/router';
+// import { AirComponentService } from '../../services/air-component.service';
+// import { AirComponentSummary } from '../../models/air-component-summary';
+// import { RouterModule } from '@angular/router';
+
+// import { KpiService, ReportQuarter, DashboardPeriod } from '../../services/kpi-service';
+// import { AirComponentMonthlyReport } from '../../models/air-component-monthly-report';
+// import { ReportMonth } from '../../shared/report-month';
+// import { FormsModule } from '@angular/forms';
+// import { CommonModule } from '@angular/common';
+// import { FilterStateService } from '../../services/filter-state';
+// import { ThemeToggleComponent } from "../../components/theme-toggle.component/theme-toggle.component";
+// import { ReportViewerComponent } from '../../components/report-viewer-component/report-viewer-component';
+// import { ReportComposerComponent } from '../../components/report-composer-component/report-composer-component';
 
 @Component({
   selector: 'app-air-component-detail.component',
@@ -51,30 +66,12 @@ export class AirComponentDetailComponent implements OnInit {
     observationNotes = signal<Record<string, string>>({});
     submittingObservation = signal<boolean>(false);
 
-    // Toggle state for the Remarks section (true = expanded, false = collapsed)
     isRemarksOpen = true;
 
-     // Toggle states for the Write-up section
-  showWriteUp = signal<boolean>(false);
-  isComposing = signal<boolean>(false); // true = editor, false = viewer
+    // Toggle states for the Write-up section
+    showWriteUp = signal<boolean>(false);
+    isComposing = signal<boolean>(false); // true = editor, false = viewer
 
-  get currentWriteUpMode(): 'AIR_COMPONENT_MONTHLY' | 'AIR_COMPONENT_QUARTERLY' {
-    return this.filterType() === 'MONTH' ? 'AIR_COMPONENT_MONTHLY' : 'AIR_COMPONENT_QUARTERLY';
-  }
-
-  toggleWriteUp(): void {
-    this.showWriteUp.update(v => !v);
-    this.isComposing.set(false); // Default to viewer when opened
-  }
-
-  toggleComposeMode(): void {
-    this.isComposing.update(v => !v);
-  }
-
-    // ADD: Toggle state for the Write-Up Viewer
-    //showWriteUp = signal<boolean>(false);
-
-    // Single source of truth for which dimension is currently visible
     activeReport = signal<string>('ops');
 
     reportCardConfig = [
@@ -97,15 +94,39 @@ export class AirComponentDetailComponent implements OnInit {
             },
             error: () => this.loading.set(false)
         });
+
+        // ADD EFFECT: Automatically load dashboard data whenever filters change
+        effect(() => {
+            // Read signals to register the effect
+            const type = this.filterType();
+            const month = this.selectedMonth();
+            const quarter = this.selectedQuarter();
+            const year = this.selectedYear();
+            
+            // Trigger the API call automatically
+            this.loadReportData();
+        });
     }
 
     ngOnInit(): void { 
-        this.loadReportData(); 
+        // Initial load is handled by the effect, but you can leave it for safety
+    }
+
+    get currentWriteUpMode(): 'AIR_COMPONENT_MONTHLY' | 'AIR_COMPONENT_QUARTERLY' {
+        return this.filterType() === 'MONTH' ? 'AIR_COMPONENT_MONTHLY' : 'AIR_COMPONENT_QUARTERLY';
+    }
+
+    toggleWriteUp(): void {
+        this.showWriteUp.update(v => !v);
+        this.isComposing.set(false); 
+    }
+
+    toggleComposeMode(): void {
+        this.isComposing.update(v => !v);
     }
 
     setFilterType(type: 'MONTH' | 'QUARTER') {
-        this.filterType.set(type); // Updates shared state globally
-        this.loadReportData();
+        this.filterType.set(type); // Effect will handle loadReportData()
     }
 
     loadReportData(): void { 
@@ -122,6 +143,7 @@ export class AirComponentDetailComponent implements OnInit {
             error: (err) => console.error(err)
         });
     }
+
 
     getSafePercentage(value: number | undefined | null, isDecimal: boolean = false): number {
         if (value == null) return 0;

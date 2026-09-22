@@ -1,4 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+/* Inter font (optional if not already loaded via index.html) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @import 'tailwindcss';
 
@@ -26,8 +28,6 @@
    They support the DOPLANS navy/gold theme + dark mode toggle.
    ================================================================= */
 
-/* Inter font (optional if not already loaded via index.html) */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 /* ----------------------------------------------------------------
    1. Theme pre-paint (prevents flash of wrong theme on first load)

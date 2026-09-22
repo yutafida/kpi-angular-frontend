@@ -18,6 +18,9 @@ import { KpiService, ReportQuarter } from '../../services/kpi-service';
 import { ReportMonth } from '../../shared/report-month';
 import { FilterStateService } from '../../services/filter-state';
 import { ReportViewerComponent } from '../report-viewer-component/report-viewer-component';
+import { ThemeToggleComponent } from "../theme-toggle.component/theme-toggle.component";
+import { RouterModule } from '@angular/router';
+
 
 
 
@@ -37,7 +40,7 @@ interface ReportRow {
 @Component({
   selector: 'app-reports-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReportViewerComponent],
+  imports: [CommonModule, FormsModule, ReportViewerComponent, RouterModule, ThemeToggleComponent],
    templateUrl: './report-dashboard-component.html',
    styleUrl: './report-dashboard-component.css',
   
@@ -159,4 +162,86 @@ export class ReportsDashboardComponent implements OnInit {
     if (textOnly.length <= 80) return textOnly;
     return `${textOnly.slice(0, 80)}...`;
   }
+
+  // =====================================================
+  // DELETE HANDLER
+  // =====================================================
+
+  deletingReportId = signal<number | null>(null);
+
+  deleteReport(row: ReportRow): void {
+    // We need an id to delete; for general reports the backend exposes general endpoints
+    // The dashboard responses don't include the persisted id in the row, so we must
+    // fetch the list of reports and find the matching natural key, then delete by id.
+
+    const confirmed = window.confirm('Delete this saved report? This action cannot be undone.');
+    if (!confirmed) return;
+
+    this.deletingReportId.set(-1);
+
+    // Load all reports and attempt to find the matching entry
+    this.kpiService.getReports().subscribe({
+      next: (reports) => {
+        // Determine matching report by period + scope + airComponentId
+        const match = reports.find(r => {
+          const isAir = (r as any).airComponentId !== undefined && (r as any).airComponentId !== null;
+          if (row.scope === 'General' && !isAir) {
+            if (this.isMonthlyMode) {
+              return (r as any).reportMonth === this.selectedMonth() && (r as any).reportYear === this.selectedYear();
+            } else {
+              return (r as any).reportQuarter === this.selectedQuarter() && (r as any).reportYear === this.selectedYear();
+            }
+          }
+
+          if (row.scope === 'Air Component' && isAir) {
+            if ((r as any).airComponentId !== row.airComponentId) return false;
+            if (this.isMonthlyMode) {
+              return (r as any).reportMonth === this.selectedMonth() && (r as any).reportYear === this.selectedYear();
+            } else {
+              return (r as any).reportQuarter === this.selectedQuarter() && (r as any).reportYear === this.selectedYear();
+            }
+          }
+
+          return false;
+        });
+
+        if (!match) {
+          window.alert('Could not locate the saved report to delete.');
+          this.deletingReportId.set(null);
+          return;
+        }
+
+        const id = (match as any).id;
+        if (!id) {
+          window.alert('Matched report has no id and cannot be deleted.');
+          this.deletingReportId.set(null);
+          return;
+        }
+
+        this.deletingReportId.set(id);
+
+        this.kpiService.deleteReport(id).subscribe({
+          next: () => {
+            // After deletion reload the dashboard
+            this.loadData();
+            this.deletingReportId.set(null);
+          },
+          error: (err) => {
+            console.error('Failed to delete report', err);
+            window.alert('Failed to delete report. See console for details.');
+            this.deletingReportId.set(null);
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Failed to fetch reports', err);
+        window.alert('Failed to fetch saved reports. See console for details.');
+        this.deletingReportId.set(null);
+      }
+    });
+  }
+
+
+ 
+    
 }
