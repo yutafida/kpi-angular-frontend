@@ -27,6 +27,8 @@ export type WriteUpMode =
 
 interface ReportResponse {
   content?: string;
+  classification?: string;
+  reference?: string;
 }
 
 @Component({
@@ -38,10 +40,14 @@ interface ReportResponse {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportViewerComponent {
-  // ===== Signal inputs (parent uses them like normal @Input/@Output) =====
+  // ===== Signal inputs =====
   readonly mode = input<WriteUpMode>('GENERAL_MONTHLY');
   readonly airComponentId = input<number | null>(null);
   readonly isVisible = input<boolean>(false);
+
+  // New: allow parent to override classification / reference. Otherwise derived.
+  readonly classification = input<string>('SECRET');
+  readonly reference = input<string>('');
 
   readonly exitViewMode = output<void>();
 
@@ -57,12 +63,11 @@ export class ReportViewerComponent {
   private readonly selectedYear = this.filterState.selectedYear;
   private readonly filterType = this.filterState.filterType;
 
-  // ===== UI state as signals (works perfectly with OnPush) =====
+  // ===== UI state as signals =====
   readonly loading = signal(false);
   readonly notFound = signal(false);
   readonly error = signal<string | null>(null);
   readonly reportContent = signal<SafeHtml>('');
-  /** Bumped on every successful load so the canvas re-runs its fade-in. */
   readonly renderKey = signal(0);
 
   // ===== Computed =====
@@ -104,8 +109,6 @@ export class ReportViewerComponent {
       )
       .subscribe((report) => this.handleReport(report as ReportResponse));
 
-    // One effect that tracks ALL relevant signals; side-effect runs untracked
-    // so internal signal writes don't retrigger it.
     effect(() => {
       this.isVisible();
       this.mode();
@@ -124,13 +127,18 @@ export class ReportViewerComponent {
     this.loadTrigger$.next();
   }
 
+  /** Print / Save-as-PDF the rendered report. */
+  print(): void {
+    if (!this.hasContent()) return;
+    window.print();
+  }
+
   // ---------- internals ----------
 
   private buildRequest$(): Observable<ReportResponse> {
     const mode = this.mode();
     const airId = this.airComponentId();
 
-    // Pre-flight: air-component modes require an id.
     if (
       (mode === 'AIR_COMPONENT_MONTHLY' || mode === 'AIR_COMPONENT_QUARTERLY') &&
       airId == null

@@ -22,7 +22,9 @@ export type ReportQuarter = 'Q1' | 'Q2' | 'Q3' | 'Q4';
 })
 export class KpiService {
 
-        private baseUrl = 'http://localhost:8080/api/kpi';
+        //private baseUrl = 'http://localhost:8080/api/kpi';
+
+        private baseUrl = '/api/kpi';
         filterState: any;
 
         constructor(private http: HttpClient) {}

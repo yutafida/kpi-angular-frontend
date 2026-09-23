@@ -8,19 +8,30 @@
         {{ periodLabel() }} Report
       </h3>
     </div>
-    <button
-      (click)="exitViewMode.emit()"
-      class="inline-flex shrink-0 items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400/40 text-xs font-black uppercase tracking-wider transition active:scale-[0.98] shadow-sm">
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-        <path stroke-linecap="round" stroke-linejoin="round" d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-      </svg>
-      <span>Back to Composer</span>
-    </button>
+    <div class="flex items-center gap-2">
+      <button
+        (click)="print()"
+        class="inline-flex shrink-0 items-center gap-2 px-3 py-2 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/10 text-xs font-black uppercase tracking-wider transition hover:bg-slate-200 dark:hover:bg-white/10 active:scale-[0.98]"
+        title="Print / Save as PDF">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.819a3.75 3.75 0 0 1-1.06-4.747L7.5 6.75 8.25 3h7.5l.75 3.75 1.84 2.322a3.75 3.75 0 0 1-1.06 4.747M6.72 13.819 12 17.25l5.28-3.431M6.72 13.819 4.5 18.75h15l-2.22-4.931"></path>
+        </svg>
+        <span class="hidden sm:inline">Print</span>
+      </button>
+      <button
+        (click)="exitViewMode.emit()"
+        class="inline-flex shrink-0 items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400/40 text-xs font-black uppercase tracking-wider transition active:scale-[0.98] shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </svg>
+        <span>Back to Composer</span>
+      </button>
+    </div>
   </div>
 
   <!-- ============ VIEWER CONTENT AREA ============ -->
-  <div class="p-8 min-h-[650px] relative bg-gradient-to-b from-white to-slate-50/60 dark:from-naf-navyLight dark:to-naf-navy/60">
+  <div class="p-4 sm:p-6 lg:p-8 min-h-[650px] relative bg-gradient-to-b from-white to-slate-50/60 dark:from-naf-navyLight dark:to-naf-navy/60">
 
     <!-- LOADING -->
     @if (loading()) {
@@ -64,12 +75,40 @@
       </div>
     }
 
-    <!-- RICH TEXT CANVAS -->
+    <!-- ============ DOCUMENT PAGE (formatted report) ============ -->
     @if (hasContent() && !loading() && !error() && !notFound()) {
-      <div
-        [innerHTML]="reportContent()"
+      <!-- Top classification banner -->
+      <div class="doc-classification doc-classification-top">
+        <span class="doc-classification-text">{{ classification() }}</span>
+      </div>
+
+      <!-- Document sheet -->
+      <article
+        class="doc-sheet"
         [attr.data-render-key]="renderKey()"
-        class="report-canvas w-full min-h-[500px] bg-transparent text-slate-800 dark:text-slate-200 text-base leading-relaxed outline-none prose prose-slate dark:prose-invert max-w-none prose-headings:font-black prose-headings:text-naf-navy dark:prose-headings:text-white prose-strong:text-naf-navy dark:prose-strong:text-naf-gold prose-a:text-blue-600 dark:prose-a:text-blue-400">
+      >
+        <!-- Document header strip: reference + period -->
+        <header class="doc-sheet-header">
+          <div class="doc-ref">
+            <span class="doc-ref-label">Reference:</span>
+            <span class="doc-ref-value">{{ reference() || 'NAF/—/COPP' }}</span>
+          </div>
+          <div class="doc-period">
+            <span class="doc-period-label">Reporting Period:</span>
+            <span class="doc-period-value">{{ periodLabel() }}</span>
+          </div>
+        </header>
+
+        <!-- The actual saved report HTML, rendered with formal document styling -->
+        <div
+          [innerHTML]="reportContent()"
+          class="report-canvas doc-prose"
+        ></div>
+      </article>
+
+      <!-- Bottom classification banner -->
+      <div class="doc-classification doc-classification-bottom">
+        <span class="doc-classification-text">{{ classification() }}</span>
       </div>
     }
   </div>

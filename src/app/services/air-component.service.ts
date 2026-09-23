@@ -11,9 +11,9 @@ export class AirComponentService {
 
   private http = inject(HttpClient);
 
-  private baseUrl = 'http://localhost:8080/api/kpi';
+  //private baseUrl = 'http://localhost:8080/api/kpi';
    
-  // private baseUrl = '/api/kpi';
+  private baseUrl = '/api/kpi';
 
 
   

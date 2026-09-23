@@ -1,46 +1,458 @@
-/* Smooth fade-in every time a new report is rendered.
-   Works because the canvas is removed from the DOM while loading(),
-   so each successful load re-mounts the node and the animation replays. */
+:host {
+  display: block;
+}
+
+/* ============================================================
+   CLASSIFICATION BANNERS
+   ============================================================ */
+.doc-classification {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  background: #1e293b; /* slate-800 */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  margin: 0 auto 1rem;
+  max-width: 880px;
+  position: relative;
+}
+:is(.dark) .doc-classification {
+  background: #0b1220;
+  border-color: rgba(234, 179, 8, 0.25);
+}
+.doc-classification-text {
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.4em;
+  color: #fbbf24; /* amber-400 / classification gold */
+  text-transform: uppercase;
+}
+.doc-classification-top::before,
+.doc-classification-bottom::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 0.5rem;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 2px rgba(251, 191, 36, 0.15);
+}
+
+/* ============================================================
+   DOCUMENT SHEET (the "page")
+   ============================================================ */
+.doc-sheet {
+  max-width: 880px;
+  margin: 0 auto;
+  background: #ffffff;
+  color: #1f2937;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 8px 24px rgba(15, 23, 42, 0.08);
+  padding: 2.5rem 3rem;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  overflow: hidden;
+}
+:is(.dark) .doc-sheet {
+  background: #111a2e;
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Document header strip (reference + period) */
+.doc-sheet-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+:is(.dark) .doc-sheet-header {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.doc-ref,
+.doc-period {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: 'Georgia', serif;
+}
+.doc-ref-label,
+.doc-period-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+.doc-ref-value,
+.doc-period-value {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #1e293b;
+}
+:is(.dark) .doc-ref-value,
+:is(.dark) .doc-period-value {
+  color: #f1f5f9;
+}
+
+/* ============================================================
+   PROSE / DOCUMENT STYLING — applied to .report-canvas
+   ============================================================ */
 .report-canvas {
-  animation: rv-fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
+  outline: none;
 }
 
-@keyframes rv-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Headings — formal military style */
+.report-canvas h1,
+.report-canvas .doc-title {
+  font-family: 'Georgia', serif;
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0.5rem auto 1.5rem;
+  color: #0f172a;
+  line-height: 1.4;
+}
+:is(.dark) .report-canvas h1,
+:is(.dark) .report-canvas .doc-title {
+  color: #f8fafc;
 }
 
-/* Respect reduced-motion preferences. */
-@media (prefers-reduced-motion: reduce) {
-  .report-canvas {
-    animation: none;
-  }
+.report-canvas h2 {
+  font-family: 'Georgia', serif;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 2rem 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid #0f172a;
+  color: #0f172a;
+}
+:is(.dark) .report-canvas h2 {
+  color: #f8fafc;
+  border-color: #f8fafc;
 }
 
-/* Prose tweaks for saved HTML reports —
-   keeps inline styles from the composer looking consistent. */
+.report-canvas h3 {
+  font-family: 'Georgia', serif;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 1.5rem 0 0.75rem;
+  color: #1e293b;
+}
+:is(.dark) .report-canvas h3 {
+  color: #e2e8f0;
+}
+
+/* Paragraphs — military numbered paragraphs look */
+.report-canvas p {
+  margin: 0 0 1rem;
+  text-align: justify;
+  text-indent: 0;
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+/* First paragraph after a heading — no indent */
+.report-canvas h2 + p,
+.report-canvas h3 + p {
+  text-indent: 0;
+}
+
+/* Bold run-ins like "Platform Availability Crisis." */
+.report-canvas strong {
+  font-weight: 800;
+  color: #0f172a;
+}
+:is(.dark) .report-canvas strong {
+  color: #fbbf24;
+}
+
+/* Links */
+.report-canvas a {
+  color: #1d4ed8;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+:is(.dark) .report-canvas a {
+  color: #60a5fa;
+}
+
+/* ============================================================
+   LISTS — military lettered/numbered sub-paragraphs
+   ============================================================ */
+.report-canvas ul,
+.report-canvas ol {
+  margin: 0 0 1rem;
+  padding-left: 2rem;
+}
+.report-canvas ol {
+  list-style: decimal;
+}
+.report-canvas ul {
+  list-style: disc;
+}
+
+/* Lettered sub-items like "a. Platform Availability..." */
+.report-canvas ol[type="a"],
+.report-canvas ol[type="A"] {
+  list-style: lower-alpha;
+}
+.report-canvas ol[type="A"] {
+  list-style: upper-alpha;
+}
+
+.report-canvas li {
+  margin: 0.35rem 0;
+  text-align: justify;
+  line-height: 1.7;
+}
+
+/* Tighten nested lists */
+.report-canvas li > ul,
+.report-canvas li > ol {
+  margin: 0.35rem 0 0.35rem 1rem;
+}
+
+/* ============================================================
+   TABLES — formal military tabular format
+   ============================================================ */
+.report-canvas table {
+  width: 100%;
+  margin: 1rem 0 1.5rem;
+  border-collapse: collapse;
+  font-family: 'Georgia', serif;
+  font-size: 0.85rem;
+  border: 1.5px solid #0f172a;
+  background: #ffffff;
+  overflow: hidden;
+  border-radius: 0.25rem;
+}
+:is(.dark) .report-canvas table {
+  border-color: #e2e8f0;
+  background: #131c30;
+}
+
+.report-canvas table > caption,
+.report-canvas .table-caption {
+  caption-side: top;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #475569;
+  margin-bottom: 0.5rem;
+}
+:is(.dark) .report-canvas table > caption,
+:is(.dark) .report-canvas .table-caption {
+  color: #94a3b8;
+}
+
+.report-canvas thead th {
+  background: #0f172a;
+  color: #ffffff;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.7rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #0f172a;
+  text-align: center;
+  vertical-align: middle;
+}
+:is(.dark) .report-canvas thead th {
+  background: #1e293b;
+  color: #f8fafc;
+  border-color: #1e293b;
+}
+
+.report-canvas tbody td {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  vertical-align: top;
+  text-align: left;
+}
+:is(.dark) .report-canvas tbody td {
+  border-color: #2a3656;
+}
+
+.report-canvas tbody tr:nth-child(even) td {
+  background: #f8fafc;
+}
+:is(.dark) .report-canvas tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.report-canvas tbody tr:hover td {
+  background: #fef9c3;
+}
+:is(.dark) .report-canvas tbody tr:hover td {
+  background: rgba(251, 191, 36, 0.08);
+}
+
+/* "Status" / "Rating" cells — color-coded chips */
+.report-canvas td .status,
+.report-canvas td.status {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.report-canvas .status.on-track,
+.report-canvas .status.excellent {
+  background: #dcfce7;
+  color: #166534;
+}
+.report-canvas .status.critical,
+.report-canvas .status.unsatisfactory {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.report-canvas .status.good,
+.report-canvas .status.satisfactory {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+/* "Overall" / "Total" row at the bottom of a table */
+.report-canvas tbody tr.overall td,
+.report-canvas tbody tr.totals td,
+.report-canvas tbody tr:last-child strong ~ td,
+.report-canvas tfoot td {
+  font-weight: 800;
+  background: #e2e8f0;
+  border-top: 2px solid #0f172a;
+}
+:is(.dark) .report-canvas tbody tr.overall td,
+:is(.dark) .report-canvas tbody tr.totals td,
+:is(.dark) .report-canvas tfoot td {
+  background: #1e293b;
+  border-color: #1e293b;
+}
+
+/* ============================================================
+   FIGURES / CAPTIONS
+   ============================================================ */
+.report-canvas figure {
+  margin: 1.25rem 0;
+  text-align: center;
+}
+.report-canvas figure img,
 .report-canvas img {
   max-width: 100%;
   height: auto;
-  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  background: #ffffff;
 }
-.report-canvas table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1rem 0;
+:is(.dark) .report-canvas figure img,
+:is(.dark) .report-canvas img {
+  background: #0f172a;
+  border-color: #1e293b;
 }
-.report-canvas th,
-.report-canvas td {
-  border: 1px solid rgb(203 213 225);
-  padding: 0.5rem 0.75rem;
+
+.report-canvas figcaption,
+.report-canvas .figure-caption {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: #475569;
+  text-align: center;
 }
-.dark .report-canvas th,
-.dark .report-canvas td {
-  border-color: rgb(255 255 255 / 0.1);
+:is(.dark) .report-canvas figcaption,
+:is(.dark) .report-canvas .figure-caption {
+  color: #94a3b8;
+}
+
+/* ============================================================
+   ENCLOSURES / APPENDICES block at the end
+   ============================================================ */
+.report-canvas .enclosures,
+.report-canvas .appendix {
+  margin-top: 2rem;
+  padding: 1rem 1.25rem;
+  background: #f1f5f9;
+  border-left: 3px solid #0f172a;
+  border-radius: 0.25rem;
+}
+:is(.dark) .report-canvas .enclosures,
+:is(.dark) .report-canvas .appendix {
+  background: rgba(255, 255, 255, 0.03);
+  border-left-color: #fbbf24;
+}
+
+/* ============================================================
+   PRINT — only the document sheet prints, not the app chrome
+   ============================================================ */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .doc-sheet,
+  .doc-sheet *,
+  .doc-classification,
+  .doc-classification * {
+    visibility: visible;
+  }
+  .doc-sheet {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    max-width: 100%;
+    box-shadow: none;
+    border: none;
+    padding: 1.5rem 2rem;
+  }
+  .doc-classification {
+    box-shadow: none;
+    margin: 0 0 0.5rem;
+  }
+  .report-canvas thead th {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* ============================================================
+   SMALL SCREENS
+   ============================================================ */
+@media (max-width: 640px) {
+  .doc-sheet {
+    padding: 1.5rem 1.25rem;
+  }
+  .report-canvas h1 {
+    font-size: 1.05rem;
+  }
+  .report-canvas table {
+    font-size: 0.75rem;
+  }
+  .report-canvas thead th {
+    font-size: 0.65rem;
+    padding: 0.4rem 0.5rem;
+  }
+  .report-canvas tbody td {
+    padding: 0.4rem 0.5rem;
+  }
 }
